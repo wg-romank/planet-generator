@@ -41,8 +41,8 @@ init _ =
       , viewportHeight = 0
       , viewportWidth = 0
       , offset = 0
-      , width = 600
-      , height = 800
+      , width = 320
+      , height = 640
       , noiseParams = emptyNoiseParams
       , res = 10
       }
@@ -66,32 +66,19 @@ type UpdateParams = UpdateScale String | UpdatePeriod String | UpdatePersistance
 computeViewportSize : Viewport -> Model -> Model
 computeViewportSize viewport model =
     let
-        vph =
-            viewport.viewport.height
-
-        ratio =
-            toFloat model.height / toFloat model.width
-
-        vpw =
-            vph / ratio
-
-        offset =
-            (viewport.viewport.width - vpw) / 2.0 |> round
+        vph = viewport.viewport.height
+        ratio = toFloat model.height / toFloat model.width
+        vpw = vph / ratio
+        offset = (viewport.viewport.width - vpw) / 2.0 |> round
     in
-    { model
-        | viewportWidth = Basics.round vpw
-        , viewportHeight = Basics.round vph
-        , offset = offset
-    }
+    { model | viewportWidth = Basics.round vpw, viewportHeight = Basics.round vph, offset = offset }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Delta f ->
-            let
-                th = model.theta
-            in
+            let th = model.theta in
             ( { model | theta = th + f / 5000 }, Cmd.none )
         Paused ->
             ( { model | paused = True }, Cmd.none )
@@ -118,70 +105,71 @@ update msg model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ if model.paused then
-            Sub.none
-
-          else
-            onAnimationFrameDelta Delta
-        , Browser.Events.onVisibilityChange
+        [ 
+          if model.paused then Sub.none
+          else onAnimationFrameDelta Delta,
+          Browser.Events.onVisibilityChange
             (\v ->
                 case v of
-                    Browser.Events.Hidden ->
-                        Paused
-
-                    Browser.Events.Visible ->
-                        Resumed
+                    Browser.Events.Hidden -> Paused
+                    Browser.Events.Visible -> Resumed
             )
         ]
 
 slider: String -> (String -> UpdateParams) -> Float -> Float -> Float -> Html Msg
 slider label up minValue maxValue actualValue = 
+    div [] [
     input [
         type_ "range",
         H.min (String.fromFloat minValue),
         H.max (String.fromFloat maxValue),
         H.step "0.1",
         value <| String.fromFloat actualValue,
-        onInput (\x -> UpdateParams (up x))
-    ] [ text label ]
+        onInput (\x -> UpdateParams (up x)),
+        style "width" "100%"
+    ] [ text label ] ]
 
 intSlider: String -> (String -> UpdateParams) -> Int -> Int -> Int -> Html Msg
 intSlider label up minValue maxValue actualValue = 
+    div [] [
     input [
         type_ "range",
         H.min (String.fromInt minValue),
         H.max (String.fromInt maxValue),
         H.step "1",
         value <| String.fromInt actualValue,
-        onInput (\x -> UpdateParams (up x))
-    ] [ text label ]
+        onInput (\x -> UpdateParams (up x)),
+        style "width" "100%"
+    ] [ text label ] ]
 
 view : Model -> Browser.Document Msg
 view model =
     { title = "Document Title"
-    , body =
-        [ WebGL.toHtml
-            [ style "top" "0px"
-            , style "left" (String.fromInt model.offset ++ "px")
-            , style "position" "absolute"
-            , style "backgroundColor" "black"
-            , style "width" (String.fromInt model.viewportWidth ++ "px")
-            , style "height" (String.fromInt model.viewportWidth ++ "px")
-            , style "display" "block"
-            , width model.width
-            , height model.height
-            ]
-            (drawCube model.res model.theta model.noiseParams)
-        , div [
-            style "top" (String.fromInt model.height ++ "px"),
+    , body = [
+        div [
+            style "top" "0px",
+            style "left" (String.fromInt model.offset ++ "px"),
             style "position" "absolute",
-            style "width" (String.fromInt model.width ++ "px"),
-            style "left" (String.fromInt model.offset ++ "px")
-        ] [ 
+            style "width" (String.fromInt model.viewportWidth ++ "px"),
+            style "height" (String.fromInt model.viewportHeight ++ "px")
+        ]
+        [ div [] [
+            WebGL.toHtml
+            [ style "backgroundColor" "black",
+              style "display" "block",
+              style "width" "100%",
+              width model.width,
+              height model.height ] (drawCube model.res model.theta model.noiseParams),
+          div [
+            style "bottom" "0px",
+            style "position" "absolute",
+            style "width" "100%"
+          ] [ 
             slider "scale" UpdateScale 0.3 4 model.noiseParams.scale,
             slider "period" UpdatePeriod 0.1 4 model.noiseParams.period,
             slider "persistance" UpdatePersistance 0 1 model.noiseParams.persistance,
-            slider "octaves" UpdateOctaves 1 8 model.noiseParams.persistance
+            intSlider "octaves" UpdateOctaves 1 8 model.noiseParams.octaves
+          ] ]
          ]
         ]
     }

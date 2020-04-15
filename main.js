@@ -6845,7 +6845,7 @@ var $author$project$Shaders$emptyNoiseParams = {octaves: 4, period: 0.8, persist
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{height: 800, noiseParams: $author$project$Shaders$emptyNoiseParams, offset: 0, paused: false, res: 10, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 600},
+		{height: 640, noiseParams: $author$project$Shaders$emptyNoiseParams, offset: 0, paused: false, res: 10, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 320},
 		$elm$core$Platform$Cmd$batch(
 			_List_fromArray(
 				[
@@ -8476,7 +8476,6 @@ var $elm$html$Html$Attributes$height = function (n) {
 var $author$project$Main$UpdateParams = function (a) {
 	return {$: 'UpdateParams', a: a};
 };
-var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
@@ -8524,37 +8523,77 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 var $elm$html$Html$Attributes$step = function (n) {
 	return A2($elm$html$Html$Attributes$stringProperty, 'step', n);
 };
+var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$Main$intSlider = F5(
+	function (label, up, minValue, maxValue, actualValue) {
+		return A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$input,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$type_('range'),
+							$elm$html$Html$Attributes$min(
+							$elm$core$String$fromInt(minValue)),
+							$elm$html$Html$Attributes$max(
+							$elm$core$String$fromInt(maxValue)),
+							$elm$html$Html$Attributes$step('1'),
+							$elm$html$Html$Attributes$value(
+							$elm$core$String$fromInt(actualValue)),
+							$elm$html$Html$Events$onInput(
+							function (x) {
+								return $author$project$Main$UpdateParams(
+									up(x));
+							}),
+							A2($elm$html$Html$Attributes$style, 'width', '100%')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(label)
+						]))
+				]));
+	});
+var $elm$core$String$fromFloat = _String_fromNumber;
 var $author$project$Main$slider = F5(
 	function (label, up, minValue, maxValue, actualValue) {
 		return A2(
-			$elm$html$Html$input,
+			$elm$html$Html$div,
+			_List_Nil,
 			_List_fromArray(
 				[
-					$elm$html$Html$Attributes$type_('range'),
-					$elm$html$Html$Attributes$min(
-					$elm$core$String$fromFloat(minValue)),
-					$elm$html$Html$Attributes$max(
-					$elm$core$String$fromFloat(maxValue)),
-					$elm$html$Html$Attributes$step('0.1'),
-					$elm$html$Html$Attributes$value(
-					$elm$core$String$fromFloat(actualValue)),
-					$elm$html$Html$Events$onInput(
-					function (x) {
-						return $author$project$Main$UpdateParams(
-							up(x));
-					})
-				]),
-			_List_fromArray(
-				[
-					$elm$html$Html$text(label)
+					A2(
+					$elm$html$Html$input,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$type_('range'),
+							$elm$html$Html$Attributes$min(
+							$elm$core$String$fromFloat(minValue)),
+							$elm$html$Html$Attributes$max(
+							$elm$core$String$fromFloat(maxValue)),
+							$elm$html$Html$Attributes$step('0.1'),
+							$elm$html$Html$Attributes$value(
+							$elm$core$String$fromFloat(actualValue)),
+							$elm$html$Html$Events$onInput(
+							function (x) {
+								return $author$project$Main$UpdateParams(
+									up(x));
+							}),
+							A2($elm$html$Html$Attributes$style, 'width', '100%')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(label)
+						]))
 				]));
 	});
-var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $elm_explorations$webgl$WebGL$Internal$Alpha = function (a) {
 	return {$: 'Alpha', a: a};
 };
@@ -8587,7 +8626,7 @@ var $author$project$Main$view = function (model) {
 		body: _List_fromArray(
 			[
 				A2(
-				$elm_explorations$webgl$WebGL$toHtml,
+				$elm$html$Html$div,
 				_List_fromArray(
 					[
 						A2($elm$html$Html$Attributes$style, 'top', '0px'),
@@ -8596,7 +8635,6 @@ var $author$project$Main$view = function (model) {
 						'left',
 						$elm$core$String$fromInt(model.offset) + 'px'),
 						A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2($elm$html$Html$Attributes$style, 'backgroundColor', 'black'),
 						A2(
 						$elm$html$Html$Attributes$style,
 						'width',
@@ -8604,36 +8642,42 @@ var $author$project$Main$view = function (model) {
 						A2(
 						$elm$html$Html$Attributes$style,
 						'height',
-						$elm$core$String$fromInt(model.viewportWidth) + 'px'),
-						A2($elm$html$Html$Attributes$style, 'display', 'block'),
-						$elm$html$Html$Attributes$width(model.width),
-						$elm$html$Html$Attributes$height(model.height)
-					]),
-				A3($author$project$Shaders$drawCube, model.res, model.theta, model.noiseParams)),
-				A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$Attributes$style,
-						'top',
-						$elm$core$String$fromInt(model.height) + 'px'),
-						A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2(
-						$elm$html$Html$Attributes$style,
-						'width',
-						$elm$core$String$fromInt(model.width) + 'px'),
-						A2(
-						$elm$html$Html$Attributes$style,
-						'left',
-						$elm$core$String$fromInt(model.offset) + 'px')
+						$elm$core$String$fromInt(model.viewportHeight) + 'px')
 					]),
 				_List_fromArray(
 					[
-						A5($author$project$Main$slider, 'scale', $author$project$Main$UpdateScale, 0.3, 4, model.noiseParams.scale),
-						A5($author$project$Main$slider, 'period', $author$project$Main$UpdatePeriod, 0.1, 4, model.noiseParams.period),
-						A5($author$project$Main$slider, 'persistance', $author$project$Main$UpdatePersistance, 0, 1, model.noiseParams.persistance),
-						A5($author$project$Main$slider, 'octaves', $author$project$Main$UpdateOctaves, 1, 8, model.noiseParams.persistance)
+						A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$elm_explorations$webgl$WebGL$toHtml,
+								_List_fromArray(
+									[
+										A2($elm$html$Html$Attributes$style, 'backgroundColor', 'black'),
+										A2($elm$html$Html$Attributes$style, 'display', 'block'),
+										A2($elm$html$Html$Attributes$style, 'width', '100%'),
+										$elm$html$Html$Attributes$width(model.width),
+										$elm$html$Html$Attributes$height(model.height)
+									]),
+								A3($author$project$Shaders$drawCube, model.res, model.theta, model.noiseParams)),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										A2($elm$html$Html$Attributes$style, 'bottom', '0px'),
+										A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+										A2($elm$html$Html$Attributes$style, 'width', '100%')
+									]),
+								_List_fromArray(
+									[
+										A5($author$project$Main$slider, 'scale', $author$project$Main$UpdateScale, 0.3, 4, model.noiseParams.scale),
+										A5($author$project$Main$slider, 'period', $author$project$Main$UpdatePeriod, 0.1, 4, model.noiseParams.period),
+										A5($author$project$Main$slider, 'persistance', $author$project$Main$UpdatePersistance, 0, 1, model.noiseParams.persistance),
+										A5($author$project$Main$intSlider, 'octaves', $author$project$Main$UpdateOctaves, 1, 8, model.noiseParams.octaves)
+									]))
+							]))
 					]))
 			]),
 		title: 'Document Title'

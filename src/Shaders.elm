@@ -4,11 +4,16 @@ import Math.Vector4 exposing (vec4, Vec4)
 import Math.Vector3 as Vec3 exposing (vec3, Vec3)
 import Math.Vector2 as Vec2 exposing (vec2, Vec2)
 import Math.Matrix4 as Mat4 exposing (Mat4)
+
+import Simplex exposing (PermutationTable)
 import WebGL exposing (Mesh)
 
 type alias Vertex = {
         position : Vec3
     }
+
+permTable: PermutationTable
+permTable = Simplex.permutationTableFromInt 42
 
 vertexShader = 
     [glsl|
@@ -32,6 +37,7 @@ fragmentShader =
 face: Int -> Vec3 -> Mesh Vertex
 face res direction =
     let
+        noise = Simplex.fractal3d { scale = 4.0, steps = 4, stepSize = 0.8, persistence = 2.0 } permTable
         axisA = vec3 (Vec3.getY direction) (Vec3.getZ direction) (Vec3.getX direction)
         axisB = Vec3.cross direction axisA
         vertexes =
@@ -42,12 +48,14 @@ face res direction =
                         floatY = toFloat y
                         floatRes = toFloat res - 1
                         percent = vec2 (floatY / floatRes) (floatX / floatRes)
-                        pointOnUniCube = direction
+                        pointOnUniSphere = direction
                             |> Vec3.add (Vec3.scale (Vec2.getX percent * 2 - 1) axisA)
                             |> Vec3.add (Vec3.scale (Vec2.getY percent * 2 - 1) axisB)
                             |> Vec3.normalize
+                        noiseV = noise (Vec3.getX pointOnUniSphere) (Vec3.getY pointOnUniSphere) (Vec3.getZ pointOnUniSphere)
+                        point = Vec3.scale (1 + (noiseV + 1) / 2) pointOnUniSphere
                     in
-                        { position = pointOnUniCube }
+                        { position = point }
                         
                     )
                 ) |> List.concat
@@ -85,7 +93,7 @@ draw: Float -> Mesh Vertex -> WebGL.Entity
 draw theta mesh = WebGL.entityWith [] vertexShader fragmentShader mesh (uniforms theta)
 
 drawFace: Float -> Vec3 -> WebGL.Entity
-drawFace theta dir = draw theta  (face 8 dir)
+drawFace theta dir = draw theta  (face 10 dir)
 
 drawCube: Float -> List WebGL.Entity
 drawCube theta =

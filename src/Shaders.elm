@@ -112,20 +112,29 @@ uniforms theta =
 draw: Float -> Mesh Vertex -> WebGL.Entity
 draw theta mesh = WebGL.entityWith [ WebGL.Settings.cullFace back ] vertexShader fragmentShader mesh (uniforms theta)
 
-drawFace: Float -> Vec3 -> WebGL.Entity
-drawFace theta dir =
-    let
-        noise = Simplex.fractal3d { scale = 4.0, steps = 4, stepSize = 0.8, persistence = 2.0 } permTable
-    in
-    draw theta (face noise 10 dir)
+drawFace: Int -> (Float -> Float -> Float -> Float) -> Float -> Vec3 -> WebGL.Entity
+drawFace res noise theta dir =
+    draw theta (face noise res dir)
 
-drawCube: Float -> List WebGL.Entity
-drawCube theta =
+
+type alias NoiseParameters =
+    { scale: Float, octaves: Int, period: Float, persistance: Float }
+
+
+emptyNoiseParams: NoiseParameters
+emptyNoiseParams = { scale = 4.0, octaves = 4, period = 0.8, persistance = 2.0 }
+
+
+drawCube: Int -> Float -> NoiseParameters -> List WebGL.Entity
+drawCube res theta noiseParams =
+    let
+        noise = Simplex.fractal3d { scale = noiseParams.scale, steps = noiseParams.octaves, stepSize = noiseParams.period, persistence = noiseParams.persistance } permTable
+    in
     [ vec3 1 0 0,
       vec3 0 1 0,
       vec3 0 0 1,
       vec3 -1 0 0,
       vec3 0 -1 0,
       vec3 0 0 -1 ]
-        |> List.map (drawFace theta)
+        |> List.map (drawFace res noise theta)
 

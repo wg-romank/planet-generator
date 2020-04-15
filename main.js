@@ -6837,12 +6837,20 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$document = _Browser_document;
+var $author$project$Main$ViewPortLoaded = function (a) {
+	return {$: 'ViewPortLoaded', a: a};
+};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$Shaders$emptyNoiseParams = {octaves: 4, period: 0.8, persistance: 2.0, scale: 4.0};
+var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{paused: false, theta: 0},
-		$elm$core$Platform$Cmd$none);
+		{height: 800, noiseParams: $author$project$Shaders$emptyNoiseParams, offset: 0, paused: false, res: 10, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 600},
+		$elm$core$Platform$Cmd$batch(
+			_List_fromArray(
+				[
+					A2($elm$core$Task$perform, $author$project$Main$ViewPortLoaded, $elm$browser$Browser$Dom$getViewport)
+				])));
 };
 var $author$project$Main$Delta = function (a) {
 	return {$: 'Delta', a: a};
@@ -7421,6 +7429,23 @@ var $author$project$Main$subscriptions = function (model) {
 				})
 			]));
 };
+var $elm$core$Basics$round = _Basics_round;
+var $author$project$Main$computeViewportSize = F2(
+	function (viewport, model) {
+		var vpm = viewport.viewport.height / model.height;
+		var vph = viewport.viewport.height;
+		var ratio = model.height / model.width;
+		var vpw = vph / ratio;
+		var offset = $elm$core$Basics$round((viewport.viewport.width - vpw) / 2.0);
+		return _Utils_update(
+			model,
+			{
+				offset: offset,
+				viewportHeight: $elm$core$Basics$round(vph),
+				viewportWidth: $elm$core$Basics$round(vpw)
+			});
+	});
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -7438,15 +7463,19 @@ var $author$project$Main$update = F2(
 						model,
 						{paused: true}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'Resumed':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{paused: false}),
 					$elm$core$Platform$Cmd$none);
+			default:
+				var viewport = msg.a;
+				return _Utils_Tuple2(
+					A2($author$project$Main$computeViewportSize, viewport, model),
+					$elm$core$Platform$Cmd$none);
 		}
 	});
-var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm_explorations$webgl$WebGL$Settings$FaceMode = function (a) {
 	return {$: 'FaceMode', a: a};
 };
@@ -7673,6 +7702,13 @@ var $author$project$Shaders$face = F3(
 				},
 				A2($elm$core$List$range, 0, res - 1)));
 		return A2($elm_explorations$webgl$WebGL$indexedTriangles, vertexes, indices);
+	});
+var $author$project$Shaders$drawFace = F4(
+	function (res, noise, theta, dir) {
+		return A2(
+			$author$project$Shaders$draw,
+			theta,
+			A3($author$project$Shaders$face, noise, res, dir));
 	});
 var $elm$core$Bitwise$and = _Bitwise_and;
 var $Herteby$simplex_noise$Simplex$f3 = 1 / 3;
@@ -8347,31 +8383,25 @@ var $Herteby$simplex_noise$Simplex$permutationTableFromInt = function (_int) {
 		$elm$random$Random$initialSeed(_int)).a;
 };
 var $author$project$Shaders$permTable = $Herteby$simplex_noise$Simplex$permutationTableFromInt(42);
-var $author$project$Shaders$drawFace = F2(
-	function (theta, dir) {
+var $author$project$Shaders$drawCube = F3(
+	function (res, theta, noiseParams) {
 		var noise = A2(
 			$Herteby$simplex_noise$Simplex$fractal3d,
-			{persistence: 2.0, scale: 4.0, stepSize: 0.8, steps: 4},
+			{persistence: noiseParams.persistance, scale: noiseParams.scale, stepSize: noiseParams.period, steps: noiseParams.octaves},
 			$author$project$Shaders$permTable);
 		return A2(
-			$author$project$Shaders$draw,
-			theta,
-			A3($author$project$Shaders$face, noise, 10, dir));
+			$elm$core$List$map,
+			A3($author$project$Shaders$drawFace, res, noise, theta),
+			_List_fromArray(
+				[
+					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 1, 0, 0),
+					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 1, 0),
+					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 0, 1),
+					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, -1, 0, 0),
+					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, -1, 0),
+					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 0, -1)
+				]));
 	});
-var $author$project$Shaders$drawCube = function (theta) {
-	return A2(
-		$elm$core$List$map,
-		$author$project$Shaders$drawFace(theta),
-		_List_fromArray(
-			[
-				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 1, 0, 0),
-				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 1, 0),
-				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 0, 1),
-				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, -1, 0, 0),
-				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, -1, 0),
-				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 0, -1)
-			]));
-};
 var $elm$html$Html$Attributes$height = function (n) {
 	return A2(
 		_VirtualDom_attribute,
@@ -8380,8 +8410,6 @@ var $elm$html$Html$Attributes$height = function (n) {
 };
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm_explorations$webgl$WebGL$Internal$Alpha = function (a) {
 	return {$: 'Alpha', a: a};
 };
@@ -8414,21 +8442,29 @@ var $author$project$Main$view = function (model) {
 		body: _List_fromArray(
 			[
 				A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text('New Document')
-					])),
-				A2(
 				$elm_explorations$webgl$WebGL$toHtml,
 				_List_fromArray(
 					[
+						A2($elm$html$Html$Attributes$style, 'top', '0'),
+						A2(
+						$elm$html$Html$Attributes$style,
+						'left',
+						$elm$core$String$fromInt(model.offset) + 'px'),
+						A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
 						A2($elm$html$Html$Attributes$style, 'backgroundColor', 'black'),
-						$elm$html$Html$Attributes$width(400),
-						$elm$html$Html$Attributes$height(400)
+						A2(
+						$elm$html$Html$Attributes$style,
+						'width',
+						$elm$core$String$fromInt(model.viewportWidth) + 'px'),
+						A2(
+						$elm$html$Html$Attributes$style,
+						'height',
+						$elm$core$String$fromInt(model.viewportWidth) + 'px'),
+						A2($elm$html$Html$Attributes$style, 'display', 'block'),
+						$elm$html$Html$Attributes$width(model.viewportWidth),
+						$elm$html$Html$Attributes$height(model.viewportHeight)
 					]),
-				$author$project$Shaders$drawCube(model.theta))
+				A3($author$project$Shaders$drawCube, model.res, model.theta, model.noiseParams))
 			]),
 		title: 'Document Title'
 	};

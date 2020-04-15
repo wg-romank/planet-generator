@@ -41,7 +41,7 @@ init _ =
       , viewportHeight = 0
       , viewportWidth = 0
       , offset = 0
-      , width = 320
+      , width = 480
       , height = 640
       , noiseParams = emptyNoiseParams
       , res = 10
@@ -157,13 +157,14 @@ view model =
             WebGL.toHtml
             [ style "backgroundColor" "black",
               style "display" "block",
-              style "width" "100%",
+              style "align" "center",
+              style "width" "95%",
               width model.width,
               height model.height ] (drawCube model.res model.theta model.noiseParams),
           div [
             style "bottom" "0px",
             style "position" "absolute",
-            style "width" "100%"
+            style "width" "95%"
           ] [ 
             slider "scale" UpdateScale 0.3 4 model.noiseParams.scale,
             slider "period" UpdatePeriod 0.1 4 model.noiseParams.period,

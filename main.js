@@ -6845,7 +6845,7 @@ var $author$project$Shaders$emptyNoiseParams = {octaves: 4, period: 0.8, persist
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{height: 640, noiseParams: $author$project$Shaders$emptyNoiseParams, offset: 0, paused: false, res: 10, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 320},
+		{height: 640, noiseParams: $author$project$Shaders$emptyNoiseParams, offset: 0, paused: false, res: 10, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 480},
 		$elm$core$Platform$Cmd$batch(
 			_List_fromArray(
 				[
@@ -8657,7 +8657,8 @@ var $author$project$Main$view = function (model) {
 									[
 										A2($elm$html$Html$Attributes$style, 'backgroundColor', 'black'),
 										A2($elm$html$Html$Attributes$style, 'display', 'block'),
-										A2($elm$html$Html$Attributes$style, 'width', '100%'),
+										A2($elm$html$Html$Attributes$style, 'align', 'center'),
+										A2($elm$html$Html$Attributes$style, 'width', '95%'),
 										$elm$html$Html$Attributes$width(model.width),
 										$elm$html$Html$Attributes$height(model.height)
 									]),
@@ -8668,7 +8669,7 @@ var $author$project$Main$view = function (model) {
 									[
 										A2($elm$html$Html$Attributes$style, 'bottom', '0px'),
 										A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-										A2($elm$html$Html$Attributes$style, 'width', '100%')
+										A2($elm$html$Html$Attributes$style, 'width', '95%')
 									]),
 								_List_fromArray(
 									[

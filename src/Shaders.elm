@@ -7,6 +7,7 @@ import Math.Matrix4 as Mat4 exposing (Mat4)
 
 import Simplex exposing (PermutationTable)
 import WebGL exposing (Mesh)
+import WebGL.Settings exposing (back)
 
 type alias Vertex = {
         position : Vec3, normal: Vec3
@@ -63,11 +64,11 @@ face noise res direction =
                         pointOnUniSphere = direction
                             |> Vec3.add (Vec3.scale (Vec2.getX percent * 2 - 1) axisA)
                             |> Vec3.add (Vec3.scale (Vec2.getY percent * 2 - 1) axisB)
-                            -- |> Vec3.normalize
-                        -- noiseV = noise (Vec3.getX pointOnUniSphere) (Vec3.getY pointOnUniSphere) (Vec3.getZ pointOnUniSphere)
-                        -- point = Vec3.scale (1 + (noiseV + 1) / 2) pointOnUniSphere
+                            |> Vec3.normalize
+                        noiseV = noise (Vec3.getX pointOnUniSphere) (Vec3.getY pointOnUniSphere) (Vec3.getZ pointOnUniSphere)
+                        point = Vec3.scale (1 + (noiseV + 1) / 2) pointOnUniSphere
                     in
-                        { position = pointOnUniSphere, normal = pointOnUniSphere }
+                        { position = point, normal = pointOnUniSphere }
                         
                     )
                 ) |> List.concat
@@ -109,7 +110,7 @@ uniforms theta =
     { rotation = rotation, normalMatrix = normalTransform, vcolor = vec4 0.5 0.5 1 1 }
 
 draw: Float -> Mesh Vertex -> WebGL.Entity
-draw theta mesh = WebGL.entityWith [] vertexShader fragmentShader mesh (uniforms theta)
+draw theta mesh = WebGL.entityWith [ WebGL.Settings.cullFace back ] vertexShader fragmentShader mesh (uniforms theta)
 
 drawFace: Float -> Vec3 -> WebGL.Entity
 drawFace theta dir =

@@ -7447,6 +7447,17 @@ var $author$project$Main$update = F2(
 		}
 	});
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm_explorations$webgl$WebGL$Settings$FaceMode = function (a) {
+	return {$: 'FaceMode', a: a};
+};
+var $elm_explorations$webgl$WebGL$Settings$back = $elm_explorations$webgl$WebGL$Settings$FaceMode(1029);
+var $elm_explorations$webgl$WebGL$Internal$CullFace = function (a) {
+	return {$: 'CullFace', a: a};
+};
+var $elm_explorations$webgl$WebGL$Settings$cullFace = function (_v0) {
+	var faceMode = _v0.a;
+	return $elm_explorations$webgl$WebGL$Internal$CullFace(faceMode);
+};
 var $elm_explorations$webgl$WebGL$Internal$disableSetting = F2(
 	function (cache, setting) {
 		switch (setting.$) {
@@ -7555,7 +7566,7 @@ var $author$project$Shaders$uniforms = function (theta) {
 	};
 };
 var $author$project$Shaders$vertexShader = {
-	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n\n        void main() {\n            gl_Position = rotation * vec4(position, 2);\n\n            vec3 ambientLight = vec3(0.5, 0.5, 0.5);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));\n            vec4 transformedNormal = rotation * vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n        }\n    ',
+	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n\n        void main() {\n            gl_Position = rotation * vec4(position, 2);\n\n            vec3 ambientLight = vec3(0.5, 0.5, 0.5);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));\n\n            vec4 transformedNormal = rotation * vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n        }\n    ',
 	attributes: {normal: 'normal', position: 'position'},
 	uniforms: {normalMatrix: 'normalMatrix', rotation: 'rotation'}
 };
@@ -7563,7 +7574,10 @@ var $author$project$Shaders$draw = F2(
 	function (theta, mesh) {
 		return A5(
 			$elm_explorations$webgl$WebGL$entityWith,
-			_List_Nil,
+			_List_fromArray(
+				[
+					$elm_explorations$webgl$WebGL$Settings$cullFace($elm_explorations$webgl$WebGL$Settings$back)
+				]),
 			$author$project$Shaders$vertexShader,
 			$author$project$Shaders$fragmentShader,
 			mesh,
@@ -7593,6 +7607,7 @@ var $elm_explorations$webgl$WebGL$MeshIndexed3 = F3(
 	});
 var $elm_explorations$webgl$WebGL$indexedTriangles = $elm_explorations$webgl$WebGL$MeshIndexed3(
 	{elemSize: 1, indexSize: 3, mode: 4});
+var $elm_explorations$linear_algebra$Math$Vector3$normalize = _MJS_v3normalize;
 var $elm_explorations$linear_algebra$Math$Vector3$scale = _MJS_v3scale;
 var $elm_explorations$linear_algebra$Math$Vector2$vec2 = _MJS_v2;
 var $author$project$Shaders$face = F3(
@@ -7632,20 +7647,27 @@ var $author$project$Shaders$face = F3(
 							var floatX = x;
 							var floatRes = res - 1;
 							var percent = A2($elm_explorations$linear_algebra$Math$Vector2$vec2, floatY / floatRes, floatX / floatRes);
-							var pointOnUniSphere = A2(
-								$elm_explorations$linear_algebra$Math$Vector3$add,
-								A2(
-									$elm_explorations$linear_algebra$Math$Vector3$scale,
-									($elm_explorations$linear_algebra$Math$Vector2$getY(percent) * 2) - 1,
-									axisB),
+							var pointOnUniSphere = $elm_explorations$linear_algebra$Math$Vector3$normalize(
 								A2(
 									$elm_explorations$linear_algebra$Math$Vector3$add,
 									A2(
 										$elm_explorations$linear_algebra$Math$Vector3$scale,
-										($elm_explorations$linear_algebra$Math$Vector2$getX(percent) * 2) - 1,
-										axisA),
-									direction));
-							return {normal: pointOnUniSphere, position: pointOnUniSphere};
+										($elm_explorations$linear_algebra$Math$Vector2$getY(percent) * 2) - 1,
+										axisB),
+									A2(
+										$elm_explorations$linear_algebra$Math$Vector3$add,
+										A2(
+											$elm_explorations$linear_algebra$Math$Vector3$scale,
+											($elm_explorations$linear_algebra$Math$Vector2$getX(percent) * 2) - 1,
+											axisA),
+										direction)));
+							var noiseV = A3(
+								noise,
+								$elm_explorations$linear_algebra$Math$Vector3$getX(pointOnUniSphere),
+								$elm_explorations$linear_algebra$Math$Vector3$getY(pointOnUniSphere),
+								$elm_explorations$linear_algebra$Math$Vector3$getZ(pointOnUniSphere));
+							var point = A2($elm_explorations$linear_algebra$Math$Vector3$scale, 1 + ((noiseV + 1) / 2), pointOnUniSphere);
+							return {normal: pointOnUniSphere, position: point};
 						},
 						A2($elm$core$List$range, 0, res - 1));
 				},

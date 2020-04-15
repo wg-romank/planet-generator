@@ -8,7 +8,7 @@ import WebGL
 import Shaders exposing (..)
 
 
-main : Program () Model Msg
+main : Program {} Model Msg
 main = Browser.document
         { init = init
         , view = view
@@ -18,16 +18,18 @@ main = Browser.document
 
 
 type alias Model =
-    { theta: Float }
+    { theta: Float, paused: Bool }
 
 
-init : flags -> (Model, Cmd Msg)
-init flags =
-    ( {theta = 0 }, Cmd.none)
+init : {} -> (Model, Cmd Msg)
+init _ =
+    ( {theta = 0, paused = False }, Cmd.none)
 
 
 type Msg
     = Delta (Float)
+    | Paused
+    | Resumed
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -37,12 +39,23 @@ update msg model =
             let
                 th = model.theta
             in
-            ( { model | theta = th + f / 5000 }, Cmd.none)
+            ( { model | theta = th + f / 5000 }, Cmd.none )
+        Paused ->
+            ( { model | paused = True }, Cmd.none )
+        Resumed ->
+            ( { model | paused = False }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    onAnimationFrameDelta Delta
+    Sub.batch [
+        if model.paused then Sub.none
+        else onAnimationFrameDelta Delta,
+        Browser.Events.onVisibilityChange (\v ->
+            case v of
+              Browser.Events.Hidden -> Paused
+              Browser.Events.Visible -> Resumed)
+    ]
 
 
 view : Model -> Browser.Document Msg

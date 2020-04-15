@@ -7432,7 +7432,6 @@ var $author$project$Main$subscriptions = function (model) {
 var $elm$core$Basics$round = _Basics_round;
 var $author$project$Main$computeViewportSize = F2(
 	function (viewport, model) {
-		var vpm = viewport.viewport.height / model.height;
 		var vph = viewport.viewport.height;
 		var ratio = model.height / model.width;
 		var vpw = vph / ratio;
@@ -7446,6 +7445,16 @@ var $author$project$Main$computeViewportSize = F2(
 			});
 	});
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $elm$core$String$toFloat = _String_toFloat;
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -7469,13 +7478,78 @@ var $author$project$Main$update = F2(
 						model,
 						{paused: false}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'ViewPortLoaded':
 				var viewport = msg.a;
 				return _Utils_Tuple2(
 					A2($author$project$Main$computeViewportSize, viewport, model),
 					$elm$core$Platform$Cmd$none);
+			default:
+				var params = msg.a;
+				var prevParams = model.noiseParams;
+				var newParams = function () {
+					switch (params.$) {
+						case 'UpdateScale':
+							var scale = params.a;
+							return _Utils_update(
+								prevParams,
+								{
+									scale: A2(
+										$elm$core$Maybe$withDefault,
+										prevParams.scale,
+										$elm$core$String$toFloat(scale))
+								});
+						case 'UpdatePeriod':
+							var period = params.a;
+							return _Utils_update(
+								prevParams,
+								{
+									period: A2(
+										$elm$core$Maybe$withDefault,
+										prevParams.period,
+										$elm$core$String$toFloat(period))
+								});
+						case 'UpdatePersistance':
+							var persistance = params.a;
+							return _Utils_update(
+								prevParams,
+								{
+									persistance: A2(
+										$elm$core$Maybe$withDefault,
+										prevParams.persistance,
+										$elm$core$String$toFloat(persistance))
+								});
+						default:
+							var octaves = params.a;
+							return _Utils_update(
+								prevParams,
+								{
+									octaves: A2(
+										$elm$core$Maybe$withDefault,
+										prevParams.octaves,
+										$elm$core$String$toInt(octaves))
+								});
+					}
+				}();
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{noiseParams: newParams}),
+					$elm$core$Platform$Cmd$none);
 		}
 	});
+var $author$project$Main$UpdateOctaves = function (a) {
+	return {$: 'UpdateOctaves', a: a};
+};
+var $author$project$Main$UpdatePeriod = function (a) {
+	return {$: 'UpdatePeriod', a: a};
+};
+var $author$project$Main$UpdatePersistance = function (a) {
+	return {$: 'UpdatePersistance', a: a};
+};
+var $author$project$Main$UpdateScale = function (a) {
+	return {$: 'UpdateScale', a: a};
+};
+var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm_explorations$webgl$WebGL$Settings$FaceMode = function (a) {
 	return {$: 'FaceMode', a: a};
 };
@@ -7563,15 +7637,6 @@ var $elm_explorations$linear_algebra$Math$Matrix4$mul = _MJS_m4x4mul;
 var $elm_explorations$linear_algebra$Math$Matrix4$transpose = _MJS_m4x4transpose;
 var $elm_explorations$linear_algebra$Math$Vector3$vec3 = _MJS_v3;
 var $elm_explorations$linear_algebra$Math$Vector4$vec4 = _MJS_v4;
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
 var $author$project$Shaders$uniforms = function (theta) {
 	var rotation = A2(
 		$elm_explorations$linear_algebra$Math$Matrix4$mul,
@@ -8408,6 +8473,86 @@ var $elm$html$Html$Attributes$height = function (n) {
 		'height',
 		$elm$core$String$fromInt(n));
 };
+var $author$project$Main$UpdateParams = function (a) {
+	return {$: 'UpdateParams', a: a};
+};
+var $elm$core$String$fromFloat = _String_fromNumber;
+var $elm$html$Html$input = _VirtualDom_node('input');
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$max = $elm$html$Html$Attributes$stringProperty('max');
+var $elm$html$Html$Attributes$min = $elm$html$Html$Attributes$stringProperty('min');
+var $elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var $elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var $elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
+	});
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $elm$html$Html$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		$elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysStop,
+			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
+var $elm$html$Html$Attributes$step = function (n) {
+	return A2($elm$html$Html$Attributes$stringProperty, 'step', n);
+};
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$Main$slider = F5(
+	function (label, up, minValue, maxValue, actualValue) {
+		return A2(
+			$elm$html$Html$input,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$type_('range'),
+					$elm$html$Html$Attributes$min(
+					$elm$core$String$fromFloat(minValue)),
+					$elm$html$Html$Attributes$max(
+					$elm$core$String$fromFloat(maxValue)),
+					$elm$html$Html$Attributes$step('0.1'),
+					$elm$html$Html$Attributes$value(
+					$elm$core$String$fromFloat(actualValue)),
+					$elm$html$Html$Events$onInput(
+					function (x) {
+						return $author$project$Main$UpdateParams(
+							up(x));
+					})
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text(label)
+				]));
+	});
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $elm_explorations$webgl$WebGL$Internal$Alpha = function (a) {
@@ -8445,7 +8590,7 @@ var $author$project$Main$view = function (model) {
 				$elm_explorations$webgl$WebGL$toHtml,
 				_List_fromArray(
 					[
-						A2($elm$html$Html$Attributes$style, 'top', '0'),
+						A2($elm$html$Html$Attributes$style, 'top', '0px'),
 						A2(
 						$elm$html$Html$Attributes$style,
 						'left',
@@ -8461,10 +8606,35 @@ var $author$project$Main$view = function (model) {
 						'height',
 						$elm$core$String$fromInt(model.viewportWidth) + 'px'),
 						A2($elm$html$Html$Attributes$style, 'display', 'block'),
-						$elm$html$Html$Attributes$width(model.viewportWidth),
-						$elm$html$Html$Attributes$height(model.viewportHeight)
+						$elm$html$Html$Attributes$width(model.width),
+						$elm$html$Html$Attributes$height(model.height)
 					]),
-				A3($author$project$Shaders$drawCube, model.res, model.theta, model.noiseParams))
+				A3($author$project$Shaders$drawCube, model.res, model.theta, model.noiseParams)),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$Attributes$style,
+						'top',
+						$elm$core$String$fromInt(model.height) + 'px'),
+						A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2(
+						$elm$html$Html$Attributes$style,
+						'width',
+						$elm$core$String$fromInt(model.width) + 'px'),
+						A2(
+						$elm$html$Html$Attributes$style,
+						'left',
+						$elm$core$String$fromInt(model.offset) + 'px')
+					]),
+				_List_fromArray(
+					[
+						A5($author$project$Main$slider, 'scale', $author$project$Main$UpdateScale, 0.3, 4, model.noiseParams.scale),
+						A5($author$project$Main$slider, 'period', $author$project$Main$UpdatePeriod, 0.1, 4, model.noiseParams.period),
+						A5($author$project$Main$slider, 'persistance', $author$project$Main$UpdatePersistance, 0, 1, model.noiseParams.persistance),
+						A5($author$project$Main$slider, 'octaves', $author$project$Main$UpdateOctaves, 1, 8, model.noiseParams.persistance)
+					]))
 			]),
 		title: 'Document Title'
 	};

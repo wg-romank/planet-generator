@@ -7512,33 +7512,52 @@ var $elm_explorations$webgl$WebGL$Internal$enableSetting = F2(
 	});
 var $elm_explorations$webgl$WebGL$entityWith = _WebGL_entity;
 var $author$project$Shaders$fragmentShader = {
-	src: '\n        precision mediump float;\n        uniform vec4 vcolor;\n        void main() {\n            gl_FragColor = vcolor;\n        }\n    ',
+	src: '\n        precision mediump float;\n        uniform vec4 vcolor;\n        varying vec3 vLighting;\n        void main() {\n            gl_FragColor = vec4(vcolor.xyz * vLighting, 1);\n        }\n    ',
 	attributes: {},
 	uniforms: {vcolor: 'vcolor'}
 };
+var $elm_explorations$linear_algebra$Math$Matrix4$identity = _MJS_m4x4identity;
+var $elm_explorations$linear_algebra$Math$Matrix4$inverse = _MJS_m4x4inverse;
 var $elm_explorations$linear_algebra$Math$Matrix4$makeRotate = _MJS_m4x4makeRotate;
 var $elm_explorations$linear_algebra$Math$Matrix4$mul = _MJS_m4x4mul;
+var $elm_explorations$linear_algebra$Math$Matrix4$transpose = _MJS_m4x4transpose;
 var $elm_explorations$linear_algebra$Math$Vector3$vec3 = _MJS_v3;
 var $elm_explorations$linear_algebra$Math$Vector4$vec4 = _MJS_v4;
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var $author$project$Shaders$uniforms = function (theta) {
+	var rotation = A2(
+		$elm_explorations$linear_algebra$Math$Matrix4$mul,
+		A2(
+			$elm_explorations$linear_algebra$Math$Matrix4$makeRotate,
+			3 * theta,
+			A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 1, 0)),
+		A2(
+			$elm_explorations$linear_algebra$Math$Matrix4$makeRotate,
+			2 * theta,
+			A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 1, 0, 0)));
+	var normalTransform = $elm_explorations$linear_algebra$Math$Matrix4$transpose(
+		A2(
+			$elm$core$Maybe$withDefault,
+			$elm_explorations$linear_algebra$Math$Matrix4$identity,
+			$elm_explorations$linear_algebra$Math$Matrix4$inverse(rotation)));
 	return {
-		rotation: A2(
-			$elm_explorations$linear_algebra$Math$Matrix4$mul,
-			A2(
-				$elm_explorations$linear_algebra$Math$Matrix4$makeRotate,
-				3 * theta,
-				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 1, 0)),
-			A2(
-				$elm_explorations$linear_algebra$Math$Matrix4$makeRotate,
-				2 * theta,
-				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 1, 0, 0))),
+		normalMatrix: normalTransform,
+		rotation: rotation,
 		vcolor: A4($elm_explorations$linear_algebra$Math$Vector4$vec4, 0.5, 0.5, 1, 1)
 	};
 };
 var $author$project$Shaders$vertexShader = {
-	src: '\n        attribute vec3 position;\n        uniform mat4 rotation;\n\n        void main() {\n            gl_Position = rotation * vec4(position, 2);\n        }\n    ',
-	attributes: {position: 'position'},
-	uniforms: {rotation: 'rotation'}
+	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n\n        void main() {\n            gl_Position = rotation * vec4(position, 2);\n\n            vec3 ambientLight = vec3(0.5, 0.5, 0.5);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));\n            vec4 transformedNormal = rotation * vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n        }\n    ',
+	attributes: {normal: 'normal', position: 'position'},
+	uniforms: {normalMatrix: 'normalMatrix', rotation: 'rotation'}
 };
 var $author$project$Shaders$draw = F2(
 	function (theta, mesh) {
@@ -7563,6 +7582,76 @@ var $elm$core$List$concat = function (lists) {
 	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
 };
 var $elm_explorations$linear_algebra$Math$Vector3$cross = _MJS_v3cross;
+var $elm_explorations$linear_algebra$Math$Vector2$getX = _MJS_v2getX;
+var $elm_explorations$linear_algebra$Math$Vector3$getX = _MJS_v3getX;
+var $elm_explorations$linear_algebra$Math$Vector2$getY = _MJS_v2getY;
+var $elm_explorations$linear_algebra$Math$Vector3$getY = _MJS_v3getY;
+var $elm_explorations$linear_algebra$Math$Vector3$getZ = _MJS_v3getZ;
+var $elm_explorations$webgl$WebGL$MeshIndexed3 = F3(
+	function (a, b, c) {
+		return {$: 'MeshIndexed3', a: a, b: b, c: c};
+	});
+var $elm_explorations$webgl$WebGL$indexedTriangles = $elm_explorations$webgl$WebGL$MeshIndexed3(
+	{elemSize: 1, indexSize: 3, mode: 4});
+var $elm_explorations$linear_algebra$Math$Vector3$scale = _MJS_v3scale;
+var $elm_explorations$linear_algebra$Math$Vector2$vec2 = _MJS_v2;
+var $author$project$Shaders$face = F3(
+	function (noise, res, direction) {
+		var indices = $elm$core$List$concat(
+			$elm$core$List$concat(
+				A2(
+					$elm$core$List$map,
+					function (y) {
+						return A2(
+							$elm$core$List$map,
+							function (x) {
+								var vertexId = (y * res) + x;
+								return ((_Utils_cmp(x, res - 1) < 0) && (_Utils_cmp(y, res - 1) < 0)) ? _List_fromArray(
+									[
+										_Utils_Tuple3(vertexId, (vertexId + res) + 1, vertexId + res),
+										_Utils_Tuple3(vertexId, vertexId + 1, (vertexId + res) + 1)
+									]) : _List_Nil;
+							},
+							A2($elm$core$List$range, 0, res - 1));
+					},
+					A2($elm$core$List$range, 0, res - 1))));
+		var axisA = A3(
+			$elm_explorations$linear_algebra$Math$Vector3$vec3,
+			$elm_explorations$linear_algebra$Math$Vector3$getY(direction),
+			$elm_explorations$linear_algebra$Math$Vector3$getZ(direction),
+			$elm_explorations$linear_algebra$Math$Vector3$getX(direction));
+		var axisB = A2($elm_explorations$linear_algebra$Math$Vector3$cross, direction, axisA);
+		var vertexes = $elm$core$List$concat(
+			A2(
+				$elm$core$List$map,
+				function (y) {
+					return A2(
+						$elm$core$List$map,
+						function (x) {
+							var floatY = y;
+							var floatX = x;
+							var floatRes = res - 1;
+							var percent = A2($elm_explorations$linear_algebra$Math$Vector2$vec2, floatY / floatRes, floatX / floatRes);
+							var pointOnUniSphere = A2(
+								$elm_explorations$linear_algebra$Math$Vector3$add,
+								A2(
+									$elm_explorations$linear_algebra$Math$Vector3$scale,
+									($elm_explorations$linear_algebra$Math$Vector2$getY(percent) * 2) - 1,
+									axisB),
+								A2(
+									$elm_explorations$linear_algebra$Math$Vector3$add,
+									A2(
+										$elm_explorations$linear_algebra$Math$Vector3$scale,
+										($elm_explorations$linear_algebra$Math$Vector2$getX(percent) * 2) - 1,
+										axisA),
+									direction));
+							return {normal: pointOnUniSphere, position: pointOnUniSphere};
+						},
+						A2($elm$core$List$range, 0, res - 1));
+				},
+				A2($elm$core$List$range, 0, res - 1)));
+		return A2($elm_explorations$webgl$WebGL$indexedTriangles, vertexes, indices);
+	});
 var $elm$core$Bitwise$and = _Bitwise_and;
 var $Herteby$simplex_noise$Simplex$f3 = 1 / 3;
 var $Herteby$simplex_noise$Simplex$g3 = 1 / 6;
@@ -7749,18 +7838,6 @@ var $Herteby$simplex_noise$Simplex$fractal3d = F5(
 					$elm$core$Basics$toFloat,
 					A2($elm$core$List$range, 0, steps - 1))));
 	});
-var $elm_explorations$linear_algebra$Math$Vector2$getX = _MJS_v2getX;
-var $elm_explorations$linear_algebra$Math$Vector3$getX = _MJS_v3getX;
-var $elm_explorations$linear_algebra$Math$Vector2$getY = _MJS_v2getY;
-var $elm_explorations$linear_algebra$Math$Vector3$getY = _MJS_v3getY;
-var $elm_explorations$linear_algebra$Math$Vector3$getZ = _MJS_v3getZ;
-var $elm_explorations$webgl$WebGL$MeshIndexed3 = F3(
-	function (a, b, c) {
-		return {$: 'MeshIndexed3', a: a, b: b, c: c};
-	});
-var $elm_explorations$webgl$WebGL$indexedTriangles = $elm_explorations$webgl$WebGL$MeshIndexed3(
-	{elemSize: 1, indexSize: 3, mode: 4});
-var $elm_explorations$linear_algebra$Math$Vector3$normalize = _MJS_v3normalize;
 var $elm$random$Random$Seed = F2(
 	function (a, b) {
 		return {$: 'Seed', a: a, b: b};
@@ -8248,82 +8325,16 @@ var $Herteby$simplex_noise$Simplex$permutationTableFromInt = function (_int) {
 		$elm$random$Random$initialSeed(_int)).a;
 };
 var $author$project$Shaders$permTable = $Herteby$simplex_noise$Simplex$permutationTableFromInt(42);
-var $elm_explorations$linear_algebra$Math$Vector3$scale = _MJS_v3scale;
-var $elm_explorations$linear_algebra$Math$Vector2$vec2 = _MJS_v2;
-var $author$project$Shaders$face = F2(
-	function (res, direction) {
+var $author$project$Shaders$drawFace = F2(
+	function (theta, dir) {
 		var noise = A2(
 			$Herteby$simplex_noise$Simplex$fractal3d,
 			{persistence: 2.0, scale: 4.0, stepSize: 0.8, steps: 4},
 			$author$project$Shaders$permTable);
-		var indices = $elm$core$List$concat(
-			$elm$core$List$concat(
-				A2(
-					$elm$core$List$map,
-					function (y) {
-						return A2(
-							$elm$core$List$map,
-							function (x) {
-								var vertexId = (y * res) + x;
-								return ((_Utils_cmp(x, res - 1) < 0) && (_Utils_cmp(y, res - 1) < 0)) ? _List_fromArray(
-									[
-										_Utils_Tuple3(vertexId, (vertexId + res) + 1, vertexId + res),
-										_Utils_Tuple3(vertexId, vertexId + 1, (vertexId + res) + 1)
-									]) : _List_Nil;
-							},
-							A2($elm$core$List$range, 0, res - 1));
-					},
-					A2($elm$core$List$range, 0, res - 1))));
-		var axisA = A3(
-			$elm_explorations$linear_algebra$Math$Vector3$vec3,
-			$elm_explorations$linear_algebra$Math$Vector3$getY(direction),
-			$elm_explorations$linear_algebra$Math$Vector3$getZ(direction),
-			$elm_explorations$linear_algebra$Math$Vector3$getX(direction));
-		var axisB = A2($elm_explorations$linear_algebra$Math$Vector3$cross, direction, axisA);
-		var vertexes = $elm$core$List$concat(
-			A2(
-				$elm$core$List$map,
-				function (y) {
-					return A2(
-						$elm$core$List$map,
-						function (x) {
-							var floatY = y;
-							var floatX = x;
-							var floatRes = res - 1;
-							var percent = A2($elm_explorations$linear_algebra$Math$Vector2$vec2, floatY / floatRes, floatX / floatRes);
-							var pointOnUniSphere = $elm_explorations$linear_algebra$Math$Vector3$normalize(
-								A2(
-									$elm_explorations$linear_algebra$Math$Vector3$add,
-									A2(
-										$elm_explorations$linear_algebra$Math$Vector3$scale,
-										($elm_explorations$linear_algebra$Math$Vector2$getY(percent) * 2) - 1,
-										axisB),
-									A2(
-										$elm_explorations$linear_algebra$Math$Vector3$add,
-										A2(
-											$elm_explorations$linear_algebra$Math$Vector3$scale,
-											($elm_explorations$linear_algebra$Math$Vector2$getX(percent) * 2) - 1,
-											axisA),
-										direction)));
-							var noiseV = A3(
-								noise,
-								$elm_explorations$linear_algebra$Math$Vector3$getX(pointOnUniSphere),
-								$elm_explorations$linear_algebra$Math$Vector3$getY(pointOnUniSphere),
-								$elm_explorations$linear_algebra$Math$Vector3$getZ(pointOnUniSphere));
-							var point = A2($elm_explorations$linear_algebra$Math$Vector3$scale, 1 + ((noiseV + 1) / 2), pointOnUniSphere);
-							return {position: point};
-						},
-						A2($elm$core$List$range, 0, res - 1));
-				},
-				A2($elm$core$List$range, 0, res - 1)));
-		return A2($elm_explorations$webgl$WebGL$indexedTriangles, vertexes, indices);
-	});
-var $author$project$Shaders$drawFace = F2(
-	function (theta, dir) {
 		return A2(
 			$author$project$Shaders$draw,
 			theta,
-			A2($author$project$Shaders$face, 10, dir));
+			A3($author$project$Shaders$face, noise, 10, dir));
 	});
 var $author$project$Shaders$drawCube = function (theta) {
 	return A2(

@@ -9,7 +9,7 @@ import Simplex exposing (PermutationTable)
 import WebGL exposing (Mesh)
 
 type alias Vertex = {
-        position : Vec3
+        position : Vec3, normal: Vec3
     }
 
 permTable: PermutationTable
@@ -18,10 +18,22 @@ permTable = Simplex.permutationTableFromInt 42
 vertexShader = 
     [glsl|
         attribute vec3 position;
+        attribute vec3 normal;
         uniform mat4 rotation;
+        uniform mat4 normalMatrix;
+        varying vec3 vLighting;
 
         void main() {
             gl_Position = rotation * vec4(position, 2);
+
+            vec3 ambientLight = vec3(0.5, 0.5, 0.5);
+            vec3 directionalLightColor = vec3(1, 1, 1);
+            vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));
+
+            vec4 transformedNormal = rotation * vec4(normal, 1.0);
+
+            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
+            vLighting = ambientLight + (directionalLightColor * directional);
         }
     |]
 
@@ -29,15 +41,15 @@ fragmentShader =
     [glsl|
         precision mediump float;
         uniform vec4 vcolor;
+        varying vec3 vLighting;
         void main() {
-            gl_FragColor = vcolor;
+            gl_FragColor = vec4(vcolor.xyz * vLighting, 1);
         }
     |]
 
-face: Int -> Vec3 -> Mesh Vertex
-face res direction =
+face: (Float -> Float -> Float -> Float) -> Int -> Vec3 -> Mesh Vertex
+face noise res direction =
     let
-        noise = Simplex.fractal3d { scale = 4.0, steps = 4, stepSize = 0.8, persistence = 2.0 } permTable
         axisA = vec3 (Vec3.getY direction) (Vec3.getZ direction) (Vec3.getX direction)
         axisB = Vec3.cross direction axisA
         vertexes =
@@ -51,11 +63,11 @@ face res direction =
                         pointOnUniSphere = direction
                             |> Vec3.add (Vec3.scale (Vec2.getX percent * 2 - 1) axisA)
                             |> Vec3.add (Vec3.scale (Vec2.getY percent * 2 - 1) axisB)
-                            |> Vec3.normalize
-                        noiseV = noise (Vec3.getX pointOnUniSphere) (Vec3.getY pointOnUniSphere) (Vec3.getZ pointOnUniSphere)
-                        point = Vec3.scale (1 + (noiseV + 1) / 2) pointOnUniSphere
+                            -- |> Vec3.normalize
+                        -- noiseV = noise (Vec3.getX pointOnUniSphere) (Vec3.getY pointOnUniSphere) (Vec3.getZ pointOnUniSphere)
+                        -- point = Vec3.scale (1 + (noiseV + 1) / 2) pointOnUniSphere
                     in
-                        { position = point }
+                        { position = pointOnUniSphere, normal = pointOnUniSphere }
                         
                     )
                 ) |> List.concat
@@ -79,21 +91,32 @@ face res direction =
 
 type alias Uniforms = {
         rotation: Mat4,
+        normalMatrix: Mat4,
         vcolor: Vec4
     }
 
 uniforms: Float -> Uniforms
 uniforms theta =
-    { rotation = Mat4.mul
+    let
+        rotation = Mat4.mul
             (Mat4.makeRotate (3 * theta) (vec3 0 1 0))
-            (Mat4.makeRotate (2 * theta) (vec3 1 0 0)),
-      vcolor = vec4 0.5 0.5 1 1 }
+            (Mat4.makeRotate (2 * theta) (vec3 1 0 0))
+        normalTransform = rotation
+            |> Mat4.inverse
+            |> Maybe.withDefault Mat4.identity
+            |> Mat4.transpose
+    in
+    { rotation = rotation, normalMatrix = normalTransform, vcolor = vec4 0.5 0.5 1 1 }
 
 draw: Float -> Mesh Vertex -> WebGL.Entity
 draw theta mesh = WebGL.entityWith [] vertexShader fragmentShader mesh (uniforms theta)
 
 drawFace: Float -> Vec3 -> WebGL.Entity
-drawFace theta dir = draw theta  (face 10 dir)
+drawFace theta dir =
+    let
+        noise = Simplex.fractal3d { scale = 4.0, steps = 4, stepSize = 0.8, persistence = 2.0 } permTable
+    in
+    draw theta (face noise 10 dir)
 
 drawCube: Float -> List WebGL.Entity
 drawCube theta =

@@ -32,7 +32,7 @@ vertexShader =
             vec3 directionalLightColor = vec3(1, 1, 1);
             vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));
 
-            vec4 transformedNormal = rotation * vec4(normal, 1.0);
+            vec4 transformedNormal = normalMatrix * vec4(normal, 1.0);
 
             float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
             vLighting = ambientLight + (directionalLightColor * directional);
@@ -102,8 +102,8 @@ face noise res direction =
         
 
 type alias Uniforms = {
-        rotation: Mat4,
-        normalMatrix: Mat4
+        rotation: Mat4
+        , normalMatrix: Mat4
     }
 
 uniforms: Float -> Uniforms

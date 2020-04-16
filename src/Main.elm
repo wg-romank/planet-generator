@@ -130,7 +130,7 @@ slider label up minValue maxValue actualValue =
         type_ "range",
         H.min (String.fromFloat minValue),
         H.max (String.fromFloat maxValue),
-        H.step "0.1",
+        H.step "0.01",
         value <| String.fromFloat actualValue,
         onInput (\x -> UpdateParams (up x))
     ] [ ] ]

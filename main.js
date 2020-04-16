@@ -7678,7 +7678,7 @@ var $author$project$Shaders$uniforms = function (theta) {
 	return {normalMatrix: normalTransform, rotation: rotation};
 };
 var $author$project$Shaders$vertexShader = {
-	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = rotation * vec4(position, 2);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.5, 0.5, 0.5);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));\n\n            vec4 transformedNormal = rotation * vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n            float height = max(0.0, length(pos.xyz) - length(transformedNormal.xyz));\n\n            // if (height <= 0.4) {\n            //    heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);\n            // } else if (height <= 0.5) {\n            //     heightColor = vec3(188.0 / 255.0, 170.0/ 255.0, 35.0 / 255.0);\n            // } else if (height <= 0.55) {\n            //     heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);\n            // } else {\n                heightColor = vec3(height, height, height);\n            // };\n        }\n    ',
+	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = rotation * vec4(position, 2);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.5, 0.5, 0.5);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n            float height = max(0.0, length(pos.xyz) - length(transformedNormal.xyz));\n\n            // if (height <= 0.4) {\n            //    heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);\n            // } else if (height <= 0.5) {\n            //     heightColor = vec3(188.0 / 255.0, 170.0/ 255.0, 35.0 / 255.0);\n            // } else if (height <= 0.55) {\n            //     heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);\n            // } else {\n                heightColor = vec3(height, height, height);\n            // };\n        }\n    ',
 	attributes: {normal: 'normal', position: 'position'},
 	uniforms: {normalMatrix: 'normalMatrix', rotation: 'rotation'}
 };
@@ -8579,7 +8579,7 @@ var $author$project$Main$slider = F5(
 							$elm$core$String$fromFloat(minValue)),
 							$elm$html$Html$Attributes$max(
 							$elm$core$String$fromFloat(maxValue)),
-							$elm$html$Html$Attributes$step('0.1'),
+							$elm$html$Html$Attributes$step('0.01'),
 							$elm$html$Html$Attributes$value(
 							$elm$core$String$fromFloat(actualValue)),
 							$elm$html$Html$Events$onInput(

@@ -7649,9 +7649,9 @@ var $elm_explorations$webgl$WebGL$Internal$enableSetting = F2(
 	});
 var $elm_explorations$webgl$WebGL$entityWith = _WebGL_entity;
 var $author$project$Shaders$fragmentShader = {
-	src: '\n        precision mediump float;\n        uniform vec4 vcolor;\n        varying vec3 vLighting;\n        void main() {\n            gl_FragColor = vec4(vcolor.xyz * vLighting, 1);\n        }\n    ',
+	src: '\n        precision mediump float;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            gl_FragColor = vec4(vLighting * heightColor, 1);\n        }\n    ',
 	attributes: {},
-	uniforms: {vcolor: 'vcolor'}
+	uniforms: {}
 };
 var $elm_explorations$linear_algebra$Math$Matrix4$identity = _MJS_m4x4identity;
 var $elm_explorations$linear_algebra$Math$Matrix4$inverse = _MJS_m4x4inverse;
@@ -7659,7 +7659,6 @@ var $elm_explorations$linear_algebra$Math$Matrix4$makeRotate = _MJS_m4x4makeRota
 var $elm_explorations$linear_algebra$Math$Matrix4$mul = _MJS_m4x4mul;
 var $elm_explorations$linear_algebra$Math$Matrix4$transpose = _MJS_m4x4transpose;
 var $elm_explorations$linear_algebra$Math$Vector3$vec3 = _MJS_v3;
-var $elm_explorations$linear_algebra$Math$Vector4$vec4 = _MJS_v4;
 var $author$project$Shaders$uniforms = function (theta) {
 	var rotation = A2(
 		$elm_explorations$linear_algebra$Math$Matrix4$mul,
@@ -7676,14 +7675,10 @@ var $author$project$Shaders$uniforms = function (theta) {
 			$elm$core$Maybe$withDefault,
 			$elm_explorations$linear_algebra$Math$Matrix4$identity,
 			$elm_explorations$linear_algebra$Math$Matrix4$inverse(rotation)));
-	return {
-		normalMatrix: normalTransform,
-		rotation: rotation,
-		vcolor: A4($elm_explorations$linear_algebra$Math$Vector4$vec4, 0.5, 0.5, 1, 1)
-	};
+	return {normalMatrix: normalTransform, rotation: rotation};
 };
 var $author$project$Shaders$vertexShader = {
-	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n\n        void main() {\n            gl_Position = rotation * vec4(position, 2);\n\n            vec3 ambientLight = vec3(0.5, 0.5, 0.5);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));\n\n            vec4 transformedNormal = rotation * vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n        }\n    ',
+	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            gl_Position = rotation * vec4(position, 2);\n\n            vec3 ambientLight = vec3(0.5, 0.5, 0.5);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));\n\n            vec4 transformedNormal = rotation * vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n            float height = max(0.0, length(position) - 1.0);\n\n            if (height <= 0.5) {\n                heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);\n            } else if (height <= 0.6) {\n                heightColor = vec3(188.0 / 255.0, 170.0/ 255.0, 35.0 / 255.0);\n            } else if (height <= 0.7) {\n                heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);\n            } else {\n                heightColor = vec3(0.9, 1, 0.9);\n            };\n        }\n    ',
 	attributes: {normal: 'normal', position: 'position'},
 	uniforms: {normalMatrix: 'normalMatrix', rotation: 'rotation'}
 };

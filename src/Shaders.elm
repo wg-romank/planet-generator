@@ -22,6 +22,7 @@ vertexShader =
         uniform mat4 rotation;
         uniform mat4 normalMatrix;
         varying vec3 vLighting;
+        varying vec3 heightColor;
 
         void main() {
             gl_Position = rotation * vec4(position, 2);
@@ -34,16 +35,28 @@ vertexShader =
 
             float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
             vLighting = ambientLight + (directionalLightColor * directional);
+            float height = max(0.0, length(position) - 1.0);
+
+            if (height <= 0.5) {
+                heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);
+            } else if (height <= 0.6) {
+                heightColor = vec3(188.0 / 255.0, 170.0/ 255.0, 35.0 / 255.0);
+            } else if (height <= 0.7) {
+                heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);
+            } else {
+                heightColor = vec3(0.9, 1, 0.9);
+            };
         }
     |]
 
 fragmentShader =
     [glsl|
         precision mediump float;
-        uniform vec4 vcolor;
         varying vec3 vLighting;
+        varying vec3 heightColor;
+
         void main() {
-            gl_FragColor = vec4(vcolor.xyz * vLighting, 1);
+            gl_FragColor = vec4(vLighting * heightColor, 1);
         }
     |]
 
@@ -89,8 +102,7 @@ face noise res direction =
 
 type alias Uniforms = {
         rotation: Mat4,
-        normalMatrix: Mat4,
-        vcolor: Vec4
+        normalMatrix: Mat4
     }
 
 uniforms: Float -> Uniforms
@@ -104,7 +116,7 @@ uniforms theta =
             |> Maybe.withDefault Mat4.identity
             |> Mat4.transpose
     in
-    { rotation = rotation, normalMatrix = normalTransform, vcolor = vec4 0.5 0.5 1 1 }
+    { rotation = rotation, normalMatrix = normalTransform }
 
 draw: Float -> Mesh Vertex -> WebGL.Entity
 draw theta mesh = WebGL.entityWith [ WebGL.Settings.cullFace back, DepthTest.default ] vertexShader fragmentShader mesh (uniforms theta)

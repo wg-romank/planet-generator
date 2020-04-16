@@ -6841,7 +6841,7 @@ var $author$project$Main$ViewPortLoaded = function (a) {
 	return {$: 'ViewPortLoaded', a: a};
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $author$project$Shaders$emptyNoiseParams = {octaves: 4, period: 0.8, persistance: 2.0, scale: 4.0, seed: 42};
+var $author$project$Shaders$emptyNoiseParams = {octaves: 8, period: 0.8, persistance: 2.0, scale: 4.0, seed: 42};
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
@@ -7547,9 +7547,6 @@ var $author$project$Main$update = F2(
 					$elm$core$Platform$Cmd$none);
 		}
 	});
-var $author$project$Main$UpdateOctaves = function (a) {
-	return {$: 'UpdateOctaves', a: a};
-};
 var $author$project$Main$UpdatePeriod = function (a) {
 	return {$: 'UpdatePeriod', a: a};
 };
@@ -7558,9 +7555,6 @@ var $author$project$Main$UpdatePersistance = function (a) {
 };
 var $author$project$Main$UpdateScale = function (a) {
 	return {$: 'UpdateScale', a: a};
-};
-var $author$project$Main$UpdateSeed = function (a) {
-	return {$: 'UpdateSeed', a: a};
 };
 var $elm_explorations$webgl$WebGL$Internal$Depth = function (a) {
 	return {$: 'Depth', a: a};
@@ -8505,6 +8499,7 @@ var $elm$html$Html$Attributes$height = function (n) {
 var $author$project$Main$UpdateParams = function (a) {
 	return {$: 'UpdateParams', a: a};
 };
+var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
@@ -8558,50 +8553,6 @@ var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
-var $author$project$Main$intSlider = F5(
-	function (label, up, minValue, maxValue, actualValue) {
-		return A2(
-			$elm$html$Html$div,
-			_List_fromArray(
-				[
-					A2($elm$html$Html$Attributes$style, 'width', '80%'),
-					A2($elm$html$Html$Attributes$style, 'height', '4em'),
-					A2($elm$html$Html$Attributes$style, 'align', 'center')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$div,
-					_List_fromArray(
-						[
-							A2($elm$html$Html$Attributes$style, 'align', 'left')
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text(label)
-						])),
-					A2(
-					$elm$html$Html$input,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$type_('range'),
-							$elm$html$Html$Attributes$min(
-							$elm$core$String$fromInt(minValue)),
-							$elm$html$Html$Attributes$max(
-							$elm$core$String$fromInt(maxValue)),
-							$elm$html$Html$Attributes$step('1'),
-							$elm$html$Html$Attributes$value(
-							$elm$core$String$fromInt(actualValue)),
-							$elm$html$Html$Events$onInput(
-							function (x) {
-								return $author$project$Main$UpdateParams(
-									up(x));
-							})
-						]),
-					_List_Nil)
-				]));
-	});
-var $elm$core$String$fromFloat = _String_fromNumber;
 var $author$project$Main$slider = F5(
 	function (label, up, minValue, maxValue, actualValue) {
 		return A2(
@@ -8715,11 +8666,9 @@ var $author$project$Main$view = function (model) {
 									]),
 								_List_fromArray(
 									[
-										A5($author$project$Main$intSlider, 'seed', $author$project$Main$UpdateSeed, 1, 100, model.noiseParams.seed),
 										A5($author$project$Main$slider, 'scale', $author$project$Main$UpdateScale, 1, 5, model.noiseParams.scale),
 										A5($author$project$Main$slider, 'period', $author$project$Main$UpdatePeriod, 0.1, 1, model.noiseParams.period),
-										A5($author$project$Main$slider, 'persistance', $author$project$Main$UpdatePersistance, 0, 1, model.noiseParams.persistance),
-										A5($author$project$Main$intSlider, 'octaves', $author$project$Main$UpdateOctaves, 1, 8, model.noiseParams.octaves)
+										A5($author$project$Main$slider, 'persistance', $author$project$Main$UpdatePersistance, 0, 1, model.noiseParams.persistance)
 									]))
 							]))
 					]))

@@ -123,7 +123,7 @@ type alias NoiseParameters =
 
 
 emptyNoiseParams: NoiseParameters
-emptyNoiseParams = { seed = 42, scale = 4.0, octaves = 4, period = 0.8, persistance = 2.0 }
+emptyNoiseParams = { seed = 42, scale = 4.0, octaves = 8, period = 0.8, persistance = 2.0 }
 
 
 drawCube: Int -> Float -> NoiseParameters -> List WebGL.Entity

@@ -177,11 +177,11 @@ view model =
             style "position" "absolute",
             style "width" "95%"
           ] [ 
-            intSlider "seed" UpdateSeed 1 100 model.noiseParams.seed,
+            -- intSlider "seed" UpdateSeed 1 100 model.noiseParams.seed,
             slider "scale" UpdateScale 1 5 model.noiseParams.scale,
             slider "period" UpdatePeriod 0.1 1 model.noiseParams.period,
-            slider "persistance" UpdatePersistance 0 1 model.noiseParams.persistance,
-            intSlider "octaves" UpdateOctaves 1 8 model.noiseParams.octaves
+            slider "persistance" UpdatePersistance 0 1 model.noiseParams.persistance
+            -- intSlider "octaves" UpdateOctaves 1 8 model.noiseParams.octaves
           ] ]
          ]
         ]

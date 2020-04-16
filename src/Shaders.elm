@@ -11,7 +11,8 @@ import WebGL.Settings exposing (back)
 import WebGL.Settings.DepthTest as DepthTest
 
 type alias Vertex = {
-        position : Vec3, normal: Vec3
+        position : Vec3,
+        normal: Vec3
     }
 
 vertexShader = 
@@ -79,8 +80,6 @@ face noise res direction =
                         [
                             (vertexId, vertexId + res + 1, vertexId + res),
                             (vertexId, vertexId + 1, vertexId + res + 1)
-                            -- (vertexId + res + 1, vertexId + 1, vertexId),
-                            -- (vertexId, vertexId + res, vertexId + res + 1)
                         ]
                     else []
             ) ) |> List.concat |> List.concat
@@ -116,7 +115,11 @@ drawFace res noise theta dir =
 
 
 type alias NoiseParameters =
-    { seed: Int, scale: Float, octaves: Int, period: Float, persistance: Float }
+    { seed: Int,
+      scale: Float,
+      octaves: Int,
+      period: Float,
+      persistance: Float }
 
 
 emptyNoiseParams: NoiseParameters

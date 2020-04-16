@@ -6845,7 +6845,7 @@ var $author$project$Shaders$emptyNoiseParams = {octaves: 4, period: 0.8, persist
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{height: 400, noiseParams: $author$project$Shaders$emptyNoiseParams, offset: 0, paused: false, res: 10, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 400},
+		{height: 400, noiseParams: $author$project$Shaders$emptyNoiseParams, offset: 0, paused: false, res: 16, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 400},
 		$elm$core$Platform$Cmd$batch(
 			_List_fromArray(
 				[
@@ -7785,7 +7785,7 @@ var $author$project$Shaders$face = F3(
 											($elm_explorations$linear_algebra$Math$Vector2$getX(percent) * 2) - 1,
 											axisA),
 										direction)));
-							var noiseV = A3(
+							var noiseV = 0.5 * A3(
 								noise,
 								$elm_explorations$linear_algebra$Math$Vector3$getX(pointOnUniSphere),
 								$elm_explorations$linear_algebra$Math$Vector3$getY(pointOnUniSphere),

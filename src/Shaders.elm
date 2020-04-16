@@ -64,7 +64,7 @@ face noise res direction =
                             |> Vec3.add (Vec3.scale (Vec2.getX percent * 2 - 1) axisA)
                             |> Vec3.add (Vec3.scale (Vec2.getY percent * 2 - 1) axisB)
                             |> Vec3.normalize
-                        noiseV = noise (Vec3.getX pointOnUniSphere) (Vec3.getY pointOnUniSphere) (Vec3.getZ pointOnUniSphere)
+                        noiseV = 0.5 * noise (Vec3.getX pointOnUniSphere) (Vec3.getY pointOnUniSphere) (Vec3.getZ pointOnUniSphere)
                         point = Vec3.scale (1 + (noiseV + 1) / 2) pointOnUniSphere
                     in
                         { position = point, normal = pointOnUniSphere }

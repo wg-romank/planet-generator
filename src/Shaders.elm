@@ -25,7 +25,8 @@ vertexShader =
         varying vec3 heightColor;
 
         void main() {
-            gl_Position = rotation * vec4(position, 2);
+            vec4 pos = rotation * vec4(position, 2);
+            gl_Position = pos;
 
             vec3 ambientLight = vec3(0.5, 0.5, 0.5);
             vec3 directionalLightColor = vec3(1, 1, 1);
@@ -35,17 +36,17 @@ vertexShader =
 
             float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
             vLighting = ambientLight + (directionalLightColor * directional);
-            float height = max(0.0, length(position) - 1.0);
+            float height = max(0.0, length(pos.xyz) - length(transformedNormal.xyz));
 
-            if (height <= 0.5) {
-                heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);
-            } else if (height <= 0.6) {
-                heightColor = vec3(188.0 / 255.0, 170.0/ 255.0, 35.0 / 255.0);
-            } else if (height <= 0.7) {
-                heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);
-            } else {
-                heightColor = vec3(0.9, 1, 0.9);
-            };
+            // if (height <= 0.4) {
+            //    heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);
+            // } else if (height <= 0.5) {
+            //     heightColor = vec3(188.0 / 255.0, 170.0/ 255.0, 35.0 / 255.0);
+            // } else if (height <= 0.55) {
+            //     heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);
+            // } else {
+                heightColor = vec3(height, height, height);
+            // };
         }
     |]
 
@@ -77,7 +78,7 @@ face noise res direction =
                             |> Vec3.add (Vec3.scale (Vec2.getX percent * 2 - 1) axisA)
                             |> Vec3.add (Vec3.scale (Vec2.getY percent * 2 - 1) axisB)
                             |> Vec3.normalize
-                        noiseV = 0.5 * noise (Vec3.getX pointOnUniSphere) (Vec3.getY pointOnUniSphere) (Vec3.getZ pointOnUniSphere)
+                        noiseV = noise (Vec3.getX pointOnUniSphere) (Vec3.getY pointOnUniSphere) (Vec3.getZ pointOnUniSphere)
                         point = Vec3.scale (1 + (noiseV + 1) / 2) pointOnUniSphere
                     in
                         { position = point, normal = pointOnUniSphere }
@@ -135,7 +136,7 @@ type alias NoiseParameters =
 
 
 emptyNoiseParams: NoiseParameters
-emptyNoiseParams = { seed = 42, scale = 4.0, octaves = 8, period = 0.8, persistance = 2.0 }
+emptyNoiseParams = { seed = 42, scale = 2, octaves = 8, period = 0.4, persistance = 0.5 }
 
 
 drawCube: Int -> Float -> NoiseParameters -> List WebGL.Entity

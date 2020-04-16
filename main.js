@@ -6841,7 +6841,7 @@ var $author$project$Main$ViewPortLoaded = function (a) {
 	return {$: 'ViewPortLoaded', a: a};
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $author$project$Shaders$emptyNoiseParams = {octaves: 8, period: 0.8, persistance: 2.0, scale: 4.0, seed: 42};
+var $author$project$Shaders$emptyNoiseParams = {octaves: 8, period: 0.4, persistance: 0.5, scale: 2, seed: 42};
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
@@ -7678,7 +7678,7 @@ var $author$project$Shaders$uniforms = function (theta) {
 	return {normalMatrix: normalTransform, rotation: rotation};
 };
 var $author$project$Shaders$vertexShader = {
-	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            gl_Position = rotation * vec4(position, 2);\n\n            vec3 ambientLight = vec3(0.5, 0.5, 0.5);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));\n\n            vec4 transformedNormal = rotation * vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n            float height = max(0.0, length(position) - 1.0);\n\n            if (height <= 0.5) {\n                heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);\n            } else if (height <= 0.6) {\n                heightColor = vec3(188.0 / 255.0, 170.0/ 255.0, 35.0 / 255.0);\n            } else if (height <= 0.7) {\n                heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);\n            } else {\n                heightColor = vec3(0.9, 1, 0.9);\n            };\n        }\n    ',
+	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = rotation * vec4(position, 2);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.5, 0.5, 0.5);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));\n\n            vec4 transformedNormal = rotation * vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n            float height = max(0.0, length(pos.xyz) - length(transformedNormal.xyz));\n\n            // if (height <= 0.4) {\n            //    heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);\n            // } else if (height <= 0.5) {\n            //     heightColor = vec3(188.0 / 255.0, 170.0/ 255.0, 35.0 / 255.0);\n            // } else if (height <= 0.55) {\n            //     heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);\n            // } else {\n                heightColor = vec3(height, height, height);\n            // };\n        }\n    ',
 	attributes: {normal: 'normal', position: 'position'},
 	uniforms: {normalMatrix: 'normalMatrix', rotation: 'rotation'}
 };
@@ -7774,7 +7774,7 @@ var $author$project$Shaders$face = F3(
 											($elm_explorations$linear_algebra$Math$Vector2$getX(percent) * 2) - 1,
 											axisA),
 										direction)));
-							var noiseV = 0.5 * A3(
+							var noiseV = A3(
 								noise,
 								$elm_explorations$linear_algebra$Math$Vector3$getX(pointOnUniSphere),
 								$elm_explorations$linear_algebra$Math$Vector3$getY(pointOnUniSphere),

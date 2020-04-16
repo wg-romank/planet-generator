@@ -14,9 +14,6 @@ type alias Vertex = {
         position : Vec3, normal: Vec3
     }
 
-permTable: PermutationTable
-permTable = Simplex.permutationTableFromInt 42
-
 vertexShader = 
     [glsl|
         attribute vec3 position;
@@ -119,17 +116,22 @@ drawFace res noise theta dir =
 
 
 type alias NoiseParameters =
-    { scale: Float, octaves: Int, period: Float, persistance: Float }
+    { seed: Int, scale: Float, octaves: Int, period: Float, persistance: Float }
 
 
 emptyNoiseParams: NoiseParameters
-emptyNoiseParams = { scale = 4.0, octaves = 4, period = 0.8, persistance = 2.0 }
+emptyNoiseParams = { seed = 42, scale = 4.0, octaves = 4, period = 0.8, persistance = 2.0 }
 
 
 drawCube: Int -> Float -> NoiseParameters -> List WebGL.Entity
 drawCube res theta noiseParams =
     let
-        noise = Simplex.fractal3d { scale = noiseParams.scale, steps = noiseParams.octaves, stepSize = noiseParams.period, persistence = noiseParams.persistance } permTable
+        noise = Simplex.fractal3d
+            { scale = noiseParams.scale,
+              steps = noiseParams.octaves,
+              stepSize = noiseParams.period,
+              persistence = noiseParams.persistance }
+             (Simplex.permutationTableFromInt noiseParams.seed )
     in
     [ vec3 1 0 0,
       vec3 0 1 0,

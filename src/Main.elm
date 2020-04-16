@@ -60,7 +60,7 @@ type Msg
     | UpdateParams UpdateParams
 
 
-type UpdateParams = UpdateScale String | UpdatePeriod String | UpdatePersistance String | UpdateOctaves String
+type UpdateParams = UpdateScale String | UpdatePeriod String | UpdatePersistance String | UpdateOctaves String | UpdateSeed String
 
 
 computeViewportSize : Viewport -> Model -> Model
@@ -98,6 +98,8 @@ update msg model =
                         { prevParams | persistance = String.toFloat persistance |> Maybe.withDefault prevParams.persistance }
                     UpdateOctaves octaves ->
                         { prevParams | octaves = String.toInt octaves |> Maybe.withDefault prevParams.octaves }
+                    UpdateSeed seed ->
+                        { prevParams | seed = String.toInt seed |> Maybe.withDefault prevParams.seed }
             in
             ( { model | noiseParams = newParams }, Cmd.none )
 
@@ -163,20 +165,21 @@ view model =
         ]
         [ div [] [
             WebGL.toHtmlWith [ WebGL.depth 1 ]
-            [ style "backgroundColor" "white",
+            [ style "backgroundColor" "#FFFFFF",
               style "display" "block",
               style "align" "center",
               style "width" "95%",
               width model.width,
               height model.height ] (drawCube model.res model.theta model.noiseParams),
           div [
-            style "bottom" "5%",
+            style "top" (String.fromInt model.height ++ "px"),
             style "align" "center",
             style "position" "absolute",
             style "width" "95%"
           ] [ 
-            slider "scale" UpdateScale 0.3 4 model.noiseParams.scale,
-            slider "period" UpdatePeriod 0.1 4 model.noiseParams.period,
+            intSlider "seed" UpdateSeed 1 100 model.noiseParams.seed,
+            slider "scale" UpdateScale 1 5 model.noiseParams.scale,
+            slider "period" UpdatePeriod 0.1 1 model.noiseParams.period,
             slider "persistance" UpdatePersistance 0 1 model.noiseParams.persistance,
             intSlider "octaves" UpdateOctaves 1 8 model.noiseParams.octaves
           ] ]

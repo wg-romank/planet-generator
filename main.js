@@ -6841,7 +6841,7 @@ var $author$project$Main$ViewPortLoaded = function (a) {
 	return {$: 'ViewPortLoaded', a: a};
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $author$project$Shaders$emptyNoiseParams = {octaves: 4, period: 0.8, persistance: 2.0, scale: 4.0};
+var $author$project$Shaders$emptyNoiseParams = {octaves: 4, period: 0.8, persistance: 2.0, scale: 4.0, seed: 42};
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
@@ -7518,7 +7518,7 @@ var $author$project$Main$update = F2(
 										prevParams.persistance,
 										$elm$core$String$toFloat(persistance))
 								});
-						default:
+						case 'UpdateOctaves':
 							var octaves = params.a;
 							return _Utils_update(
 								prevParams,
@@ -7527,6 +7527,16 @@ var $author$project$Main$update = F2(
 										$elm$core$Maybe$withDefault,
 										prevParams.octaves,
 										$elm$core$String$toInt(octaves))
+								});
+						default:
+							var seed = params.a;
+							return _Utils_update(
+								prevParams,
+								{
+									seed: A2(
+										$elm$core$Maybe$withDefault,
+										prevParams.seed,
+										$elm$core$String$toInt(seed))
 								});
 					}
 				}();
@@ -7548,6 +7558,9 @@ var $author$project$Main$UpdatePersistance = function (a) {
 };
 var $author$project$Main$UpdateScale = function (a) {
 	return {$: 'UpdateScale', a: a};
+};
+var $author$project$Main$UpdateSeed = function (a) {
+	return {$: 'UpdateSeed', a: a};
 };
 var $elm_explorations$webgl$WebGL$Internal$Depth = function (a) {
 	return {$: 'Depth', a: a};
@@ -8464,13 +8477,12 @@ var $Herteby$simplex_noise$Simplex$permutationTableFromInt = function (_int) {
 		$Herteby$simplex_noise$Simplex$permutationTableGenerator,
 		$elm$random$Random$initialSeed(_int)).a;
 };
-var $author$project$Shaders$permTable = $Herteby$simplex_noise$Simplex$permutationTableFromInt(42);
 var $author$project$Shaders$drawCube = F3(
 	function (res, theta, noiseParams) {
 		var noise = A2(
 			$Herteby$simplex_noise$Simplex$fractal3d,
 			{persistence: noiseParams.persistance, scale: noiseParams.scale, stepSize: noiseParams.period, steps: noiseParams.octaves},
-			$author$project$Shaders$permTable);
+			$Herteby$simplex_noise$Simplex$permutationTableFromInt(noiseParams.seed));
 		return A2(
 			$elm$core$List$map,
 			A3($author$project$Shaders$drawFace, res, noise, theta),
@@ -8681,7 +8693,7 @@ var $author$project$Main$view = function (model) {
 									]),
 								_List_fromArray(
 									[
-										A2($elm$html$Html$Attributes$style, 'backgroundColor', 'white'),
+										A2($elm$html$Html$Attributes$style, 'backgroundColor', '#FFFFFF'),
 										A2($elm$html$Html$Attributes$style, 'display', 'block'),
 										A2($elm$html$Html$Attributes$style, 'align', 'center'),
 										A2($elm$html$Html$Attributes$style, 'width', '95%'),
@@ -8693,15 +8705,19 @@ var $author$project$Main$view = function (model) {
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										A2($elm$html$Html$Attributes$style, 'bottom', '5%'),
+										A2(
+										$elm$html$Html$Attributes$style,
+										'top',
+										$elm$core$String$fromInt(model.height) + 'px'),
 										A2($elm$html$Html$Attributes$style, 'align', 'center'),
 										A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
 										A2($elm$html$Html$Attributes$style, 'width', '95%')
 									]),
 								_List_fromArray(
 									[
-										A5($author$project$Main$slider, 'scale', $author$project$Main$UpdateScale, 0.3, 4, model.noiseParams.scale),
-										A5($author$project$Main$slider, 'period', $author$project$Main$UpdatePeriod, 0.1, 4, model.noiseParams.period),
+										A5($author$project$Main$intSlider, 'seed', $author$project$Main$UpdateSeed, 1, 100, model.noiseParams.seed),
+										A5($author$project$Main$slider, 'scale', $author$project$Main$UpdateScale, 1, 5, model.noiseParams.scale),
+										A5($author$project$Main$slider, 'period', $author$project$Main$UpdatePeriod, 0.1, 1, model.noiseParams.period),
 										A5($author$project$Main$slider, 'persistance', $author$project$Main$UpdatePersistance, 0, 1, model.noiseParams.persistance),
 										A5($author$project$Main$intSlider, 'octaves', $author$project$Main$UpdateOctaves, 1, 8, model.noiseParams.octaves)
 									]))

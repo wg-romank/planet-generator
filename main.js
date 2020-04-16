@@ -6845,7 +6845,7 @@ var $author$project$Shaders$emptyNoiseParams = {octaves: 8, period: 0.4, persist
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{height: 400, noiseParams: $author$project$Shaders$emptyNoiseParams, offset: 0, paused: false, res: 16, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 400},
+		{height: 400, noiseParams: $author$project$Shaders$emptyNoiseParams, offset: 0, paused: false, res: 10, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 400},
 		$elm$core$Platform$Cmd$batch(
 			_List_fromArray(
 				[
@@ -7678,7 +7678,7 @@ var $author$project$Shaders$uniforms = function (theta) {
 	return {normalMatrix: normalTransform, rotation: rotation};
 };
 var $author$project$Shaders$vertexShader = {
-	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = rotation * vec4(position, 2);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.5, 0.5, 0.5);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n            float height = max(0.0, length(pos.xyz) - length(transformedNormal.xyz));\n\n            // if (height <= 0.4) {\n            //    heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);\n            // } else if (height <= 0.5) {\n            //     heightColor = vec3(188.0 / 255.0, 170.0/ 255.0, 35.0 / 255.0);\n            // } else if (height <= 0.55) {\n            //     heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);\n            // } else {\n                heightColor = vec3(height, height, height);\n            // };\n        }\n    ',
+	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = vec4(position, 2);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.5, 0.5, 0.5);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));\n\n            vec4 transformedNormal = vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n            float height = max(0.0, length(pos.xyz) - length(transformedNormal.xyz));\n\n            // if (height <= 0.4) {\n            //    heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);\n            // } else if (height <= 0.5) {\n            //     heightColor = vec3(188.0 / 255.0, 170.0/ 255.0, 35.0 / 255.0);\n            // } else if (height <= 0.55) {\n            //     heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);\n            // } else {\n            heightColor = vec3(height, height, height);\n            // };\n        }\n    ',
 	attributes: {normal: 'normal', position: 'position'},
 	uniforms: {normalMatrix: 'normalMatrix', rotation: 'rotation'}
 };
@@ -7779,7 +7779,7 @@ var $author$project$Shaders$face = F3(
 								$elm_explorations$linear_algebra$Math$Vector3$getX(pointOnUniSphere),
 								$elm_explorations$linear_algebra$Math$Vector3$getY(pointOnUniSphere),
 								$elm_explorations$linear_algebra$Math$Vector3$getZ(pointOnUniSphere));
-							var point = A2($elm_explorations$linear_algebra$Math$Vector3$scale, 1 + ((noiseV + 1) / 2), pointOnUniSphere);
+							var point = A2($elm_explorations$linear_algebra$Math$Vector3$scale, 1 + noiseV, pointOnUniSphere);
 							return {normal: pointOnUniSphere, position: point};
 						},
 						A2($elm$core$List$range, 0, res - 1));
@@ -7794,6 +7794,9 @@ var $author$project$Shaders$drawFace = F4(
 			theta,
 			A3($author$project$Shaders$face, noise, res, dir));
 	});
+var $elm$core$Basics$negate = function (n) {
+	return -n;
+};
 var $elm$core$Bitwise$and = _Bitwise_and;
 var $Herteby$simplex_noise$Simplex$f3 = 1 / 3;
 var $Herteby$simplex_noise$Simplex$g3 = 1 / 6;
@@ -7887,9 +7890,6 @@ var $elm$core$Array$fromList = function (list) {
 		return A3($elm$core$Array$fromListHelp, list, _List_Nil, 0);
 	}
 };
-var $elm$core$Basics$negate = function (n) {
-	return -n;
-};
 var $Herteby$simplex_noise$Simplex$grad3 = $elm$core$Array$fromList(
 	_List_fromArray(
 		[1, 1, 0, -1, 1, 0, 1, -1, 0, -1, -1, 0, 1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, -1, 0, 1, 1, 0, -1, 1, 0, 1, -1, 0, -1, -1]));
@@ -7949,36 +7949,6 @@ var $Herteby$simplex_noise$Simplex$noise3d = F4(
 		var z2 = (z0 - k2) + (2 * $Herteby$simplex_noise$Simplex$g3);
 		var n2 = A8($Herteby$simplex_noise$Simplex$getN3d, x2, y2, z2, ii + i2, jj + j2, kk + k2, perm, permMod12);
 		return 32 * (((n0 + n1) + n2) + n3);
-	});
-var $elm$core$Basics$pow = _Basics_pow;
-var $Herteby$simplex_noise$Simplex$fractal3d = F5(
-	function (_v0, table, x, y, z) {
-		var steps = _v0.steps;
-		var stepSize = _v0.stepSize;
-		var persistence = _v0.persistence;
-		var scale = _v0.scale;
-		return function (_v2) {
-			var noise = _v2.a;
-			var max = _v2.b;
-			return noise / max;
-		}(
-			A3(
-				$elm$core$List$foldl,
-				F2(
-					function (step, _v1) {
-						var noise = _v1.a;
-						var max = _v1.b;
-						var freq = A2($elm$core$Basics$pow, stepSize, step) * scale;
-						var amp = A2($elm$core$Basics$pow, persistence, step);
-						return _Utils_Tuple2(
-							noise + (amp * A4($Herteby$simplex_noise$Simplex$noise3d, table, x / freq, y / freq, z / freq)),
-							max + amp);
-					}),
-				_Utils_Tuple2(0, 0),
-				A2(
-					$elm$core$List$map,
-					$elm$core$Basics$toFloat,
-					A2($elm$core$List$range, 0, steps - 1))));
 	});
 var $elm$random$Random$Seed = F2(
 	function (a, b) {
@@ -8468,13 +8438,29 @@ var $Herteby$simplex_noise$Simplex$permutationTableFromInt = function (_int) {
 };
 var $author$project$Shaders$drawCube = F3(
 	function (res, theta, noiseParams) {
-		var noise = A2(
-			$Herteby$simplex_noise$Simplex$fractal3d,
-			{persistence: noiseParams.persistance, scale: noiseParams.scale, stepSize: noiseParams.period, steps: noiseParams.octaves},
+		var noise = $Herteby$simplex_noise$Simplex$noise3d(
 			$Herteby$simplex_noise$Simplex$permutationTableFromInt(noiseParams.seed));
+		var initialParams = {amplidute: noiseParams.persistance, frequency: noiseParams.scale, value: 0.0};
+		var noiseFunc = F3(
+			function (x, y, z) {
+				return function (f) {
+					return f.value;
+				}(
+					A3(
+						$elm$core$List$foldl,
+						F2(
+							function (_v0, acc) {
+								var v = ((A3(noise, acc.frequency * x, acc.frequency * y, acc.frequency * z) + 1) * 0.5) * acc.amplidute;
+								var newFrequency = acc.frequency;
+								var newAmp = acc.amplidute * noiseParams.persistance;
+								return {amplidute: newAmp, frequency: newFrequency, value: acc.value + v};
+							}),
+						initialParams,
+						A2($elm$core$List$range, 1, noiseParams.octaves)));
+			});
 		return A2(
 			$elm$core$List$map,
-			A3($author$project$Shaders$drawFace, res, noise, theta),
+			A3($author$project$Shaders$drawFace, res, noiseFunc, theta),
 			_List_fromArray(
 				[
 					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 1, 0, 0),

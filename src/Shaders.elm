@@ -25,14 +25,14 @@ vertexShader =
         varying vec3 heightColor;
 
         void main() {
-            vec4 pos = rotation * vec4(position, 2);
+            vec4 pos = vec4(position, 2);
             gl_Position = pos;
 
             vec3 ambientLight = vec3(0.5, 0.5, 0.5);
             vec3 directionalLightColor = vec3(1, 1, 1);
             vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));
 
-            vec4 transformedNormal = normalMatrix * vec4(normal, 1.0);
+            vec4 transformedNormal = vec4(normal, 1.0);
 
             float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
             vLighting = ambientLight + (directionalLightColor * directional);
@@ -45,7 +45,7 @@ vertexShader =
             // } else if (height <= 0.55) {
             //     heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);
             // } else {
-                heightColor = vec3(height, height, height);
+            heightColor = vec3(height, height, height);
             // };
         }
     |]
@@ -79,7 +79,7 @@ face noise res direction =
                             |> Vec3.add (Vec3.scale (Vec2.getY percent * 2 - 1) axisB)
                             |> Vec3.normalize
                         noiseV = noise (Vec3.getX pointOnUniSphere) (Vec3.getY pointOnUniSphere) (Vec3.getZ pointOnUniSphere)
-                        point = Vec3.scale (1 + (noiseV + 1) / 2) pointOnUniSphere
+                        point = Vec3.scale (1 + noiseV) pointOnUniSphere
                     in
                         { position = point, normal = pointOnUniSphere }
                         
@@ -142,12 +142,22 @@ emptyNoiseParams = { seed = 42, scale = 2, octaves = 8, period = 0.4, persistanc
 drawCube: Int -> Float -> NoiseParameters -> List WebGL.Entity
 drawCube res theta noiseParams =
     let
-        noise = Simplex.fractal3d
-            { scale = noiseParams.scale,
-              steps = noiseParams.octaves,
-              stepSize = noiseParams.period,
-              persistence = noiseParams.persistance }
+        noise = Simplex.noise3d
+            -- { scale = noiseParams.scale,
+            --   steps = noiseParams.octaves,
+            --   stepSize = noiseParams.period,
+            --   persistence = noiseParams.persistance }
              (Simplex.permutationTableFromInt noiseParams.seed )
+        initialParams = { value = 0.0, frequency = noiseParams.scale, amplidute = noiseParams.persistance }
+        noiseFunc = \x y z ->
+            List.foldl ( \_ acc ->
+            let
+                v = (noise (acc.frequency * x) (acc.frequency * y) (acc.frequency * z) + 1) * 0.5 * acc.amplidute
+                newFrequency = acc.frequency -- TODO: settings
+                newAmp = acc.amplidute * noiseParams.persistance
+            in
+                { value = acc.value + v, frequency = newFrequency, amplidute = newAmp }
+            ) initialParams (List.range 1 noiseParams.octaves) |> \f -> f.value
     in
     [ vec3 1 0 0,
       vec3 0 1 0,
@@ -155,5 +165,5 @@ drawCube res theta noiseParams =
       vec3 -1 0 0,
       vec3 0 -1 0,
       vec3 0 0 -1 ]
-        |> List.map (drawFace res noise theta)
+        |> List.map (drawFace res noiseFunc theta)
 

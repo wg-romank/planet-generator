@@ -44,7 +44,7 @@ init _ =
       , width = 400
       , height = 400
       , noiseParams = emptyNoiseParams
-      , res = 16
+      , res = 10
       }
     , Cmd.batch
         [ Task.perform ViewPortLoaded Browser.Dom.getViewport

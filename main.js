@@ -7549,6 +7549,10 @@ var $author$project$Main$UpdatePersistance = function (a) {
 var $author$project$Main$UpdateScale = function (a) {
 	return {$: 'UpdateScale', a: a};
 };
+var $elm_explorations$webgl$WebGL$Internal$Depth = function (a) {
+	return {$: 'Depth', a: a};
+};
+var $elm_explorations$webgl$WebGL$depth = $elm_explorations$webgl$WebGL$Internal$Depth;
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm_explorations$webgl$WebGL$Settings$FaceMode = function (a) {
 	return {$: 'FaceMode', a: a};
@@ -7561,6 +7565,18 @@ var $elm_explorations$webgl$WebGL$Settings$cullFace = function (_v0) {
 	var faceMode = _v0.a;
 	return $elm_explorations$webgl$WebGL$Internal$CullFace(faceMode);
 };
+var $elm_explorations$webgl$WebGL$Internal$DepthTest = F4(
+	function (a, b, c, d) {
+		return {$: 'DepthTest', a: a, b: b, c: c, d: d};
+	});
+var $elm_explorations$webgl$WebGL$Settings$DepthTest$less = function (_v0) {
+	var write = _v0.write;
+	var near = _v0.near;
+	var far = _v0.far;
+	return A4($elm_explorations$webgl$WebGL$Internal$DepthTest, 513, write, near, far);
+};
+var $elm_explorations$webgl$WebGL$Settings$DepthTest$default = $elm_explorations$webgl$WebGL$Settings$DepthTest$less(
+	{far: 1, near: 0, write: true});
 var $elm_explorations$webgl$WebGL$Internal$disableSetting = F2(
 	function (cache, setting) {
 		switch (setting.$) {
@@ -7670,7 +7686,8 @@ var $author$project$Shaders$draw = F2(
 			$elm_explorations$webgl$WebGL$entityWith,
 			_List_fromArray(
 				[
-					$elm_explorations$webgl$WebGL$Settings$cullFace($elm_explorations$webgl$WebGL$Settings$back)
+					$elm_explorations$webgl$WebGL$Settings$cullFace($elm_explorations$webgl$WebGL$Settings$back),
+					$elm_explorations$webgl$WebGL$Settings$DepthTest$default
 				]),
 			$author$project$Shaders$vertexShader,
 			$author$project$Shaders$fragmentShader,
@@ -8616,27 +8633,10 @@ var $author$project$Main$slider = F5(
 					_List_Nil)
 				]));
 	});
-var $elm_explorations$webgl$WebGL$Internal$Alpha = function (a) {
-	return {$: 'Alpha', a: a};
-};
-var $elm_explorations$webgl$WebGL$alpha = $elm_explorations$webgl$WebGL$Internal$Alpha;
-var $elm_explorations$webgl$WebGL$Internal$Antialias = {$: 'Antialias'};
-var $elm_explorations$webgl$WebGL$antialias = $elm_explorations$webgl$WebGL$Internal$Antialias;
-var $elm_explorations$webgl$WebGL$Internal$Depth = function (a) {
-	return {$: 'Depth', a: a};
-};
-var $elm_explorations$webgl$WebGL$depth = $elm_explorations$webgl$WebGL$Internal$Depth;
 var $elm_explorations$webgl$WebGL$toHtmlWith = F3(
 	function (options, attributes, entities) {
 		return A3(_WebGL_toHtml, options, attributes, entities);
 	});
-var $elm_explorations$webgl$WebGL$toHtml = $elm_explorations$webgl$WebGL$toHtmlWith(
-	_List_fromArray(
-		[
-			$elm_explorations$webgl$WebGL$alpha(true),
-			$elm_explorations$webgl$WebGL$antialias,
-			$elm_explorations$webgl$WebGL$depth(1)
-		]));
 var $elm$html$Html$Attributes$width = function (n) {
 	return A2(
 		_VirtualDom_attribute,
@@ -8673,10 +8673,15 @@ var $author$project$Main$view = function (model) {
 						_List_Nil,
 						_List_fromArray(
 							[
-								A2(
-								$elm_explorations$webgl$WebGL$toHtml,
+								A3(
+								$elm_explorations$webgl$WebGL$toHtmlWith,
 								_List_fromArray(
 									[
+										$elm_explorations$webgl$WebGL$depth(1)
+									]),
+								_List_fromArray(
+									[
+										A2($elm$html$Html$Attributes$style, 'backgroundColor', 'white'),
 										A2($elm$html$Html$Attributes$style, 'display', 'block'),
 										A2($elm$html$Html$Attributes$style, 'align', 'center'),
 										A2($elm$html$Html$Attributes$style, 'width', '95%'),

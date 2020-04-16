@@ -8,6 +8,7 @@ import Math.Matrix4 as Mat4 exposing (Mat4)
 import Simplex exposing (PermutationTable)
 import WebGL exposing (Mesh)
 import WebGL.Settings exposing (back)
+import WebGL.Settings.DepthTest as DepthTest
 
 type alias Vertex = {
         position : Vec3, normal: Vec3
@@ -110,7 +111,7 @@ uniforms theta =
     { rotation = rotation, normalMatrix = normalTransform, vcolor = vec4 0.5 0.5 1 1 }
 
 draw: Float -> Mesh Vertex -> WebGL.Entity
-draw theta mesh = WebGL.entityWith [ WebGL.Settings.cullFace back ] vertexShader fragmentShader mesh (uniforms theta)
+draw theta mesh = WebGL.entityWith [ WebGL.Settings.cullFace back, DepthTest.default ] vertexShader fragmentShader mesh (uniforms theta)
 
 drawFace: Int -> (Float -> Float -> Float -> Float) -> Float -> Vec3 -> WebGL.Entity
 drawFace res noise theta dir =

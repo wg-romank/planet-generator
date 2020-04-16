@@ -41,8 +41,8 @@ init _ =
       , viewportHeight = 0
       , viewportWidth = 0
       , offset = 0
-      , width = 480
-      , height = 640
+      , width = 400
+      , height = 400
       , noiseParams = emptyNoiseParams
       , res = 10
       }
@@ -67,7 +67,7 @@ computeViewportSize : Viewport -> Model -> Model
 computeViewportSize viewport model =
     let
         vph = viewport.viewport.height
-        ratio = toFloat model.height / toFloat model.width
+        ratio = 16.0 / 9.0
         vpw = vph / ratio
         offset = (viewport.viewport.width - vpw) / 2.0 |> round
     in
@@ -118,29 +118,37 @@ subscriptions model =
 
 slider: String -> (String -> UpdateParams) -> Float -> Float -> Float -> Html Msg
 slider label up minValue maxValue actualValue = 
-    div [] [
+    div [
+        style "width" "80%",
+        style "height" "4em",
+        style "align" "center"
+    ] [
+        div [ style "align" "left" ] [text label],
     input [
         type_ "range",
         H.min (String.fromFloat minValue),
         H.max (String.fromFloat maxValue),
         H.step "0.1",
         value <| String.fromFloat actualValue,
-        onInput (\x -> UpdateParams (up x)),
-        style "width" "100%"
-    ] [ text label ] ]
+        onInput (\x -> UpdateParams (up x))
+    ] [ ] ]
 
 intSlider: String -> (String -> UpdateParams) -> Int -> Int -> Int -> Html Msg
 intSlider label up minValue maxValue actualValue = 
-    div [] [
+    div [
+        style "width" "80%",
+        style "height" "4em",
+        style "align" "center"
+    ] [
+        div [ style "align" "left" ] [text label],
     input [
         type_ "range",
         H.min (String.fromInt minValue),
         H.max (String.fromInt maxValue),
         H.step "1",
         value <| String.fromInt actualValue,
-        onInput (\x -> UpdateParams (up x)),
-        style "width" "100%"
-    ] [ text label ] ]
+        onInput (\x -> UpdateParams (up x))
+    ] [ ] ]
 
 view : Model -> Browser.Document Msg
 view model =
@@ -155,14 +163,15 @@ view model =
         ]
         [ div [] [
             WebGL.toHtml
-            [ style "backgroundColor" "black",
+            [ --style "backgroundColor" "black",
               style "display" "block",
               style "align" "center",
               style "width" "95%",
               width model.width,
               height model.height ] (drawCube model.res model.theta model.noiseParams),
           div [
-            style "bottom" "0px",
+            style "bottom" "5%",
+            style "align" "center",
             style "position" "absolute",
             style "width" "95%"
           ] [ 

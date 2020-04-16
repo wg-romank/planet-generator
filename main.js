@@ -6845,7 +6845,7 @@ var $author$project$Shaders$emptyNoiseParams = {octaves: 4, period: 0.8, persist
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{height: 640, noiseParams: $author$project$Shaders$emptyNoiseParams, offset: 0, paused: false, res: 10, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 480},
+		{height: 400, noiseParams: $author$project$Shaders$emptyNoiseParams, offset: 0, paused: false, res: 10, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 400},
 		$elm$core$Platform$Cmd$batch(
 			_List_fromArray(
 				[
@@ -7433,7 +7433,7 @@ var $elm$core$Basics$round = _Basics_round;
 var $author$project$Main$computeViewportSize = F2(
 	function (viewport, model) {
 		var vph = viewport.viewport.height;
-		var ratio = model.height / model.width;
+		var ratio = 16.0 / 9.0;
 		var vpw = vph / ratio;
 		var offset = $elm$core$Basics$round((viewport.viewport.width - vpw) / 2.0);
 		return _Utils_update(
@@ -8533,9 +8533,24 @@ var $author$project$Main$intSlider = F5(
 	function (label, up, minValue, maxValue, actualValue) {
 		return A2(
 			$elm$html$Html$div,
-			_List_Nil,
 			_List_fromArray(
 				[
+					A2($elm$html$Html$Attributes$style, 'width', '80%'),
+					A2($elm$html$Html$Attributes$style, 'height', '4em'),
+					A2($elm$html$Html$Attributes$style, 'align', 'center')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'align', 'left')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(label)
+						])),
 					A2(
 					$elm$html$Html$input,
 					_List_fromArray(
@@ -8552,13 +8567,9 @@ var $author$project$Main$intSlider = F5(
 							function (x) {
 								return $author$project$Main$UpdateParams(
 									up(x));
-							}),
-							A2($elm$html$Html$Attributes$style, 'width', '100%')
+							})
 						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text(label)
-						]))
+					_List_Nil)
 				]));
 	});
 var $elm$core$String$fromFloat = _String_fromNumber;
@@ -8566,9 +8577,24 @@ var $author$project$Main$slider = F5(
 	function (label, up, minValue, maxValue, actualValue) {
 		return A2(
 			$elm$html$Html$div,
-			_List_Nil,
 			_List_fromArray(
 				[
+					A2($elm$html$Html$Attributes$style, 'width', '80%'),
+					A2($elm$html$Html$Attributes$style, 'height', '4em'),
+					A2($elm$html$Html$Attributes$style, 'align', 'center')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'align', 'left')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(label)
+						])),
 					A2(
 					$elm$html$Html$input,
 					_List_fromArray(
@@ -8585,13 +8611,9 @@ var $author$project$Main$slider = F5(
 							function (x) {
 								return $author$project$Main$UpdateParams(
 									up(x));
-							}),
-							A2($elm$html$Html$Attributes$style, 'width', '100%')
+							})
 						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text(label)
-						]))
+					_List_Nil)
 				]));
 	});
 var $elm_explorations$webgl$WebGL$Internal$Alpha = function (a) {
@@ -8655,7 +8677,6 @@ var $author$project$Main$view = function (model) {
 								$elm_explorations$webgl$WebGL$toHtml,
 								_List_fromArray(
 									[
-										A2($elm$html$Html$Attributes$style, 'backgroundColor', 'black'),
 										A2($elm$html$Html$Attributes$style, 'display', 'block'),
 										A2($elm$html$Html$Attributes$style, 'align', 'center'),
 										A2($elm$html$Html$Attributes$style, 'width', '95%'),
@@ -8667,7 +8688,8 @@ var $author$project$Main$view = function (model) {
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										A2($elm$html$Html$Attributes$style, 'bottom', '0px'),
+										A2($elm$html$Html$Attributes$style, 'bottom', '5%'),
+										A2($elm$html$Html$Attributes$style, 'align', 'center'),
 										A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
 										A2($elm$html$Html$Attributes$style, 'width', '95%')
 									]),

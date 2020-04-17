@@ -6841,11 +6841,11 @@ var $author$project$Main$ViewPortLoaded = function (a) {
 	return {$: 'ViewPortLoaded', a: a};
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $author$project$Shaders$emptyNoiseParams = {octaves: 8, period: 0.4, persistance: 0.5, scale: 2, seed: 42};
+var $author$project$Shaders$emptyNoiseParams = {baseRoughness: 8, numLayers: 8, persistance: 0.5, roughness: 0.4, seed: 42, strength: 1};
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{height: 400, noiseParams: $author$project$Shaders$emptyNoiseParams, offset: 0, paused: false, res: 10, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 400},
+		{height: 400, noiseParams: $author$project$Shaders$emptyNoiseParams, offset: 0, paused: false, res: 20, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 400},
 		$elm$core$Platform$Cmd$batch(
 			_List_fromArray(
 				[
@@ -7488,25 +7488,25 @@ var $author$project$Main$update = F2(
 				var prevParams = model.noiseParams;
 				var newParams = function () {
 					switch (params.$) {
-						case 'UpdateScale':
-							var scale = params.a;
+						case 'UpdateBaseRoughness':
+							var baseRoughness = params.a;
 							return _Utils_update(
 								prevParams,
 								{
-									scale: A2(
+									baseRoughness: A2(
 										$elm$core$Maybe$withDefault,
-										prevParams.scale,
-										$elm$core$String$toFloat(scale))
+										prevParams.baseRoughness,
+										$elm$core$String$toFloat(baseRoughness))
 								});
-						case 'UpdatePeriod':
-							var period = params.a;
+						case 'UpdateRoughness':
+							var roughness = params.a;
 							return _Utils_update(
 								prevParams,
 								{
-									period: A2(
+									roughness: A2(
 										$elm$core$Maybe$withDefault,
-										prevParams.period,
-										$elm$core$String$toFloat(period))
+										prevParams.roughness,
+										$elm$core$String$toFloat(roughness))
 								});
 						case 'UpdatePersistance':
 							var persistance = params.a;
@@ -7518,17 +7518,17 @@ var $author$project$Main$update = F2(
 										prevParams.persistance,
 										$elm$core$String$toFloat(persistance))
 								});
-						case 'UpdateOctaves':
-							var octaves = params.a;
+						case 'UpdateNumLayers':
+							var numLayers = params.a;
 							return _Utils_update(
 								prevParams,
 								{
-									octaves: A2(
+									numLayers: A2(
 										$elm$core$Maybe$withDefault,
-										prevParams.octaves,
-										$elm$core$String$toInt(octaves))
+										prevParams.numLayers,
+										$elm$core$String$toInt(numLayers))
 								});
-						default:
+						case 'UpdateSeed':
 							var seed = params.a;
 							return _Utils_update(
 								prevParams,
@@ -7537,6 +7537,16 @@ var $author$project$Main$update = F2(
 										$elm$core$Maybe$withDefault,
 										prevParams.seed,
 										$elm$core$String$toInt(seed))
+								});
+						default:
+							var strength = params.a;
+							return _Utils_update(
+								prevParams,
+								{
+									strength: A2(
+										$elm$core$Maybe$withDefault,
+										prevParams.strength,
+										$elm$core$String$toFloat(strength))
 								});
 					}
 				}();
@@ -7547,14 +7557,20 @@ var $author$project$Main$update = F2(
 					$elm$core$Platform$Cmd$none);
 		}
 	});
-var $author$project$Main$UpdatePeriod = function (a) {
-	return {$: 'UpdatePeriod', a: a};
+var $author$project$Main$UpdateBaseRoughness = function (a) {
+	return {$: 'UpdateBaseRoughness', a: a};
+};
+var $author$project$Main$UpdateNumLayers = function (a) {
+	return {$: 'UpdateNumLayers', a: a};
 };
 var $author$project$Main$UpdatePersistance = function (a) {
 	return {$: 'UpdatePersistance', a: a};
 };
-var $author$project$Main$UpdateScale = function (a) {
-	return {$: 'UpdateScale', a: a};
+var $author$project$Main$UpdateRoughness = function (a) {
+	return {$: 'UpdateRoughness', a: a};
+};
+var $author$project$Main$UpdateStrength = function (a) {
+	return {$: 'UpdateStrength', a: a};
 };
 var $elm_explorations$webgl$WebGL$Internal$Depth = function (a) {
 	return {$: 'Depth', a: a};
@@ -7678,7 +7694,7 @@ var $author$project$Shaders$uniforms = function (theta) {
 	return {normalMatrix: normalTransform, rotation: rotation};
 };
 var $author$project$Shaders$vertexShader = {
-	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = vec4(position, 2);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.5, 0.5, 0.5);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));\n\n            vec4 transformedNormal = vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n            float height = max(0.0, length(pos.xyz) - length(transformedNormal.xyz));\n\n            // if (height <= 0.4) {\n            //    heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);\n            // } else if (height <= 0.5) {\n            //     heightColor = vec3(188.0 / 255.0, 170.0/ 255.0, 35.0 / 255.0);\n            // } else if (height <= 0.55) {\n            //     heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);\n            // } else {\n            heightColor = vec3(height, height, height);\n            // };\n        }\n    ',
+	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = vec4(position, 2) * rotation;\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.5, 0.5, 0.5);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n            float height = max(0.0, length(pos.xyz) - length(transformedNormal.xyz));\n\n            // if (height <= 0.4) {\n            //    heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);\n            // } else if (height <= 0.5) {\n            //     heightColor = vec3(188.0 / 255.0, 170.0/ 255.0, 35.0 / 255.0);\n            // } else if (height <= 0.55) {\n            //     heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);\n            // } else {\n            heightColor = vec3(height, height, height);\n            // };\n        }\n    ',
 	attributes: {normal: 'normal', position: 'position'},
 	uniforms: {normalMatrix: 'normalMatrix', rotation: 'rotation'}
 };
@@ -8440,23 +8456,23 @@ var $author$project$Shaders$drawCube = F3(
 	function (res, theta, noiseParams) {
 		var noise = $Herteby$simplex_noise$Simplex$noise3d(
 			$Herteby$simplex_noise$Simplex$permutationTableFromInt(noiseParams.seed));
-		var initialParams = {amplidute: noiseParams.persistance, frequency: noiseParams.scale, value: 0.0};
+		var initialParams = {amplidute: noiseParams.persistance, frequency: noiseParams.baseRoughness, value: 0.0};
 		var noiseFunc = F3(
 			function (x, y, z) {
 				return function (f) {
-					return f.value;
+					return f.value * noiseParams.strength;
 				}(
 					A3(
 						$elm$core$List$foldl,
 						F2(
 							function (_v0, acc) {
 								var v = ((A3(noise, acc.frequency * x, acc.frequency * y, acc.frequency * z) + 1) * 0.5) * acc.amplidute;
-								var newFrequency = acc.frequency;
+								var newFrequency = acc.frequency * noiseParams.roughness;
 								var newAmp = acc.amplidute * noiseParams.persistance;
 								return {amplidute: newAmp, frequency: newFrequency, value: acc.value + v};
 							}),
 						initialParams,
-						A2($elm$core$List$range, 1, noiseParams.octaves)));
+						A2($elm$core$List$range, 1, noiseParams.numLayers)));
 			});
 		return A2(
 			$elm$core$List$map,
@@ -8480,7 +8496,6 @@ var $elm$html$Html$Attributes$height = function (n) {
 var $author$project$Main$UpdateParams = function (a) {
 	return {$: 'UpdateParams', a: a};
 };
-var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
@@ -8534,6 +8549,50 @@ var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$Main$intSlider = F5(
+	function (label, up, minValue, maxValue, actualValue) {
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$style, 'width', '80%'),
+					A2($elm$html$Html$Attributes$style, 'height', '4em'),
+					A2($elm$html$Html$Attributes$style, 'align', 'center')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'align', 'left')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(label)
+						])),
+					A2(
+					$elm$html$Html$input,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$type_('range'),
+							$elm$html$Html$Attributes$min(
+							$elm$core$String$fromInt(minValue)),
+							$elm$html$Html$Attributes$max(
+							$elm$core$String$fromInt(maxValue)),
+							$elm$html$Html$Attributes$step('1'),
+							$elm$html$Html$Attributes$value(
+							$elm$core$String$fromInt(actualValue)),
+							$elm$html$Html$Events$onInput(
+							function (x) {
+								return $author$project$Main$UpdateParams(
+									up(x));
+							})
+						]),
+					_List_Nil)
+				]));
+	});
+var $elm$core$String$fromFloat = _String_fromNumber;
 var $author$project$Main$slider = F5(
 	function (label, up, minValue, maxValue, actualValue) {
 		return A2(
@@ -8647,9 +8706,11 @@ var $author$project$Main$view = function (model) {
 									]),
 								_List_fromArray(
 									[
-										A5($author$project$Main$slider, 'scale', $author$project$Main$UpdateScale, 1, 5, model.noiseParams.scale),
-										A5($author$project$Main$slider, 'period', $author$project$Main$UpdatePeriod, 0.1, 1, model.noiseParams.period),
-										A5($author$project$Main$slider, 'persistance', $author$project$Main$UpdatePersistance, 0, 1, model.noiseParams.persistance)
+										A5($author$project$Main$slider, 'baseRoughness', $author$project$Main$UpdateBaseRoughness, 1, 5, model.noiseParams.baseRoughness),
+										A5($author$project$Main$slider, 'roughness', $author$project$Main$UpdateRoughness, 0.1, 1, model.noiseParams.roughness),
+										A5($author$project$Main$slider, 'persistance', $author$project$Main$UpdatePersistance, 0, 1, model.noiseParams.persistance),
+										A5($author$project$Main$slider, 'strength', $author$project$Main$UpdateStrength, 0, 1, model.noiseParams.strength),
+										A5($author$project$Main$intSlider, 'numLayers', $author$project$Main$UpdateNumLayers, 1, 8, model.noiseParams.numLayers)
 									]))
 							]))
 					]))

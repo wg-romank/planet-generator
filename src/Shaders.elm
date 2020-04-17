@@ -25,14 +25,14 @@ vertexShader =
         varying vec3 heightColor;
 
         void main() {
-            vec4 pos = vec4(position, 2);
+            vec4 pos = vec4(position, 2) * rotation;
             gl_Position = pos;
 
             vec3 ambientLight = vec3(0.5, 0.5, 0.5);
             vec3 directionalLightColor = vec3(1, 1, 1);
             vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));
 
-            vec4 transformedNormal = vec4(normal, 1.0);
+            vec4 transformedNormal = normalMatrix * vec4(normal, 1.0);
 
             float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
             vLighting = ambientLight + (directionalLightColor * directional);
@@ -129,35 +129,31 @@ drawFace res noise theta dir =
 
 type alias NoiseParameters =
     { seed: Int,
-      scale: Float,
-      octaves: Int,
-      period: Float,
-      persistance: Float }
+      baseRoughness: Float,
+      numLayers: Int,
+      roughness: Float,
+      persistance: Float,
+      strength: Float }
 
 
 emptyNoiseParams: NoiseParameters
-emptyNoiseParams = { seed = 42, scale = 2, octaves = 8, period = 0.4, persistance = 0.5 }
+emptyNoiseParams = { seed = 42, baseRoughness = 8, numLayers = 8, roughness = 0.4, persistance = 0.5, strength = 1 }
 
 
 drawCube: Int -> Float -> NoiseParameters -> List WebGL.Entity
 drawCube res theta noiseParams =
     let
-        noise = Simplex.noise3d
-            -- { scale = noiseParams.scale,
-            --   steps = noiseParams.octaves,
-            --   stepSize = noiseParams.period,
-            --   persistence = noiseParams.persistance }
-             (Simplex.permutationTableFromInt noiseParams.seed )
-        initialParams = { value = 0.0, frequency = noiseParams.scale, amplidute = noiseParams.persistance }
+        noise = Simplex.noise3d (Simplex.permutationTableFromInt noiseParams.seed )
+        initialParams = { value = 0.0, frequency = noiseParams.baseRoughness, amplidute = noiseParams.persistance }
         noiseFunc = \x y z ->
             List.foldl ( \_ acc ->
             let
                 v = (noise (acc.frequency * x) (acc.frequency * y) (acc.frequency * z) + 1) * 0.5 * acc.amplidute
-                newFrequency = acc.frequency -- TODO: settings
+                newFrequency = acc.frequency * noiseParams.roughness
                 newAmp = acc.amplidute * noiseParams.persistance
             in
                 { value = acc.value + v, frequency = newFrequency, amplidute = newAmp }
-            ) initialParams (List.range 1 noiseParams.octaves) |> \f -> f.value
+            ) initialParams (List.range 1 noiseParams.numLayers) |> \f -> f.value * noiseParams.strength
     in
     [ vec3 1 0 0,
       vec3 0 1 0,

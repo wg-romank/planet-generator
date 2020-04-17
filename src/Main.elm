@@ -44,7 +44,7 @@ init _ =
       , width = 400
       , height = 400
       , noiseParams = emptyNoiseParams
-      , res = 10
+      , res = 20
       }
     , Cmd.batch
         [ Task.perform ViewPortLoaded Browser.Dom.getViewport
@@ -60,7 +60,7 @@ type Msg
     | UpdateParams UpdateParams
 
 
-type UpdateParams = UpdateScale String | UpdatePeriod String | UpdatePersistance String | UpdateOctaves String | UpdateSeed String
+type UpdateParams = UpdateBaseRoughness String | UpdateRoughness String | UpdatePersistance String | UpdateNumLayers String | UpdateSeed String | UpdateStrength String
 
 
 computeViewportSize : Viewport -> Model -> Model
@@ -90,16 +90,18 @@ update msg model =
             let
                 prevParams = model.noiseParams
                 newParams = case params of 
-                    UpdateScale scale ->
-                        { prevParams | scale = String.toFloat scale |> Maybe.withDefault prevParams.scale }
-                    UpdatePeriod period ->
-                        { prevParams | period = String.toFloat period |> Maybe.withDefault prevParams.period }
+                    UpdateBaseRoughness baseRoughness ->
+                        { prevParams | baseRoughness = String.toFloat baseRoughness |> Maybe.withDefault prevParams.baseRoughness }
+                    UpdateRoughness roughness ->
+                        { prevParams | roughness = String.toFloat roughness |> Maybe.withDefault prevParams.roughness }
                     UpdatePersistance persistance ->
                         { prevParams | persistance = String.toFloat persistance |> Maybe.withDefault prevParams.persistance }
-                    UpdateOctaves octaves ->
-                        { prevParams | octaves = String.toInt octaves |> Maybe.withDefault prevParams.octaves }
+                    UpdateNumLayers numLayers ->
+                        { prevParams | numLayers = String.toInt numLayers |> Maybe.withDefault prevParams.numLayers }
                     UpdateSeed seed ->
                         { prevParams | seed = String.toInt seed |> Maybe.withDefault prevParams.seed }
+                    UpdateStrength strength ->
+                        { prevParams | strength = String.toFloat strength |> Maybe.withDefault prevParams.strength }
             in
             ( { model | noiseParams = newParams }, Cmd.none )
 
@@ -178,10 +180,11 @@ view model =
             style "width" "95%"
           ] [ 
             -- intSlider "seed" UpdateSeed 1 100 model.noiseParams.seed,
-            slider "scale" UpdateScale 1 5 model.noiseParams.scale,
-            slider "period" UpdatePeriod 0.1 1 model.noiseParams.period,
-            slider "persistance" UpdatePersistance 0 1 model.noiseParams.persistance
-            -- intSlider "octaves" UpdateOctaves 1 8 model.noiseParams.octaves
+            slider "baseRoughness" UpdateBaseRoughness 1 5 model.noiseParams.baseRoughness,
+            slider "roughness" UpdateRoughness 0.1 1 model.noiseParams.roughness,
+            slider "persistance" UpdatePersistance 0 1 model.noiseParams.persistance,
+            slider "strength" UpdateStrength 0 1 model.noiseParams.strength,
+            intSlider "numLayers" UpdateNumLayers 1 8 model.noiseParams.numLayers
           ] ]
          ]
         ]

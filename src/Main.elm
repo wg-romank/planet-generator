@@ -31,6 +31,7 @@ type alias Model =
     , offset : Int
     , noiseParams : NoiseParameters
     , res : Int
+    , meshes: List (WebGL.Mesh Vertex)
     }
 
 
@@ -44,7 +45,8 @@ init _ =
       , width = 400
       , height = 400
       , noiseParams = emptyNoiseParams
-      , res = 10
+      , res = 40
+      , meshes = makeCube 40 emptyNoiseParams
       }
     , Cmd.batch
         [ Task.perform ViewPortLoaded Browser.Dom.getViewport
@@ -111,7 +113,7 @@ update msg model =
                     UpdateMinValue minValue ->
                         { prevParams | minValue = String.toFloat minValue |> Maybe.withDefault prevParams.strength }
             in
-            ( { model | noiseParams = newParams }, Cmd.none )
+            ( { model | noiseParams = newParams, meshes = makeCube model.res model.noiseParams }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -180,7 +182,7 @@ view model =
               style "align" "center",
               style "width" "95%",
               width model.width,
-              height model.height ] (drawCube model.res model.theta model.noiseParams),
+              height model.height ] (List.map (draw model.theta) model.meshes),
           div [
             style "top" (String.fromInt model.height ++ "px"),
             style "align" "center",

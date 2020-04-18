@@ -4357,648 +4357,6 @@ function _Browser_load(url)
 }
 
 
-function _WebGL_log(/* msg */) {
-  // console.log(msg);
-}
-
-var _WebGL_guid = 0;
-
-function _WebGL_listEach(fn, list) {
-  for (; list.b; list = list.b) {
-    fn(list.a);
-  }
-}
-
-function _WebGL_listLength(list) {
-  var length = 0;
-  for (; list.b; list = list.b) {
-    length++;
-  }
-  return length;
-}
-
-var _WebGL_rAF = typeof requestAnimationFrame !== 'undefined' ?
-  requestAnimationFrame :
-  function (cb) { setTimeout(cb, 1000 / 60); };
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_entity = F5(function (settings, vert, frag, mesh, uniforms) {
-  return {
-    $: 0,
-    a: settings,
-    b: vert,
-    c: frag,
-    d: mesh,
-    e: uniforms
-  };
-});
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_enableBlend = F2(function (gl, setting) {
-  gl.enable(gl.BLEND);
-  // a   b   c   d   e   f   g h i j
-  // eq1 f11 f12 eq2 f21 f22 r g b a
-  gl.blendEquationSeparate(setting.a, setting.d);
-  gl.blendFuncSeparate(setting.b, setting.c, setting.e, setting.f);
-  gl.blendColor(setting.g, setting.h, setting.i, setting.j);
-});
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_enableDepthTest = F2(function (gl, setting) {
-  gl.enable(gl.DEPTH_TEST);
-  // a    b    c    d
-  // func mask near far
-  gl.depthFunc(setting.a);
-  gl.depthMask(setting.b);
-  gl.depthRange(setting.c, setting.d);
-});
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_enableStencilTest = F2(function (gl, setting) {
-  gl.enable(gl.STENCIL_TEST);
-  // a   b    c         d     e     f      g      h     i     j      k
-  // ref mask writeMask test1 fail1 zfail1 zpass1 test2 fail2 zfail2 zpass2
-  gl.stencilFuncSeparate(gl.FRONT, setting.d, setting.a, setting.b);
-  gl.stencilOpSeparate(gl.FRONT, setting.e, setting.f, setting.g);
-  gl.stencilMaskSeparate(gl.FRONT, setting.c);
-  gl.stencilFuncSeparate(gl.BACK, setting.h, setting.a, setting.b);
-  gl.stencilOpSeparate(gl.BACK, setting.i, setting.j, setting.k);
-  gl.stencilMaskSeparate(gl.BACK, setting.c);
-});
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_enableScissor = F2(function (gl, setting) {
-  gl.enable(gl.SCISSOR_TEST);
-  gl.scissor(setting.a, setting.b, setting.c, setting.d);
-});
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_enableColorMask = F2(function (gl, setting) {
-  gl.colorMask(setting.a, setting.b, setting.c, setting.d);
-});
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_enableCullFace = F2(function (gl, setting) {
-  gl.enable(gl.CULL_FACE);
-  gl.cullFace(setting.a);
-});
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_enablePolygonOffset = F2(function (gl, setting) {
-  gl.enable(gl.POLYGON_OFFSET_FILL);
-  gl.polygonOffset(setting.a, setting.b);
-});
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_enableSampleCoverage = F2(function (gl, setting) {
-  gl.enable(gl.SAMPLE_COVERAGE);
-  gl.sampleCoverage(setting.a, setting.b);
-});
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_enableSampleAlphaToCoverage = F2(function (gl, setting) {
-  gl.enable(gl.SAMPLE_ALPHA_TO_COVERAGE);
-});
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_disableBlend = function (cache) {
-  cache.gl.disable(cache.gl.BLEND);
-};
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_disableDepthTest = function (cache) {
-  cache.gl.disable(cache.gl.DEPTH_TEST);
-  cache.gl.depthMask(true);
-};
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_disableStencilTest = function (cache) {
-  cache.gl.disable(cache.gl.STENCIL_TEST);
-  cache.gl.stencilMask(cache.STENCIL_WRITEMASK);
-};
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_disableScissor = function (cache) {
-  cache.gl.disable(cache.gl.SCISSOR_TEST);
-};
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_disableColorMask = function (cache) {
-  cache.gl.colorMask(true, true, true, true);
-};
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_disableCullFace = function (cache) {
-  cache.gl.disable(cache.gl.CULL_FACE);
-};
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_disablePolygonOffset = function (cache) {
-  cache.gl.disable(cache.gl.POLYGON_OFFSET_FILL);
-};
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_disableSampleCoverage = function (cache) {
-  cache.gl.disable(cache.gl.SAMPLE_COVERAGE);
-};
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_disableSampleAlphaToCoverage = function (cache) {
-  cache.gl.disable(cache.gl.SAMPLE_ALPHA_TO_COVERAGE);
-};
-
-function _WebGL_doCompile(gl, src, type) {
-
-  var shader = gl.createShader(type);
-  _WebGL_log('Created shader');
-
-  gl.shaderSource(shader, src);
-  gl.compileShader(shader);
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    throw gl.getShaderInfoLog(shader);
-  }
-
-  return shader;
-
-}
-
-function _WebGL_doLink(gl, vshader, fshader) {
-
-  var program = gl.createProgram();
-  _WebGL_log('Created program');
-
-  gl.attachShader(program, vshader);
-  gl.attachShader(program, fshader);
-  gl.linkProgram(program);
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    throw gl.getProgramInfoLog(program);
-  }
-
-  return program;
-
-}
-
-function _WebGL_getAttributeInfo(gl, type) {
-  switch (type) {
-    case gl.FLOAT:
-      return { size: 1, arraySize: 1, type: Float32Array, baseType: gl.FLOAT };
-    case gl.FLOAT_VEC2:
-      return { size: 2, arraySize: 1, type: Float32Array, baseType: gl.FLOAT };
-    case gl.FLOAT_VEC3:
-      return { size: 3, arraySize: 1, type: Float32Array, baseType: gl.FLOAT };
-    case gl.FLOAT_VEC4:
-      return { size: 4, arraySize: 1, type: Float32Array, baseType: gl.FLOAT };
-    case gl.FLOAT_MAT4:
-      return { size: 4, arraySize: 4, type: Float32Array, baseType: gl.FLOAT };
-    case gl.INT:
-      return { size: 1, arraySize: 1, type: Int32Array, baseType: gl.INT };
-  }
-}
-
-/**
- *  Form the buffer for a given attribute.
- *
- *  @param {WebGLRenderingContext} gl context
- *  @param {WebGLActiveInfo} attribute the attribute to bind to.
- *         We use its name to grab the record by name and also to know
- *         how many elements we need to grab.
- *  @param {Mesh} mesh The mesh coming in from Elm.
- *  @param {Object} attributes The mapping between the attribute names and Elm fields
- *  @return {WebGLBuffer}
- */
-function _WebGL_doBindAttribute(gl, attribute, mesh, attributes) {
-  // The length of the number of vertices that
-  // complete one 'thing' based on the drawing mode.
-  // ie, 2 for Lines, 3 for Triangles, etc.
-  var elemSize = mesh.a.elemSize;
-
-  var idxKeys = [];
-  for (var i = 0; i < elemSize; i++) {
-    idxKeys.push(String.fromCharCode(97 + i));
-  }
-
-  function dataFill(data, cnt, fillOffset, elem, key) {
-    var i;
-    if (elemSize === 1) {
-      for (i = 0; i < cnt; i++) {
-        data[fillOffset++] = cnt === 1 ? elem[key] : elem[key][i];
-      }
-    } else {
-      idxKeys.forEach(function (idx) {
-        for (i = 0; i < cnt; i++) {
-          data[fillOffset++] = cnt === 1 ? elem[idx][key] : elem[idx][key][i];
-        }
-      });
-    }
-  }
-
-  var attributeInfo = _WebGL_getAttributeInfo(gl, attribute.type);
-
-  if (attributeInfo === undefined) {
-    throw new Error('No info available for: ' + attribute.type);
-  }
-
-  var dataIdx = 0;
-  var dataOffset = attributeInfo.size * attributeInfo.arraySize * elemSize;
-  var array = new attributeInfo.type(_WebGL_listLength(mesh.b) * dataOffset);
-
-  _WebGL_listEach(function (elem) {
-    dataFill(array, attributeInfo.size * attributeInfo.arraySize, dataIdx, elem, attributes[attribute.name] || attribute.name);
-    dataIdx += dataOffset;
-  }, mesh.b);
-
-  var buffer = gl.createBuffer();
-  _WebGL_log('Created attribute buffer ' + attribute.name);
-
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, array, gl.STATIC_DRAW);
-  return buffer;
-}
-
-/**
- *  This sets up the binding caching buffers.
- *
- *  We don't actually bind any buffers now except for the indices buffer.
- *  The problem with filling the buffers here is that it is possible to
- *  have a buffer shared between two webgl shaders;
- *  which could have different active attributes. If we bind it here against
- *  a particular program, we might not bind them all. That final bind is now
- *  done right before drawing.
- *
- *  @param {WebGLRenderingContext} gl context
- *  @param {Mesh} mesh a mesh object from Elm
- *  @return {Object} buffer - an object with the following properties
- *  @return {Number} buffer.numIndices
- *  @return {WebGLBuffer|null} buffer.indexBuffer - optional index buffer
- *  @return {Object} buffer.buffers - will be used to buffer attributes
- */
-function _WebGL_doBindSetup(gl, mesh) {
-  if (mesh.a.indexSize > 0) {
-    _WebGL_log('Created index buffer');
-    var indexBuffer = gl.createBuffer();
-    var indices = _WebGL_makeIndexedBuffer(mesh.c, mesh.a.indexSize);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
-    return {
-      numIndices: indices.length,
-      indexBuffer: indexBuffer,
-      buffers: {}
-    };
-  } else {
-    return {
-      numIndices: mesh.a.elemSize * _WebGL_listLength(mesh.b),
-      indexBuffer: null,
-      buffers: {}
-    };
-  }
-}
-
-/**
- *  Create an indices array and fill it from indices
- *  based on the size of the index
- *
- *  @param {List} indicesList the list of indices
- *  @param {Number} indexSize the size of the index
- *  @return {Uint16Array} indices
- */
-function _WebGL_makeIndexedBuffer(indicesList, indexSize) {
-  var indices = new Uint16Array(_WebGL_listLength(indicesList) * indexSize);
-  var fillOffset = 0;
-  var i;
-  _WebGL_listEach(function (elem) {
-    if (indexSize === 1) {
-      indices[fillOffset++] = elem;
-    } else {
-      for (i = 0; i < indexSize; i++) {
-        indices[fillOffset++] = elem[String.fromCharCode(97 + i)];
-      }
-    }
-  }, indicesList);
-  return indices;
-}
-
-function _WebGL_getProgID(vertID, fragID) {
-  return vertID + '#' + fragID;
-}
-
-var _WebGL_drawGL = F2(function (model, domNode) {
-
-  var gl = model.f.gl;
-
-  if (!gl) {
-    return domNode;
-  }
-
-  gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
-  _WebGL_log('Drawing');
-
-  function drawEntity(entity) {
-    if (!entity.d.b.b) {
-      return; // Empty list
-    }
-
-    var progid;
-    var program;
-    if (entity.b.id && entity.c.id) {
-      progid = _WebGL_getProgID(entity.b.id, entity.c.id);
-      program = model.f.programs[progid];
-    }
-
-    if (!program) {
-
-      var vshader;
-      if (entity.b.id) {
-        vshader = model.f.shaders[entity.b.id];
-      } else {
-        entity.b.id = _WebGL_guid++;
-      }
-
-      if (!vshader) {
-        vshader = _WebGL_doCompile(gl, entity.b.src, gl.VERTEX_SHADER);
-        model.f.shaders[entity.b.id] = vshader;
-      }
-
-      var fshader;
-      if (entity.c.id) {
-        fshader = model.f.shaders[entity.c.id];
-      } else {
-        entity.c.id = _WebGL_guid++;
-      }
-
-      if (!fshader) {
-        fshader = _WebGL_doCompile(gl, entity.c.src, gl.FRAGMENT_SHADER);
-        model.f.shaders[entity.c.id] = fshader;
-      }
-
-      var glProgram = _WebGL_doLink(gl, vshader, fshader);
-
-      program = {
-        glProgram: glProgram,
-        attributes: Object.assign({}, entity.b.attributes, entity.c.attributes),
-        uniformSetters: _WebGL_createUniformSetters(
-          gl,
-          model,
-          glProgram,
-          Object.assign({}, entity.b.uniforms, entity.c.uniforms)
-        )
-      };
-
-      progid = _WebGL_getProgID(entity.b.id, entity.c.id);
-      model.f.programs[progid] = program;
-
-    }
-
-    gl.useProgram(program.glProgram);
-
-    _WebGL_setUniforms(program.uniformSetters, entity.e);
-
-    var buffer = model.f.buffers.get(entity.d);
-
-    if (!buffer) {
-      buffer = _WebGL_doBindSetup(gl, entity.d);
-      model.f.buffers.set(entity.d, buffer);
-    }
-
-    var numAttributes = gl.getProgramParameter(program.glProgram, gl.ACTIVE_ATTRIBUTES);
-
-    for (var i = 0; i < numAttributes; i++) {
-      var attribute = gl.getActiveAttrib(program.glProgram, i);
-
-      var attribLocation = gl.getAttribLocation(program.glProgram, attribute.name);
-      gl.enableVertexAttribArray(attribLocation);
-
-      if (buffer.buffers[attribute.name] === undefined) {
-        buffer.buffers[attribute.name] = _WebGL_doBindAttribute(gl, attribute, entity.d, program.attributes);
-      }
-      var attributeBuffer = buffer.buffers[attribute.name];
-      var attributeInfo = _WebGL_getAttributeInfo(gl, attribute.type);
-
-      gl.bindBuffer(gl.ARRAY_BUFFER, attributeBuffer);
-
-      if (attributeInfo.arraySize === 1) {
-        gl.vertexAttribPointer(attribLocation, attributeInfo.size, attributeInfo.baseType, false, 0, 0);
-      } else {
-        // Point to four vec4 in case of mat4
-        var offset = attributeInfo.size * 4; // float32 takes 4 bytes
-        var stride = offset * attributeInfo.arraySize;
-        for (var m = 0; m < attributeInfo.arraySize; m++) {
-          gl.enableVertexAttribArray(attribLocation + m);
-          gl.vertexAttribPointer(attribLocation + m, attributeInfo.size, attributeInfo.baseType, false, stride, offset * m);
-        }
-      }
-    }
-    _WebGL_listEach($elm_explorations$webgl$WebGL$Internal$enableSetting(gl), entity.a);
-
-    if (buffer.indexBuffer) {
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indexBuffer);
-      gl.drawElements(entity.d.a.mode, buffer.numIndices, gl.UNSIGNED_SHORT, 0);
-    } else {
-      gl.drawArrays(entity.d.a.mode, 0, buffer.numIndices);
-    }
-
-    _WebGL_listEach($elm_explorations$webgl$WebGL$Internal$disableSetting(model.f), entity.a);
-
-  }
-
-  _WebGL_listEach(drawEntity, model.g);
-  return domNode;
-});
-
-function _WebGL_createUniformSetters(gl, model, program, uniformsMap) {
-  var textureCounter = 0;
-  function createUniformSetter(program, uniform) {
-    var uniformLocation = gl.getUniformLocation(program, uniform.name);
-    switch (uniform.type) {
-      case gl.INT:
-        return function (value) {
-          gl.uniform1i(uniformLocation, value);
-        };
-      case gl.FLOAT:
-        return function (value) {
-          gl.uniform1f(uniformLocation, value);
-        };
-      case gl.FLOAT_VEC2:
-        return function (value) {
-          gl.uniform2fv(uniformLocation, new Float32Array(value));
-        };
-      case gl.FLOAT_VEC3:
-        return function (value) {
-          gl.uniform3fv(uniformLocation, new Float32Array(value));
-        };
-      case gl.FLOAT_VEC4:
-        return function (value) {
-          gl.uniform4fv(uniformLocation, new Float32Array(value));
-        };
-      case gl.FLOAT_MAT4:
-        return function (value) {
-          gl.uniformMatrix4fv(uniformLocation, false, new Float32Array(value));
-        };
-      case gl.SAMPLER_2D:
-        var currentTexture = textureCounter++;
-        return function (texture) {
-          gl.activeTexture(gl.TEXTURE0 + currentTexture);
-          var tex = model.f.textures.get(texture);
-          if (!tex) {
-            _WebGL_log('Created texture');
-            tex = texture.createTexture(gl);
-            model.f.textures.set(texture, tex);
-          }
-          gl.bindTexture(gl.TEXTURE_2D, tex);
-          gl.uniform1i(uniformLocation, currentTexture);
-        };
-      case gl.BOOL:
-        return function (value) {
-          gl.uniform1i(uniformLocation, value);
-        };
-      default:
-        _WebGL_log('Unsupported uniform type: ' + uniform.type);
-        return function () { };
-    }
-  }
-
-  var uniformSetters = {};
-  var numUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
-  for (var i = 0; i < numUniforms; i++) {
-    var uniform = gl.getActiveUniform(program, i);
-    uniformSetters[uniformsMap[uniform.name] || uniform.name] = createUniformSetter(program, uniform);
-  }
-
-  return uniformSetters;
-}
-
-function _WebGL_setUniforms(setters, values) {
-  Object.keys(values).forEach(function (name) {
-    var setter = setters[name];
-    if (setter) {
-      setter(values[name]);
-    }
-  });
-}
-
-// VIRTUAL-DOM WIDGET
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_toHtml = F3(function (options, factList, entities) {
-  return _VirtualDom_custom(
-    factList,
-    {
-      g: entities,
-      f: {},
-      h: options
-    },
-    _WebGL_render,
-    _WebGL_diff
-  );
-});
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_enableAlpha = F2(function (options, option) {
-  options.contextAttributes.alpha = true;
-  options.contextAttributes.premultipliedAlpha = option.a;
-});
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_enableDepth = F2(function (options, option) {
-  options.contextAttributes.depth = true;
-  options.sceneSettings.push(function (gl) {
-    gl.clearDepth(option.a);
-  });
-});
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_enableStencil = F2(function (options, option) {
-  options.contextAttributes.stencil = true;
-  options.sceneSettings.push(function (gl) {
-    gl.clearStencil(option.a);
-  });
-});
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_enableAntialias = F2(function (options, option) {
-  options.contextAttributes.antialias = true;
-});
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_enableClearColor = F2(function (options, option) {
-  options.sceneSettings.push(function (gl) {
-    gl.clearColor(option.a, option.b, option.c, option.d);
-  });
-});
-
-// eslint-disable-next-line no-unused-vars
-var _WebGL_enablePreserveDrawingBuffer = F2(function (options, option) {
-  options.contextAttributes.preserveDrawingBuffer = true;
-});
-
-/**
- *  Creates canvas and schedules initial _WebGL_drawGL
- *  @param {Object} model
- *  @param {Object} model.f that may contain the following properties:
-           gl, shaders, programs, buffers, textures
- *  @param {List<Option>} model.h list of options coming from Elm
- *  @param {List<Entity>} model.g list of entities coming from Elm
- *  @return {HTMLElement} <canvas> if WebGL is supported, otherwise a <div>
- */
-function _WebGL_render(model) {
-  var options = {
-    contextAttributes: {
-      alpha: false,
-      depth: false,
-      stencil: false,
-      antialias: false,
-      premultipliedAlpha: false,
-      preserveDrawingBuffer: false
-    },
-    sceneSettings: []
-  };
-
-  _WebGL_listEach(function (option) {
-    return A2($elm_explorations$webgl$WebGL$Internal$enableOption, options, option);
-  }, model.h);
-
-  _WebGL_log('Render canvas');
-  var canvas = _VirtualDom_doc.createElement('canvas');
-  var gl = canvas.getContext && (
-    canvas.getContext('webgl', options.contextAttributes) ||
-    canvas.getContext('experimental-webgl', options.contextAttributes)
-  );
-
-  if (gl && typeof WeakMap !== 'undefined') {
-    options.sceneSettings.forEach(function (sceneSetting) {
-      sceneSetting(gl);
-    });
-
-    model.f.gl = gl;
-    model.f.shaders = [];
-    model.f.programs = {};
-    model.f.buffers = new WeakMap();
-    model.f.textures = new WeakMap();
-    // Memorize the initial stencil write mask, because
-    // browsers may have different number of stencil bits
-    model.f.STENCIL_WRITEMASK = gl.getParameter(gl.STENCIL_WRITEMASK);
-
-    // Render for the first time.
-    // This has to be done in animation frame,
-    // because the canvas is not in the DOM yet
-    _WebGL_rAF(function () {
-      return A2(_WebGL_drawGL, model, canvas);
-    });
-
-  } else {
-    canvas = _VirtualDom_doc.createElement('div');
-    canvas.innerHTML = '<a href="https://get.webgl.org/">Enable WebGL</a> to see this content!';
-  }
-
-  return canvas;
-}
-
-function _WebGL_diff(oldModel, newModel) {
-  newModel.f = oldModel.f;
-  return _WebGL_drawGL(newModel);
-}
-
-
 /*
  * Copyright (c) 2010 Mozilla Corporation
  * Copyright (c) 2010 Vladimir Vukicevic
@@ -6048,6 +5406,648 @@ var _Bitwise_shiftRightZfBy = F2(function(offset, a)
 {
 	return a >>> offset;
 });
+
+
+function _WebGL_log(/* msg */) {
+  // console.log(msg);
+}
+
+var _WebGL_guid = 0;
+
+function _WebGL_listEach(fn, list) {
+  for (; list.b; list = list.b) {
+    fn(list.a);
+  }
+}
+
+function _WebGL_listLength(list) {
+  var length = 0;
+  for (; list.b; list = list.b) {
+    length++;
+  }
+  return length;
+}
+
+var _WebGL_rAF = typeof requestAnimationFrame !== 'undefined' ?
+  requestAnimationFrame :
+  function (cb) { setTimeout(cb, 1000 / 60); };
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_entity = F5(function (settings, vert, frag, mesh, uniforms) {
+  return {
+    $: 0,
+    a: settings,
+    b: vert,
+    c: frag,
+    d: mesh,
+    e: uniforms
+  };
+});
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_enableBlend = F2(function (gl, setting) {
+  gl.enable(gl.BLEND);
+  // a   b   c   d   e   f   g h i j
+  // eq1 f11 f12 eq2 f21 f22 r g b a
+  gl.blendEquationSeparate(setting.a, setting.d);
+  gl.blendFuncSeparate(setting.b, setting.c, setting.e, setting.f);
+  gl.blendColor(setting.g, setting.h, setting.i, setting.j);
+});
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_enableDepthTest = F2(function (gl, setting) {
+  gl.enable(gl.DEPTH_TEST);
+  // a    b    c    d
+  // func mask near far
+  gl.depthFunc(setting.a);
+  gl.depthMask(setting.b);
+  gl.depthRange(setting.c, setting.d);
+});
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_enableStencilTest = F2(function (gl, setting) {
+  gl.enable(gl.STENCIL_TEST);
+  // a   b    c         d     e     f      g      h     i     j      k
+  // ref mask writeMask test1 fail1 zfail1 zpass1 test2 fail2 zfail2 zpass2
+  gl.stencilFuncSeparate(gl.FRONT, setting.d, setting.a, setting.b);
+  gl.stencilOpSeparate(gl.FRONT, setting.e, setting.f, setting.g);
+  gl.stencilMaskSeparate(gl.FRONT, setting.c);
+  gl.stencilFuncSeparate(gl.BACK, setting.h, setting.a, setting.b);
+  gl.stencilOpSeparate(gl.BACK, setting.i, setting.j, setting.k);
+  gl.stencilMaskSeparate(gl.BACK, setting.c);
+});
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_enableScissor = F2(function (gl, setting) {
+  gl.enable(gl.SCISSOR_TEST);
+  gl.scissor(setting.a, setting.b, setting.c, setting.d);
+});
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_enableColorMask = F2(function (gl, setting) {
+  gl.colorMask(setting.a, setting.b, setting.c, setting.d);
+});
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_enableCullFace = F2(function (gl, setting) {
+  gl.enable(gl.CULL_FACE);
+  gl.cullFace(setting.a);
+});
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_enablePolygonOffset = F2(function (gl, setting) {
+  gl.enable(gl.POLYGON_OFFSET_FILL);
+  gl.polygonOffset(setting.a, setting.b);
+});
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_enableSampleCoverage = F2(function (gl, setting) {
+  gl.enable(gl.SAMPLE_COVERAGE);
+  gl.sampleCoverage(setting.a, setting.b);
+});
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_enableSampleAlphaToCoverage = F2(function (gl, setting) {
+  gl.enable(gl.SAMPLE_ALPHA_TO_COVERAGE);
+});
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_disableBlend = function (cache) {
+  cache.gl.disable(cache.gl.BLEND);
+};
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_disableDepthTest = function (cache) {
+  cache.gl.disable(cache.gl.DEPTH_TEST);
+  cache.gl.depthMask(true);
+};
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_disableStencilTest = function (cache) {
+  cache.gl.disable(cache.gl.STENCIL_TEST);
+  cache.gl.stencilMask(cache.STENCIL_WRITEMASK);
+};
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_disableScissor = function (cache) {
+  cache.gl.disable(cache.gl.SCISSOR_TEST);
+};
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_disableColorMask = function (cache) {
+  cache.gl.colorMask(true, true, true, true);
+};
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_disableCullFace = function (cache) {
+  cache.gl.disable(cache.gl.CULL_FACE);
+};
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_disablePolygonOffset = function (cache) {
+  cache.gl.disable(cache.gl.POLYGON_OFFSET_FILL);
+};
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_disableSampleCoverage = function (cache) {
+  cache.gl.disable(cache.gl.SAMPLE_COVERAGE);
+};
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_disableSampleAlphaToCoverage = function (cache) {
+  cache.gl.disable(cache.gl.SAMPLE_ALPHA_TO_COVERAGE);
+};
+
+function _WebGL_doCompile(gl, src, type) {
+
+  var shader = gl.createShader(type);
+  _WebGL_log('Created shader');
+
+  gl.shaderSource(shader, src);
+  gl.compileShader(shader);
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    throw gl.getShaderInfoLog(shader);
+  }
+
+  return shader;
+
+}
+
+function _WebGL_doLink(gl, vshader, fshader) {
+
+  var program = gl.createProgram();
+  _WebGL_log('Created program');
+
+  gl.attachShader(program, vshader);
+  gl.attachShader(program, fshader);
+  gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    throw gl.getProgramInfoLog(program);
+  }
+
+  return program;
+
+}
+
+function _WebGL_getAttributeInfo(gl, type) {
+  switch (type) {
+    case gl.FLOAT:
+      return { size: 1, arraySize: 1, type: Float32Array, baseType: gl.FLOAT };
+    case gl.FLOAT_VEC2:
+      return { size: 2, arraySize: 1, type: Float32Array, baseType: gl.FLOAT };
+    case gl.FLOAT_VEC3:
+      return { size: 3, arraySize: 1, type: Float32Array, baseType: gl.FLOAT };
+    case gl.FLOAT_VEC4:
+      return { size: 4, arraySize: 1, type: Float32Array, baseType: gl.FLOAT };
+    case gl.FLOAT_MAT4:
+      return { size: 4, arraySize: 4, type: Float32Array, baseType: gl.FLOAT };
+    case gl.INT:
+      return { size: 1, arraySize: 1, type: Int32Array, baseType: gl.INT };
+  }
+}
+
+/**
+ *  Form the buffer for a given attribute.
+ *
+ *  @param {WebGLRenderingContext} gl context
+ *  @param {WebGLActiveInfo} attribute the attribute to bind to.
+ *         We use its name to grab the record by name and also to know
+ *         how many elements we need to grab.
+ *  @param {Mesh} mesh The mesh coming in from Elm.
+ *  @param {Object} attributes The mapping between the attribute names and Elm fields
+ *  @return {WebGLBuffer}
+ */
+function _WebGL_doBindAttribute(gl, attribute, mesh, attributes) {
+  // The length of the number of vertices that
+  // complete one 'thing' based on the drawing mode.
+  // ie, 2 for Lines, 3 for Triangles, etc.
+  var elemSize = mesh.a.elemSize;
+
+  var idxKeys = [];
+  for (var i = 0; i < elemSize; i++) {
+    idxKeys.push(String.fromCharCode(97 + i));
+  }
+
+  function dataFill(data, cnt, fillOffset, elem, key) {
+    var i;
+    if (elemSize === 1) {
+      for (i = 0; i < cnt; i++) {
+        data[fillOffset++] = cnt === 1 ? elem[key] : elem[key][i];
+      }
+    } else {
+      idxKeys.forEach(function (idx) {
+        for (i = 0; i < cnt; i++) {
+          data[fillOffset++] = cnt === 1 ? elem[idx][key] : elem[idx][key][i];
+        }
+      });
+    }
+  }
+
+  var attributeInfo = _WebGL_getAttributeInfo(gl, attribute.type);
+
+  if (attributeInfo === undefined) {
+    throw new Error('No info available for: ' + attribute.type);
+  }
+
+  var dataIdx = 0;
+  var dataOffset = attributeInfo.size * attributeInfo.arraySize * elemSize;
+  var array = new attributeInfo.type(_WebGL_listLength(mesh.b) * dataOffset);
+
+  _WebGL_listEach(function (elem) {
+    dataFill(array, attributeInfo.size * attributeInfo.arraySize, dataIdx, elem, attributes[attribute.name] || attribute.name);
+    dataIdx += dataOffset;
+  }, mesh.b);
+
+  var buffer = gl.createBuffer();
+  _WebGL_log('Created attribute buffer ' + attribute.name);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  gl.bufferData(gl.ARRAY_BUFFER, array, gl.STATIC_DRAW);
+  return buffer;
+}
+
+/**
+ *  This sets up the binding caching buffers.
+ *
+ *  We don't actually bind any buffers now except for the indices buffer.
+ *  The problem with filling the buffers here is that it is possible to
+ *  have a buffer shared between two webgl shaders;
+ *  which could have different active attributes. If we bind it here against
+ *  a particular program, we might not bind them all. That final bind is now
+ *  done right before drawing.
+ *
+ *  @param {WebGLRenderingContext} gl context
+ *  @param {Mesh} mesh a mesh object from Elm
+ *  @return {Object} buffer - an object with the following properties
+ *  @return {Number} buffer.numIndices
+ *  @return {WebGLBuffer|null} buffer.indexBuffer - optional index buffer
+ *  @return {Object} buffer.buffers - will be used to buffer attributes
+ */
+function _WebGL_doBindSetup(gl, mesh) {
+  if (mesh.a.indexSize > 0) {
+    _WebGL_log('Created index buffer');
+    var indexBuffer = gl.createBuffer();
+    var indices = _WebGL_makeIndexedBuffer(mesh.c, mesh.a.indexSize);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
+    return {
+      numIndices: indices.length,
+      indexBuffer: indexBuffer,
+      buffers: {}
+    };
+  } else {
+    return {
+      numIndices: mesh.a.elemSize * _WebGL_listLength(mesh.b),
+      indexBuffer: null,
+      buffers: {}
+    };
+  }
+}
+
+/**
+ *  Create an indices array and fill it from indices
+ *  based on the size of the index
+ *
+ *  @param {List} indicesList the list of indices
+ *  @param {Number} indexSize the size of the index
+ *  @return {Uint16Array} indices
+ */
+function _WebGL_makeIndexedBuffer(indicesList, indexSize) {
+  var indices = new Uint16Array(_WebGL_listLength(indicesList) * indexSize);
+  var fillOffset = 0;
+  var i;
+  _WebGL_listEach(function (elem) {
+    if (indexSize === 1) {
+      indices[fillOffset++] = elem;
+    } else {
+      for (i = 0; i < indexSize; i++) {
+        indices[fillOffset++] = elem[String.fromCharCode(97 + i)];
+      }
+    }
+  }, indicesList);
+  return indices;
+}
+
+function _WebGL_getProgID(vertID, fragID) {
+  return vertID + '#' + fragID;
+}
+
+var _WebGL_drawGL = F2(function (model, domNode) {
+
+  var gl = model.f.gl;
+
+  if (!gl) {
+    return domNode;
+  }
+
+  gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+  _WebGL_log('Drawing');
+
+  function drawEntity(entity) {
+    if (!entity.d.b.b) {
+      return; // Empty list
+    }
+
+    var progid;
+    var program;
+    if (entity.b.id && entity.c.id) {
+      progid = _WebGL_getProgID(entity.b.id, entity.c.id);
+      program = model.f.programs[progid];
+    }
+
+    if (!program) {
+
+      var vshader;
+      if (entity.b.id) {
+        vshader = model.f.shaders[entity.b.id];
+      } else {
+        entity.b.id = _WebGL_guid++;
+      }
+
+      if (!vshader) {
+        vshader = _WebGL_doCompile(gl, entity.b.src, gl.VERTEX_SHADER);
+        model.f.shaders[entity.b.id] = vshader;
+      }
+
+      var fshader;
+      if (entity.c.id) {
+        fshader = model.f.shaders[entity.c.id];
+      } else {
+        entity.c.id = _WebGL_guid++;
+      }
+
+      if (!fshader) {
+        fshader = _WebGL_doCompile(gl, entity.c.src, gl.FRAGMENT_SHADER);
+        model.f.shaders[entity.c.id] = fshader;
+      }
+
+      var glProgram = _WebGL_doLink(gl, vshader, fshader);
+
+      program = {
+        glProgram: glProgram,
+        attributes: Object.assign({}, entity.b.attributes, entity.c.attributes),
+        uniformSetters: _WebGL_createUniformSetters(
+          gl,
+          model,
+          glProgram,
+          Object.assign({}, entity.b.uniforms, entity.c.uniforms)
+        )
+      };
+
+      progid = _WebGL_getProgID(entity.b.id, entity.c.id);
+      model.f.programs[progid] = program;
+
+    }
+
+    gl.useProgram(program.glProgram);
+
+    _WebGL_setUniforms(program.uniformSetters, entity.e);
+
+    var buffer = model.f.buffers.get(entity.d);
+
+    if (!buffer) {
+      buffer = _WebGL_doBindSetup(gl, entity.d);
+      model.f.buffers.set(entity.d, buffer);
+    }
+
+    var numAttributes = gl.getProgramParameter(program.glProgram, gl.ACTIVE_ATTRIBUTES);
+
+    for (var i = 0; i < numAttributes; i++) {
+      var attribute = gl.getActiveAttrib(program.glProgram, i);
+
+      var attribLocation = gl.getAttribLocation(program.glProgram, attribute.name);
+      gl.enableVertexAttribArray(attribLocation);
+
+      if (buffer.buffers[attribute.name] === undefined) {
+        buffer.buffers[attribute.name] = _WebGL_doBindAttribute(gl, attribute, entity.d, program.attributes);
+      }
+      var attributeBuffer = buffer.buffers[attribute.name];
+      var attributeInfo = _WebGL_getAttributeInfo(gl, attribute.type);
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, attributeBuffer);
+
+      if (attributeInfo.arraySize === 1) {
+        gl.vertexAttribPointer(attribLocation, attributeInfo.size, attributeInfo.baseType, false, 0, 0);
+      } else {
+        // Point to four vec4 in case of mat4
+        var offset = attributeInfo.size * 4; // float32 takes 4 bytes
+        var stride = offset * attributeInfo.arraySize;
+        for (var m = 0; m < attributeInfo.arraySize; m++) {
+          gl.enableVertexAttribArray(attribLocation + m);
+          gl.vertexAttribPointer(attribLocation + m, attributeInfo.size, attributeInfo.baseType, false, stride, offset * m);
+        }
+      }
+    }
+    _WebGL_listEach($elm_explorations$webgl$WebGL$Internal$enableSetting(gl), entity.a);
+
+    if (buffer.indexBuffer) {
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indexBuffer);
+      gl.drawElements(entity.d.a.mode, buffer.numIndices, gl.UNSIGNED_SHORT, 0);
+    } else {
+      gl.drawArrays(entity.d.a.mode, 0, buffer.numIndices);
+    }
+
+    _WebGL_listEach($elm_explorations$webgl$WebGL$Internal$disableSetting(model.f), entity.a);
+
+  }
+
+  _WebGL_listEach(drawEntity, model.g);
+  return domNode;
+});
+
+function _WebGL_createUniformSetters(gl, model, program, uniformsMap) {
+  var textureCounter = 0;
+  function createUniformSetter(program, uniform) {
+    var uniformLocation = gl.getUniformLocation(program, uniform.name);
+    switch (uniform.type) {
+      case gl.INT:
+        return function (value) {
+          gl.uniform1i(uniformLocation, value);
+        };
+      case gl.FLOAT:
+        return function (value) {
+          gl.uniform1f(uniformLocation, value);
+        };
+      case gl.FLOAT_VEC2:
+        return function (value) {
+          gl.uniform2fv(uniformLocation, new Float32Array(value));
+        };
+      case gl.FLOAT_VEC3:
+        return function (value) {
+          gl.uniform3fv(uniformLocation, new Float32Array(value));
+        };
+      case gl.FLOAT_VEC4:
+        return function (value) {
+          gl.uniform4fv(uniformLocation, new Float32Array(value));
+        };
+      case gl.FLOAT_MAT4:
+        return function (value) {
+          gl.uniformMatrix4fv(uniformLocation, false, new Float32Array(value));
+        };
+      case gl.SAMPLER_2D:
+        var currentTexture = textureCounter++;
+        return function (texture) {
+          gl.activeTexture(gl.TEXTURE0 + currentTexture);
+          var tex = model.f.textures.get(texture);
+          if (!tex) {
+            _WebGL_log('Created texture');
+            tex = texture.createTexture(gl);
+            model.f.textures.set(texture, tex);
+          }
+          gl.bindTexture(gl.TEXTURE_2D, tex);
+          gl.uniform1i(uniformLocation, currentTexture);
+        };
+      case gl.BOOL:
+        return function (value) {
+          gl.uniform1i(uniformLocation, value);
+        };
+      default:
+        _WebGL_log('Unsupported uniform type: ' + uniform.type);
+        return function () { };
+    }
+  }
+
+  var uniformSetters = {};
+  var numUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
+  for (var i = 0; i < numUniforms; i++) {
+    var uniform = gl.getActiveUniform(program, i);
+    uniformSetters[uniformsMap[uniform.name] || uniform.name] = createUniformSetter(program, uniform);
+  }
+
+  return uniformSetters;
+}
+
+function _WebGL_setUniforms(setters, values) {
+  Object.keys(values).forEach(function (name) {
+    var setter = setters[name];
+    if (setter) {
+      setter(values[name]);
+    }
+  });
+}
+
+// VIRTUAL-DOM WIDGET
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_toHtml = F3(function (options, factList, entities) {
+  return _VirtualDom_custom(
+    factList,
+    {
+      g: entities,
+      f: {},
+      h: options
+    },
+    _WebGL_render,
+    _WebGL_diff
+  );
+});
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_enableAlpha = F2(function (options, option) {
+  options.contextAttributes.alpha = true;
+  options.contextAttributes.premultipliedAlpha = option.a;
+});
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_enableDepth = F2(function (options, option) {
+  options.contextAttributes.depth = true;
+  options.sceneSettings.push(function (gl) {
+    gl.clearDepth(option.a);
+  });
+});
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_enableStencil = F2(function (options, option) {
+  options.contextAttributes.stencil = true;
+  options.sceneSettings.push(function (gl) {
+    gl.clearStencil(option.a);
+  });
+});
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_enableAntialias = F2(function (options, option) {
+  options.contextAttributes.antialias = true;
+});
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_enableClearColor = F2(function (options, option) {
+  options.sceneSettings.push(function (gl) {
+    gl.clearColor(option.a, option.b, option.c, option.d);
+  });
+});
+
+// eslint-disable-next-line no-unused-vars
+var _WebGL_enablePreserveDrawingBuffer = F2(function (options, option) {
+  options.contextAttributes.preserveDrawingBuffer = true;
+});
+
+/**
+ *  Creates canvas and schedules initial _WebGL_drawGL
+ *  @param {Object} model
+ *  @param {Object} model.f that may contain the following properties:
+           gl, shaders, programs, buffers, textures
+ *  @param {List<Option>} model.h list of options coming from Elm
+ *  @param {List<Entity>} model.g list of entities coming from Elm
+ *  @return {HTMLElement} <canvas> if WebGL is supported, otherwise a <div>
+ */
+function _WebGL_render(model) {
+  var options = {
+    contextAttributes: {
+      alpha: false,
+      depth: false,
+      stencil: false,
+      antialias: false,
+      premultipliedAlpha: false,
+      preserveDrawingBuffer: false
+    },
+    sceneSettings: []
+  };
+
+  _WebGL_listEach(function (option) {
+    return A2($elm_explorations$webgl$WebGL$Internal$enableOption, options, option);
+  }, model.h);
+
+  _WebGL_log('Render canvas');
+  var canvas = _VirtualDom_doc.createElement('canvas');
+  var gl = canvas.getContext && (
+    canvas.getContext('webgl', options.contextAttributes) ||
+    canvas.getContext('experimental-webgl', options.contextAttributes)
+  );
+
+  if (gl && typeof WeakMap !== 'undefined') {
+    options.sceneSettings.forEach(function (sceneSetting) {
+      sceneSetting(gl);
+    });
+
+    model.f.gl = gl;
+    model.f.shaders = [];
+    model.f.programs = {};
+    model.f.buffers = new WeakMap();
+    model.f.textures = new WeakMap();
+    // Memorize the initial stencil write mask, because
+    // browsers may have different number of stencil bits
+    model.f.STENCIL_WRITEMASK = gl.getParameter(gl.STENCIL_WRITEMASK);
+
+    // Render for the first time.
+    // This has to be done in animation frame,
+    // because the canvas is not in the DOM yet
+    _WebGL_rAF(function () {
+      return A2(_WebGL_drawGL, model, canvas);
+    });
+
+  } else {
+    canvas = _VirtualDom_doc.createElement('div');
+    canvas.innerHTML = '<a href="https://get.webgl.org/">Enable WebGL</a> to see this content!';
+  }
+
+  return canvas;
+}
+
+function _WebGL_diff(oldModel, newModel) {
+  newModel.f = oldModel.f;
+  return _WebGL_drawGL(newModel);
+}
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
@@ -6843,888 +6843,6 @@ var $author$project$Main$ViewPortLoaded = function (a) {
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $author$project$Shaders$emptyNoiseParams = {baseRoughness: 8, minValue: 0, numLayers: 8, persistance: 0.5, roughness: 0.4, seed: 42, strength: 1};
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
-var $author$project$Main$init = function (_v0) {
-	return _Utils_Tuple2(
-		{height: 400, noiseParams: $author$project$Shaders$emptyNoiseParams, offset: 0, paused: false, res: 10, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 400},
-		$elm$core$Platform$Cmd$batch(
-			_List_fromArray(
-				[
-					A2($elm$core$Task$perform, $author$project$Main$ViewPortLoaded, $elm$browser$Browser$Dom$getViewport)
-				])));
-};
-var $author$project$Main$Delta = function (a) {
-	return {$: 'Delta', a: a};
-};
-var $author$project$Main$Paused = {$: 'Paused'};
-var $author$project$Main$Resumed = {$: 'Resumed'};
-var $elm$core$Platform$Sub$batch = _Platform_batch;
-var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $elm$browser$Browser$AnimationManager$Delta = function (a) {
-	return {$: 'Delta', a: a};
-};
-var $elm$browser$Browser$AnimationManager$State = F3(
-	function (subs, request, oldTime) {
-		return {oldTime: oldTime, request: request, subs: subs};
-	});
-var $elm$browser$Browser$AnimationManager$init = $elm$core$Task$succeed(
-	A3($elm$browser$Browser$AnimationManager$State, _List_Nil, $elm$core$Maybe$Nothing, 0));
-var $elm$core$Process$kill = _Scheduler_kill;
-var $elm$browser$Browser$AnimationManager$now = _Browser_now(_Utils_Tuple0);
-var $elm$browser$Browser$AnimationManager$rAF = _Browser_rAF(_Utils_Tuple0);
-var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
-var $elm$core$Process$spawn = _Scheduler_spawn;
-var $elm$browser$Browser$AnimationManager$onEffects = F3(
-	function (router, subs, _v0) {
-		var request = _v0.request;
-		var oldTime = _v0.oldTime;
-		var _v1 = _Utils_Tuple2(request, subs);
-		if (_v1.a.$ === 'Nothing') {
-			if (!_v1.b.b) {
-				var _v2 = _v1.a;
-				return $elm$browser$Browser$AnimationManager$init;
-			} else {
-				var _v4 = _v1.a;
-				return A2(
-					$elm$core$Task$andThen,
-					function (pid) {
-						return A2(
-							$elm$core$Task$andThen,
-							function (time) {
-								return $elm$core$Task$succeed(
-									A3(
-										$elm$browser$Browser$AnimationManager$State,
-										subs,
-										$elm$core$Maybe$Just(pid),
-										time));
-							},
-							$elm$browser$Browser$AnimationManager$now);
-					},
-					$elm$core$Process$spawn(
-						A2(
-							$elm$core$Task$andThen,
-							$elm$core$Platform$sendToSelf(router),
-							$elm$browser$Browser$AnimationManager$rAF)));
-			}
-		} else {
-			if (!_v1.b.b) {
-				var pid = _v1.a.a;
-				return A2(
-					$elm$core$Task$andThen,
-					function (_v3) {
-						return $elm$browser$Browser$AnimationManager$init;
-					},
-					$elm$core$Process$kill(pid));
-			} else {
-				return $elm$core$Task$succeed(
-					A3($elm$browser$Browser$AnimationManager$State, subs, request, oldTime));
-			}
-		}
-	});
-var $elm$time$Time$Posix = function (a) {
-	return {$: 'Posix', a: a};
-};
-var $elm$time$Time$millisToPosix = $elm$time$Time$Posix;
-var $elm$browser$Browser$AnimationManager$onSelfMsg = F3(
-	function (router, newTime, _v0) {
-		var subs = _v0.subs;
-		var oldTime = _v0.oldTime;
-		var send = function (sub) {
-			if (sub.$ === 'Time') {
-				var tagger = sub.a;
-				return A2(
-					$elm$core$Platform$sendToApp,
-					router,
-					tagger(
-						$elm$time$Time$millisToPosix(newTime)));
-			} else {
-				var tagger = sub.a;
-				return A2(
-					$elm$core$Platform$sendToApp,
-					router,
-					tagger(newTime - oldTime));
-			}
-		};
-		return A2(
-			$elm$core$Task$andThen,
-			function (pid) {
-				return A2(
-					$elm$core$Task$andThen,
-					function (_v1) {
-						return $elm$core$Task$succeed(
-							A3(
-								$elm$browser$Browser$AnimationManager$State,
-								subs,
-								$elm$core$Maybe$Just(pid),
-								newTime));
-					},
-					$elm$core$Task$sequence(
-						A2($elm$core$List$map, send, subs)));
-			},
-			$elm$core$Process$spawn(
-				A2(
-					$elm$core$Task$andThen,
-					$elm$core$Platform$sendToSelf(router),
-					$elm$browser$Browser$AnimationManager$rAF)));
-	});
-var $elm$browser$Browser$AnimationManager$Time = function (a) {
-	return {$: 'Time', a: a};
-};
-var $elm$core$Basics$composeL = F3(
-	function (g, f, x) {
-		return g(
-			f(x));
-	});
-var $elm$browser$Browser$AnimationManager$subMap = F2(
-	function (func, sub) {
-		if (sub.$ === 'Time') {
-			var tagger = sub.a;
-			return $elm$browser$Browser$AnimationManager$Time(
-				A2($elm$core$Basics$composeL, func, tagger));
-		} else {
-			var tagger = sub.a;
-			return $elm$browser$Browser$AnimationManager$Delta(
-				A2($elm$core$Basics$composeL, func, tagger));
-		}
-	});
-_Platform_effectManagers['Browser.AnimationManager'] = _Platform_createManager($elm$browser$Browser$AnimationManager$init, $elm$browser$Browser$AnimationManager$onEffects, $elm$browser$Browser$AnimationManager$onSelfMsg, 0, $elm$browser$Browser$AnimationManager$subMap);
-var $elm$browser$Browser$AnimationManager$subscription = _Platform_leaf('Browser.AnimationManager');
-var $elm$browser$Browser$AnimationManager$onAnimationFrameDelta = function (tagger) {
-	return $elm$browser$Browser$AnimationManager$subscription(
-		$elm$browser$Browser$AnimationManager$Delta(tagger));
-};
-var $elm$browser$Browser$Events$onAnimationFrameDelta = $elm$browser$Browser$AnimationManager$onAnimationFrameDelta;
-var $elm$browser$Browser$Events$Document = {$: 'Document'};
-var $elm$json$Json$Decode$bool = _Json_decodeBool;
-var $elm$json$Json$Decode$field = _Json_decodeField;
-var $elm$browser$Browser$Events$MySub = F3(
-	function (a, b, c) {
-		return {$: 'MySub', a: a, b: b, c: c};
-	});
-var $elm$browser$Browser$Events$State = F2(
-	function (subs, pids) {
-		return {pids: pids, subs: subs};
-	});
-var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
-var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
-var $elm$browser$Browser$Events$init = $elm$core$Task$succeed(
-	A2($elm$browser$Browser$Events$State, _List_Nil, $elm$core$Dict$empty));
-var $elm$browser$Browser$Events$nodeToKey = function (node) {
-	if (node.$ === 'Document') {
-		return 'd_';
-	} else {
-		return 'w_';
-	}
-};
-var $elm$browser$Browser$Events$addKey = function (sub) {
-	var node = sub.a;
-	var name = sub.b;
-	return _Utils_Tuple2(
-		_Utils_ap(
-			$elm$browser$Browser$Events$nodeToKey(node),
-			name),
-		sub);
-};
-var $elm$core$Dict$Black = {$: 'Black'};
-var $elm$core$Dict$RBNode_elm_builtin = F5(
-	function (a, b, c, d, e) {
-		return {$: 'RBNode_elm_builtin', a: a, b: b, c: c, d: d, e: e};
-	});
-var $elm$core$Dict$Red = {$: 'Red'};
-var $elm$core$Dict$balance = F5(
-	function (color, key, value, left, right) {
-		if ((right.$ === 'RBNode_elm_builtin') && (right.a.$ === 'Red')) {
-			var _v1 = right.a;
-			var rK = right.b;
-			var rV = right.c;
-			var rLeft = right.d;
-			var rRight = right.e;
-			if ((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Red')) {
-				var _v3 = left.a;
-				var lK = left.b;
-				var lV = left.c;
-				var lLeft = left.d;
-				var lRight = left.e;
-				return A5(
-					$elm$core$Dict$RBNode_elm_builtin,
-					$elm$core$Dict$Red,
-					key,
-					value,
-					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, lK, lV, lLeft, lRight),
-					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, rK, rV, rLeft, rRight));
-			} else {
-				return A5(
-					$elm$core$Dict$RBNode_elm_builtin,
-					color,
-					rK,
-					rV,
-					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, key, value, left, rLeft),
-					rRight);
-			}
-		} else {
-			if ((((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Red')) && (left.d.$ === 'RBNode_elm_builtin')) && (left.d.a.$ === 'Red')) {
-				var _v5 = left.a;
-				var lK = left.b;
-				var lV = left.c;
-				var _v6 = left.d;
-				var _v7 = _v6.a;
-				var llK = _v6.b;
-				var llV = _v6.c;
-				var llLeft = _v6.d;
-				var llRight = _v6.e;
-				var lRight = left.e;
-				return A5(
-					$elm$core$Dict$RBNode_elm_builtin,
-					$elm$core$Dict$Red,
-					lK,
-					lV,
-					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, llK, llV, llLeft, llRight),
-					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, key, value, lRight, right));
-			} else {
-				return A5($elm$core$Dict$RBNode_elm_builtin, color, key, value, left, right);
-			}
-		}
-	});
-var $elm$core$Basics$compare = _Utils_compare;
-var $elm$core$Dict$insertHelp = F3(
-	function (key, value, dict) {
-		if (dict.$ === 'RBEmpty_elm_builtin') {
-			return A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, key, value, $elm$core$Dict$RBEmpty_elm_builtin, $elm$core$Dict$RBEmpty_elm_builtin);
-		} else {
-			var nColor = dict.a;
-			var nKey = dict.b;
-			var nValue = dict.c;
-			var nLeft = dict.d;
-			var nRight = dict.e;
-			var _v1 = A2($elm$core$Basics$compare, key, nKey);
-			switch (_v1.$) {
-				case 'LT':
-					return A5(
-						$elm$core$Dict$balance,
-						nColor,
-						nKey,
-						nValue,
-						A3($elm$core$Dict$insertHelp, key, value, nLeft),
-						nRight);
-				case 'EQ':
-					return A5($elm$core$Dict$RBNode_elm_builtin, nColor, nKey, value, nLeft, nRight);
-				default:
-					return A5(
-						$elm$core$Dict$balance,
-						nColor,
-						nKey,
-						nValue,
-						nLeft,
-						A3($elm$core$Dict$insertHelp, key, value, nRight));
-			}
-		}
-	});
-var $elm$core$Dict$insert = F3(
-	function (key, value, dict) {
-		var _v0 = A3($elm$core$Dict$insertHelp, key, value, dict);
-		if ((_v0.$ === 'RBNode_elm_builtin') && (_v0.a.$ === 'Red')) {
-			var _v1 = _v0.a;
-			var k = _v0.b;
-			var v = _v0.c;
-			var l = _v0.d;
-			var r = _v0.e;
-			return A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, k, v, l, r);
-		} else {
-			var x = _v0;
-			return x;
-		}
-	});
-var $elm$core$Dict$fromList = function (assocs) {
-	return A3(
-		$elm$core$List$foldl,
-		F2(
-			function (_v0, dict) {
-				var key = _v0.a;
-				var value = _v0.b;
-				return A3($elm$core$Dict$insert, key, value, dict);
-			}),
-		$elm$core$Dict$empty,
-		assocs);
-};
-var $elm$core$Dict$foldl = F3(
-	function (func, acc, dict) {
-		foldl:
-		while (true) {
-			if (dict.$ === 'RBEmpty_elm_builtin') {
-				return acc;
-			} else {
-				var key = dict.b;
-				var value = dict.c;
-				var left = dict.d;
-				var right = dict.e;
-				var $temp$func = func,
-					$temp$acc = A3(
-					func,
-					key,
-					value,
-					A3($elm$core$Dict$foldl, func, acc, left)),
-					$temp$dict = right;
-				func = $temp$func;
-				acc = $temp$acc;
-				dict = $temp$dict;
-				continue foldl;
-			}
-		}
-	});
-var $elm$core$Dict$merge = F6(
-	function (leftStep, bothStep, rightStep, leftDict, rightDict, initialResult) {
-		var stepState = F3(
-			function (rKey, rValue, _v0) {
-				stepState:
-				while (true) {
-					var list = _v0.a;
-					var result = _v0.b;
-					if (!list.b) {
-						return _Utils_Tuple2(
-							list,
-							A3(rightStep, rKey, rValue, result));
-					} else {
-						var _v2 = list.a;
-						var lKey = _v2.a;
-						var lValue = _v2.b;
-						var rest = list.b;
-						if (_Utils_cmp(lKey, rKey) < 0) {
-							var $temp$rKey = rKey,
-								$temp$rValue = rValue,
-								$temp$_v0 = _Utils_Tuple2(
-								rest,
-								A3(leftStep, lKey, lValue, result));
-							rKey = $temp$rKey;
-							rValue = $temp$rValue;
-							_v0 = $temp$_v0;
-							continue stepState;
-						} else {
-							if (_Utils_cmp(lKey, rKey) > 0) {
-								return _Utils_Tuple2(
-									list,
-									A3(rightStep, rKey, rValue, result));
-							} else {
-								return _Utils_Tuple2(
-									rest,
-									A4(bothStep, lKey, lValue, rValue, result));
-							}
-						}
-					}
-				}
-			});
-		var _v3 = A3(
-			$elm$core$Dict$foldl,
-			stepState,
-			_Utils_Tuple2(
-				$elm$core$Dict$toList(leftDict),
-				initialResult),
-			rightDict);
-		var leftovers = _v3.a;
-		var intermediateResult = _v3.b;
-		return A3(
-			$elm$core$List$foldl,
-			F2(
-				function (_v4, result) {
-					var k = _v4.a;
-					var v = _v4.b;
-					return A3(leftStep, k, v, result);
-				}),
-			intermediateResult,
-			leftovers);
-	});
-var $elm$browser$Browser$Events$Event = F2(
-	function (key, event) {
-		return {event: event, key: key};
-	});
-var $elm$browser$Browser$Events$spawn = F3(
-	function (router, key, _v0) {
-		var node = _v0.a;
-		var name = _v0.b;
-		var actualNode = function () {
-			if (node.$ === 'Document') {
-				return _Browser_doc;
-			} else {
-				return _Browser_window;
-			}
-		}();
-		return A2(
-			$elm$core$Task$map,
-			function (value) {
-				return _Utils_Tuple2(key, value);
-			},
-			A3(
-				_Browser_on,
-				actualNode,
-				name,
-				function (event) {
-					return A2(
-						$elm$core$Platform$sendToSelf,
-						router,
-						A2($elm$browser$Browser$Events$Event, key, event));
-				}));
-	});
-var $elm$core$Dict$union = F2(
-	function (t1, t2) {
-		return A3($elm$core$Dict$foldl, $elm$core$Dict$insert, t2, t1);
-	});
-var $elm$browser$Browser$Events$onEffects = F3(
-	function (router, subs, state) {
-		var stepRight = F3(
-			function (key, sub, _v6) {
-				var deads = _v6.a;
-				var lives = _v6.b;
-				var news = _v6.c;
-				return _Utils_Tuple3(
-					deads,
-					lives,
-					A2(
-						$elm$core$List$cons,
-						A3($elm$browser$Browser$Events$spawn, router, key, sub),
-						news));
-			});
-		var stepLeft = F3(
-			function (_v4, pid, _v5) {
-				var deads = _v5.a;
-				var lives = _v5.b;
-				var news = _v5.c;
-				return _Utils_Tuple3(
-					A2($elm$core$List$cons, pid, deads),
-					lives,
-					news);
-			});
-		var stepBoth = F4(
-			function (key, pid, _v2, _v3) {
-				var deads = _v3.a;
-				var lives = _v3.b;
-				var news = _v3.c;
-				return _Utils_Tuple3(
-					deads,
-					A3($elm$core$Dict$insert, key, pid, lives),
-					news);
-			});
-		var newSubs = A2($elm$core$List$map, $elm$browser$Browser$Events$addKey, subs);
-		var _v0 = A6(
-			$elm$core$Dict$merge,
-			stepLeft,
-			stepBoth,
-			stepRight,
-			state.pids,
-			$elm$core$Dict$fromList(newSubs),
-			_Utils_Tuple3(_List_Nil, $elm$core$Dict$empty, _List_Nil));
-		var deadPids = _v0.a;
-		var livePids = _v0.b;
-		var makeNewPids = _v0.c;
-		return A2(
-			$elm$core$Task$andThen,
-			function (pids) {
-				return $elm$core$Task$succeed(
-					A2(
-						$elm$browser$Browser$Events$State,
-						newSubs,
-						A2(
-							$elm$core$Dict$union,
-							livePids,
-							$elm$core$Dict$fromList(pids))));
-			},
-			A2(
-				$elm$core$Task$andThen,
-				function (_v1) {
-					return $elm$core$Task$sequence(makeNewPids);
-				},
-				$elm$core$Task$sequence(
-					A2($elm$core$List$map, $elm$core$Process$kill, deadPids))));
-	});
-var $elm$core$List$maybeCons = F3(
-	function (f, mx, xs) {
-		var _v0 = f(mx);
-		if (_v0.$ === 'Just') {
-			var x = _v0.a;
-			return A2($elm$core$List$cons, x, xs);
-		} else {
-			return xs;
-		}
-	});
-var $elm$core$List$filterMap = F2(
-	function (f, xs) {
-		return A3(
-			$elm$core$List$foldr,
-			$elm$core$List$maybeCons(f),
-			_List_Nil,
-			xs);
-	});
-var $elm$browser$Browser$Events$onSelfMsg = F3(
-	function (router, _v0, state) {
-		var key = _v0.key;
-		var event = _v0.event;
-		var toMessage = function (_v2) {
-			var subKey = _v2.a;
-			var _v3 = _v2.b;
-			var node = _v3.a;
-			var name = _v3.b;
-			var decoder = _v3.c;
-			return _Utils_eq(subKey, key) ? A2(_Browser_decodeEvent, decoder, event) : $elm$core$Maybe$Nothing;
-		};
-		var messages = A2($elm$core$List$filterMap, toMessage, state.subs);
-		return A2(
-			$elm$core$Task$andThen,
-			function (_v1) {
-				return $elm$core$Task$succeed(state);
-			},
-			$elm$core$Task$sequence(
-				A2(
-					$elm$core$List$map,
-					$elm$core$Platform$sendToApp(router),
-					messages)));
-	});
-var $elm$browser$Browser$Events$subMap = F2(
-	function (func, _v0) {
-		var node = _v0.a;
-		var name = _v0.b;
-		var decoder = _v0.c;
-		return A3(
-			$elm$browser$Browser$Events$MySub,
-			node,
-			name,
-			A2($elm$json$Json$Decode$map, func, decoder));
-	});
-_Platform_effectManagers['Browser.Events'] = _Platform_createManager($elm$browser$Browser$Events$init, $elm$browser$Browser$Events$onEffects, $elm$browser$Browser$Events$onSelfMsg, 0, $elm$browser$Browser$Events$subMap);
-var $elm$browser$Browser$Events$subscription = _Platform_leaf('Browser.Events');
-var $elm$browser$Browser$Events$on = F3(
-	function (node, name, decoder) {
-		return $elm$browser$Browser$Events$subscription(
-			A3($elm$browser$Browser$Events$MySub, node, name, decoder));
-	});
-var $elm$browser$Browser$Events$Hidden = {$: 'Hidden'};
-var $elm$browser$Browser$Events$Visible = {$: 'Visible'};
-var $elm$browser$Browser$Events$withHidden = F2(
-	function (func, isHidden) {
-		return func(
-			isHidden ? $elm$browser$Browser$Events$Hidden : $elm$browser$Browser$Events$Visible);
-	});
-var $elm$browser$Browser$Events$onVisibilityChange = function (func) {
-	var info = _Browser_visibilityInfo(_Utils_Tuple0);
-	return A3(
-		$elm$browser$Browser$Events$on,
-		$elm$browser$Browser$Events$Document,
-		info.change,
-		A2(
-			$elm$json$Json$Decode$map,
-			$elm$browser$Browser$Events$withHidden(func),
-			A2(
-				$elm$json$Json$Decode$field,
-				'target',
-				A2($elm$json$Json$Decode$field, info.hidden, $elm$json$Json$Decode$bool))));
-};
-var $author$project$Main$subscriptions = function (model) {
-	return $elm$core$Platform$Sub$batch(
-		_List_fromArray(
-			[
-				model.paused ? $elm$core$Platform$Sub$none : $elm$browser$Browser$Events$onAnimationFrameDelta($author$project$Main$Delta),
-				$elm$browser$Browser$Events$onVisibilityChange(
-				function (v) {
-					if (v.$ === 'Hidden') {
-						return $author$project$Main$Paused;
-					} else {
-						return $author$project$Main$Resumed;
-					}
-				})
-			]));
-};
-var $elm$core$Basics$round = _Basics_round;
-var $author$project$Main$computeViewportSize = F2(
-	function (viewport, model) {
-		var vph = viewport.viewport.height;
-		var ratio = 16.0 / 9.0;
-		var vpw = vph / ratio;
-		var offset = $elm$core$Basics$round((viewport.viewport.width - vpw) / 2.0);
-		return _Utils_update(
-			model,
-			{
-				offset: offset,
-				viewportHeight: $elm$core$Basics$round(vph),
-				viewportWidth: $elm$core$Basics$round(vpw)
-			});
-	});
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $elm$core$String$toFloat = _String_toFloat;
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
-var $author$project$Main$update = F2(
-	function (msg, model) {
-		switch (msg.$) {
-			case 'Delta':
-				var f = msg.a;
-				var th = model.theta;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{theta: th + (f / 5000)}),
-					$elm$core$Platform$Cmd$none);
-			case 'Paused':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{paused: true}),
-					$elm$core$Platform$Cmd$none);
-			case 'Resumed':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{paused: false}),
-					$elm$core$Platform$Cmd$none);
-			case 'ViewPortLoaded':
-				var viewport = msg.a;
-				return _Utils_Tuple2(
-					A2($author$project$Main$computeViewportSize, viewport, model),
-					$elm$core$Platform$Cmd$none);
-			default:
-				var params = msg.a;
-				var prevParams = model.noiseParams;
-				var newParams = function () {
-					switch (params.$) {
-						case 'UpdateBaseRoughness':
-							var baseRoughness = params.a;
-							return _Utils_update(
-								prevParams,
-								{
-									baseRoughness: A2(
-										$elm$core$Maybe$withDefault,
-										prevParams.baseRoughness,
-										$elm$core$String$toFloat(baseRoughness))
-								});
-						case 'UpdateRoughness':
-							var roughness = params.a;
-							return _Utils_update(
-								prevParams,
-								{
-									roughness: A2(
-										$elm$core$Maybe$withDefault,
-										prevParams.roughness,
-										$elm$core$String$toFloat(roughness))
-								});
-						case 'UpdatePersistance':
-							var persistance = params.a;
-							return _Utils_update(
-								prevParams,
-								{
-									persistance: A2(
-										$elm$core$Maybe$withDefault,
-										prevParams.persistance,
-										$elm$core$String$toFloat(persistance))
-								});
-						case 'UpdateNumLayers':
-							var numLayers = params.a;
-							return _Utils_update(
-								prevParams,
-								{
-									numLayers: A2(
-										$elm$core$Maybe$withDefault,
-										prevParams.numLayers,
-										$elm$core$String$toInt(numLayers))
-								});
-						case 'UpdateSeed':
-							var seed = params.a;
-							return _Utils_update(
-								prevParams,
-								{
-									seed: A2(
-										$elm$core$Maybe$withDefault,
-										prevParams.seed,
-										$elm$core$String$toInt(seed))
-								});
-						case 'UpdateStrength':
-							var strength = params.a;
-							return _Utils_update(
-								prevParams,
-								{
-									strength: A2(
-										$elm$core$Maybe$withDefault,
-										prevParams.strength,
-										$elm$core$String$toFloat(strength))
-								});
-						default:
-							var minValue = params.a;
-							return _Utils_update(
-								prevParams,
-								{
-									minValue: A2(
-										$elm$core$Maybe$withDefault,
-										prevParams.strength,
-										$elm$core$String$toFloat(minValue))
-								});
-					}
-				}();
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{noiseParams: newParams}),
-					$elm$core$Platform$Cmd$none);
-		}
-	});
-var $author$project$Main$UpdateBaseRoughness = function (a) {
-	return {$: 'UpdateBaseRoughness', a: a};
-};
-var $author$project$Main$UpdateMinValue = function (a) {
-	return {$: 'UpdateMinValue', a: a};
-};
-var $author$project$Main$UpdateNumLayers = function (a) {
-	return {$: 'UpdateNumLayers', a: a};
-};
-var $author$project$Main$UpdatePersistance = function (a) {
-	return {$: 'UpdatePersistance', a: a};
-};
-var $author$project$Main$UpdateRoughness = function (a) {
-	return {$: 'UpdateRoughness', a: a};
-};
-var $author$project$Main$UpdateStrength = function (a) {
-	return {$: 'UpdateStrength', a: a};
-};
-var $elm_explorations$webgl$WebGL$Internal$Depth = function (a) {
-	return {$: 'Depth', a: a};
-};
-var $elm_explorations$webgl$WebGL$depth = $elm_explorations$webgl$WebGL$Internal$Depth;
-var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm_explorations$webgl$WebGL$Settings$FaceMode = function (a) {
-	return {$: 'FaceMode', a: a};
-};
-var $elm_explorations$webgl$WebGL$Settings$back = $elm_explorations$webgl$WebGL$Settings$FaceMode(1029);
-var $elm_explorations$webgl$WebGL$Internal$CullFace = function (a) {
-	return {$: 'CullFace', a: a};
-};
-var $elm_explorations$webgl$WebGL$Settings$cullFace = function (_v0) {
-	var faceMode = _v0.a;
-	return $elm_explorations$webgl$WebGL$Internal$CullFace(faceMode);
-};
-var $elm_explorations$webgl$WebGL$Internal$DepthTest = F4(
-	function (a, b, c, d) {
-		return {$: 'DepthTest', a: a, b: b, c: c, d: d};
-	});
-var $elm_explorations$webgl$WebGL$Settings$DepthTest$less = function (_v0) {
-	var write = _v0.write;
-	var near = _v0.near;
-	var far = _v0.far;
-	return A4($elm_explorations$webgl$WebGL$Internal$DepthTest, 513, write, near, far);
-};
-var $elm_explorations$webgl$WebGL$Settings$DepthTest$default = $elm_explorations$webgl$WebGL$Settings$DepthTest$less(
-	{far: 1, near: 0, write: true});
-var $elm_explorations$webgl$WebGL$Internal$disableSetting = F2(
-	function (cache, setting) {
-		switch (setting.$) {
-			case 'Blend':
-				return _WebGL_disableBlend(cache);
-			case 'DepthTest':
-				return _WebGL_disableDepthTest(cache);
-			case 'StencilTest':
-				return _WebGL_disableStencilTest(cache);
-			case 'Scissor':
-				return _WebGL_disableScissor(cache);
-			case 'ColorMask':
-				return _WebGL_disableColorMask(cache);
-			case 'CullFace':
-				return _WebGL_disableCullFace(cache);
-			case 'PolygonOffset':
-				return _WebGL_disablePolygonOffset(cache);
-			case 'SampleCoverage':
-				return _WebGL_disableSampleCoverage(cache);
-			default:
-				return _WebGL_disableSampleAlphaToCoverage(cache);
-		}
-	});
-var $elm_explorations$webgl$WebGL$Internal$enableOption = F2(
-	function (ctx, option) {
-		switch (option.$) {
-			case 'Alpha':
-				return A2(_WebGL_enableAlpha, ctx, option);
-			case 'Depth':
-				return A2(_WebGL_enableDepth, ctx, option);
-			case 'Stencil':
-				return A2(_WebGL_enableStencil, ctx, option);
-			case 'Antialias':
-				return A2(_WebGL_enableAntialias, ctx, option);
-			case 'ClearColor':
-				return A2(_WebGL_enableClearColor, ctx, option);
-			default:
-				return A2(_WebGL_enablePreserveDrawingBuffer, ctx, option);
-		}
-	});
-var $elm_explorations$webgl$WebGL$Internal$enableSetting = F2(
-	function (gl, setting) {
-		switch (setting.$) {
-			case 'Blend':
-				return A2(_WebGL_enableBlend, gl, setting);
-			case 'DepthTest':
-				return A2(_WebGL_enableDepthTest, gl, setting);
-			case 'StencilTest':
-				return A2(_WebGL_enableStencilTest, gl, setting);
-			case 'Scissor':
-				return A2(_WebGL_enableScissor, gl, setting);
-			case 'ColorMask':
-				return A2(_WebGL_enableColorMask, gl, setting);
-			case 'CullFace':
-				return A2(_WebGL_enableCullFace, gl, setting);
-			case 'PolygonOffset':
-				return A2(_WebGL_enablePolygonOffset, gl, setting);
-			case 'SampleCoverage':
-				return A2(_WebGL_enableSampleCoverage, gl, setting);
-			default:
-				return A2(_WebGL_enableSampleAlphaToCoverage, gl, setting);
-		}
-	});
-var $elm_explorations$webgl$WebGL$entityWith = _WebGL_entity;
-var $author$project$Shaders$fragmentShader = {
-	src: '\n        precision mediump float;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            gl_FragColor = vec4(vec3(0.5, 0.5, 1) * vLighting, 1);\n        }\n    ',
-	attributes: {},
-	uniforms: {}
-};
-var $elm_explorations$linear_algebra$Math$Matrix4$identity = _MJS_m4x4identity;
-var $elm_explorations$linear_algebra$Math$Matrix4$inverse = _MJS_m4x4inverse;
-var $elm_explorations$linear_algebra$Math$Matrix4$makeRotate = _MJS_m4x4makeRotate;
-var $elm_explorations$linear_algebra$Math$Matrix4$mul = _MJS_m4x4mul;
-var $elm_explorations$linear_algebra$Math$Matrix4$transpose = _MJS_m4x4transpose;
-var $elm_explorations$linear_algebra$Math$Vector3$vec3 = _MJS_v3;
-var $author$project$Shaders$uniforms = function (theta) {
-	var rotation = A2(
-		$elm_explorations$linear_algebra$Math$Matrix4$mul,
-		A2(
-			$elm_explorations$linear_algebra$Math$Matrix4$makeRotate,
-			3 * theta,
-			A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 1, 0)),
-		A2(
-			$elm_explorations$linear_algebra$Math$Matrix4$makeRotate,
-			2 * theta,
-			A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 1, 0, 0)));
-	var normalTransform = $elm_explorations$linear_algebra$Math$Matrix4$transpose(
-		A2(
-			$elm$core$Maybe$withDefault,
-			$elm_explorations$linear_algebra$Math$Matrix4$identity,
-			$elm_explorations$linear_algebra$Math$Matrix4$inverse(rotation)));
-	return {normalMatrix: normalTransform, rotation: rotation};
-};
-var $author$project$Shaders$vertexShader = {
-	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = vec4(position, 2) * rotation;\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.3, 0.3, 0.3);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n\n            float height = max(0.0, length(pos.xyz) - length(transformedNormal.xyz));\n            // if (height <= 0.4) {\n            //    heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);\n            // } else if (height <= 0.5) {\n            //     heightColor = vec3(188.0 / 255.0, 170.0/ 255.0, 35.0 / 255.0);\n            // } else if (height <= 0.55) {\n            //     heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);\n            // } else {\n            heightColor = vec3(height, height, height);\n            // };\n        }\n    ',
-	attributes: {normal: 'normal', position: 'position'},
-	uniforms: {normalMatrix: 'normalMatrix', rotation: 'rotation'}
-};
-var $author$project$Shaders$draw = F2(
-	function (theta, mesh) {
-		return A5(
-			$elm_explorations$webgl$WebGL$entityWith,
-			_List_fromArray(
-				[
-					$elm_explorations$webgl$WebGL$Settings$cullFace($elm_explorations$webgl$WebGL$Settings$back),
-					$elm_explorations$webgl$WebGL$Settings$DepthTest$default
-				]),
-			$author$project$Shaders$vertexShader,
-			$author$project$Shaders$fragmentShader,
-			mesh,
-			$author$project$Shaders$uniforms(theta));
-	});
 var $elm_explorations$linear_algebra$Math$Vector3$add = _MJS_v3add;
 var $elm$core$List$append = F2(
 	function (xs, ys) {
@@ -7752,6 +6870,7 @@ var $elm_explorations$webgl$WebGL$indexedTriangles = $elm_explorations$webgl$Web
 var $elm_explorations$linear_algebra$Math$Vector3$normalize = _MJS_v3normalize;
 var $elm_explorations$linear_algebra$Math$Vector3$scale = _MJS_v3scale;
 var $elm_explorations$linear_algebra$Math$Vector2$vec2 = _MJS_v2;
+var $elm_explorations$linear_algebra$Math$Vector3$vec3 = _MJS_v3;
 var $author$project$Shaders$face = F3(
 	function (noise, res, direction) {
 		var indices = $elm$core$List$concat(
@@ -7815,13 +6934,6 @@ var $author$project$Shaders$face = F3(
 				},
 				A2($elm$core$List$range, 0, res - 1)));
 		return A2($elm_explorations$webgl$WebGL$indexedTriangles, vertexes, indices);
-	});
-var $author$project$Shaders$drawFace = F4(
-	function (res, noise, theta, dir) {
-		return A2(
-			$author$project$Shaders$draw,
-			theta,
-			A3($author$project$Shaders$face, noise, res, dir));
 	});
 var $elm$core$Basics$negate = function (n) {
 	return -n;
@@ -8290,6 +7402,7 @@ var $elm$random$Random$list = F2(
 				return A4($elm$random$Random$listHelp, _List_Nil, n, gen, seed);
 			});
 	});
+var $elm$core$Basics$compare = _Utils_compare;
 var $elm$core$Dict$get = F2(
 	function (targetKey, dict) {
 		get:
@@ -8356,11 +7469,121 @@ var $owanturist$elm_union_find$UnionFind$QuickUnionPathCompression = F2(
 	function (a, b) {
 		return {$: 'QuickUnionPathCompression', a: a, b: b};
 	});
+var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
+var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $owanturist$elm_union_find$UnionFind$quickUnionPathCompression = A2($owanturist$elm_union_find$UnionFind$QuickUnionPathCompression, 0, $elm$core$Dict$empty);
 var $elm$core$Tuple$second = function (_v0) {
 	var y = _v0.b;
 	return y;
 };
+var $elm$core$Dict$Black = {$: 'Black'};
+var $elm$core$Dict$RBNode_elm_builtin = F5(
+	function (a, b, c, d, e) {
+		return {$: 'RBNode_elm_builtin', a: a, b: b, c: c, d: d, e: e};
+	});
+var $elm$core$Dict$Red = {$: 'Red'};
+var $elm$core$Dict$balance = F5(
+	function (color, key, value, left, right) {
+		if ((right.$ === 'RBNode_elm_builtin') && (right.a.$ === 'Red')) {
+			var _v1 = right.a;
+			var rK = right.b;
+			var rV = right.c;
+			var rLeft = right.d;
+			var rRight = right.e;
+			if ((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Red')) {
+				var _v3 = left.a;
+				var lK = left.b;
+				var lV = left.c;
+				var lLeft = left.d;
+				var lRight = left.e;
+				return A5(
+					$elm$core$Dict$RBNode_elm_builtin,
+					$elm$core$Dict$Red,
+					key,
+					value,
+					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, lK, lV, lLeft, lRight),
+					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, rK, rV, rLeft, rRight));
+			} else {
+				return A5(
+					$elm$core$Dict$RBNode_elm_builtin,
+					color,
+					rK,
+					rV,
+					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, key, value, left, rLeft),
+					rRight);
+			}
+		} else {
+			if ((((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Red')) && (left.d.$ === 'RBNode_elm_builtin')) && (left.d.a.$ === 'Red')) {
+				var _v5 = left.a;
+				var lK = left.b;
+				var lV = left.c;
+				var _v6 = left.d;
+				var _v7 = _v6.a;
+				var llK = _v6.b;
+				var llV = _v6.c;
+				var llLeft = _v6.d;
+				var llRight = _v6.e;
+				var lRight = left.e;
+				return A5(
+					$elm$core$Dict$RBNode_elm_builtin,
+					$elm$core$Dict$Red,
+					lK,
+					lV,
+					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, llK, llV, llLeft, llRight),
+					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, key, value, lRight, right));
+			} else {
+				return A5($elm$core$Dict$RBNode_elm_builtin, color, key, value, left, right);
+			}
+		}
+	});
+var $elm$core$Dict$insertHelp = F3(
+	function (key, value, dict) {
+		if (dict.$ === 'RBEmpty_elm_builtin') {
+			return A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, key, value, $elm$core$Dict$RBEmpty_elm_builtin, $elm$core$Dict$RBEmpty_elm_builtin);
+		} else {
+			var nColor = dict.a;
+			var nKey = dict.b;
+			var nValue = dict.c;
+			var nLeft = dict.d;
+			var nRight = dict.e;
+			var _v1 = A2($elm$core$Basics$compare, key, nKey);
+			switch (_v1.$) {
+				case 'LT':
+					return A5(
+						$elm$core$Dict$balance,
+						nColor,
+						nKey,
+						nValue,
+						A3($elm$core$Dict$insertHelp, key, value, nLeft),
+						nRight);
+				case 'EQ':
+					return A5($elm$core$Dict$RBNode_elm_builtin, nColor, nKey, value, nLeft, nRight);
+				default:
+					return A5(
+						$elm$core$Dict$balance,
+						nColor,
+						nKey,
+						nValue,
+						nLeft,
+						A3($elm$core$Dict$insertHelp, key, value, nRight));
+			}
+		}
+	});
+var $elm$core$Dict$insert = F3(
+	function (key, value, dict) {
+		var _v0 = A3($elm$core$Dict$insertHelp, key, value, dict);
+		if ((_v0.$ === 'RBNode_elm_builtin') && (_v0.a.$ === 'Red')) {
+			var _v1 = _v0.a;
+			var k = _v0.b;
+			var v = _v0.c;
+			var l = _v0.d;
+			var r = _v0.e;
+			return A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, k, v, l, r);
+		} else {
+			var x = _v0;
+			return x;
+		}
+	});
 var $owanturist$elm_union_find$UnionFind$findCompressed = F2(
 	function (id, dict) {
 		var _v0 = A2($elm$core$Dict$get, id, dict);
@@ -8465,8 +7688,8 @@ var $Herteby$simplex_noise$Simplex$permutationTableFromInt = function (_int) {
 		$Herteby$simplex_noise$Simplex$permutationTableGenerator,
 		$elm$random$Random$initialSeed(_int)).a;
 };
-var $author$project$Shaders$drawCube = F3(
-	function (res, theta, noiseParams) {
+var $author$project$Shaders$makeCube = F2(
+	function (res, noiseParams) {
 		var noise = $Herteby$simplex_noise$Simplex$noise3d(
 			$Herteby$simplex_noise$Simplex$permutationTableFromInt(noiseParams.seed));
 		var initialParams = {amplidute: noiseParams.persistance, frequency: noiseParams.baseRoughness, value: 0.0};
@@ -8489,7 +7712,7 @@ var $author$project$Shaders$drawCube = F3(
 			});
 		return A2(
 			$elm$core$List$map,
-			A3($author$project$Shaders$drawFace, res, noiseFunc, theta),
+			A2($author$project$Shaders$face, noiseFunc, res),
 			_List_fromArray(
 				[
 					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 1, 0, 0),
@@ -8499,6 +7722,790 @@ var $author$project$Shaders$drawCube = F3(
 					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, -1, 0),
 					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 0, -1)
 				]));
+	});
+var $author$project$Main$init = function (_v0) {
+	return _Utils_Tuple2(
+		{
+			height: 400,
+			meshes: A2($author$project$Shaders$makeCube, 40, $author$project$Shaders$emptyNoiseParams),
+			noiseParams: $author$project$Shaders$emptyNoiseParams,
+			offset: 0,
+			paused: false,
+			res: 40,
+			theta: 0,
+			viewportHeight: 0,
+			viewportWidth: 0,
+			width: 400
+		},
+		$elm$core$Platform$Cmd$batch(
+			_List_fromArray(
+				[
+					A2($elm$core$Task$perform, $author$project$Main$ViewPortLoaded, $elm$browser$Browser$Dom$getViewport)
+				])));
+};
+var $author$project$Main$Delta = function (a) {
+	return {$: 'Delta', a: a};
+};
+var $author$project$Main$Paused = {$: 'Paused'};
+var $author$project$Main$Resumed = {$: 'Resumed'};
+var $elm$core$Platform$Sub$batch = _Platform_batch;
+var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
+var $elm$browser$Browser$AnimationManager$Delta = function (a) {
+	return {$: 'Delta', a: a};
+};
+var $elm$browser$Browser$AnimationManager$State = F3(
+	function (subs, request, oldTime) {
+		return {oldTime: oldTime, request: request, subs: subs};
+	});
+var $elm$browser$Browser$AnimationManager$init = $elm$core$Task$succeed(
+	A3($elm$browser$Browser$AnimationManager$State, _List_Nil, $elm$core$Maybe$Nothing, 0));
+var $elm$core$Process$kill = _Scheduler_kill;
+var $elm$browser$Browser$AnimationManager$now = _Browser_now(_Utils_Tuple0);
+var $elm$browser$Browser$AnimationManager$rAF = _Browser_rAF(_Utils_Tuple0);
+var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
+var $elm$core$Process$spawn = _Scheduler_spawn;
+var $elm$browser$Browser$AnimationManager$onEffects = F3(
+	function (router, subs, _v0) {
+		var request = _v0.request;
+		var oldTime = _v0.oldTime;
+		var _v1 = _Utils_Tuple2(request, subs);
+		if (_v1.a.$ === 'Nothing') {
+			if (!_v1.b.b) {
+				var _v2 = _v1.a;
+				return $elm$browser$Browser$AnimationManager$init;
+			} else {
+				var _v4 = _v1.a;
+				return A2(
+					$elm$core$Task$andThen,
+					function (pid) {
+						return A2(
+							$elm$core$Task$andThen,
+							function (time) {
+								return $elm$core$Task$succeed(
+									A3(
+										$elm$browser$Browser$AnimationManager$State,
+										subs,
+										$elm$core$Maybe$Just(pid),
+										time));
+							},
+							$elm$browser$Browser$AnimationManager$now);
+					},
+					$elm$core$Process$spawn(
+						A2(
+							$elm$core$Task$andThen,
+							$elm$core$Platform$sendToSelf(router),
+							$elm$browser$Browser$AnimationManager$rAF)));
+			}
+		} else {
+			if (!_v1.b.b) {
+				var pid = _v1.a.a;
+				return A2(
+					$elm$core$Task$andThen,
+					function (_v3) {
+						return $elm$browser$Browser$AnimationManager$init;
+					},
+					$elm$core$Process$kill(pid));
+			} else {
+				return $elm$core$Task$succeed(
+					A3($elm$browser$Browser$AnimationManager$State, subs, request, oldTime));
+			}
+		}
+	});
+var $elm$time$Time$Posix = function (a) {
+	return {$: 'Posix', a: a};
+};
+var $elm$time$Time$millisToPosix = $elm$time$Time$Posix;
+var $elm$browser$Browser$AnimationManager$onSelfMsg = F3(
+	function (router, newTime, _v0) {
+		var subs = _v0.subs;
+		var oldTime = _v0.oldTime;
+		var send = function (sub) {
+			if (sub.$ === 'Time') {
+				var tagger = sub.a;
+				return A2(
+					$elm$core$Platform$sendToApp,
+					router,
+					tagger(
+						$elm$time$Time$millisToPosix(newTime)));
+			} else {
+				var tagger = sub.a;
+				return A2(
+					$elm$core$Platform$sendToApp,
+					router,
+					tagger(newTime - oldTime));
+			}
+		};
+		return A2(
+			$elm$core$Task$andThen,
+			function (pid) {
+				return A2(
+					$elm$core$Task$andThen,
+					function (_v1) {
+						return $elm$core$Task$succeed(
+							A3(
+								$elm$browser$Browser$AnimationManager$State,
+								subs,
+								$elm$core$Maybe$Just(pid),
+								newTime));
+					},
+					$elm$core$Task$sequence(
+						A2($elm$core$List$map, send, subs)));
+			},
+			$elm$core$Process$spawn(
+				A2(
+					$elm$core$Task$andThen,
+					$elm$core$Platform$sendToSelf(router),
+					$elm$browser$Browser$AnimationManager$rAF)));
+	});
+var $elm$browser$Browser$AnimationManager$Time = function (a) {
+	return {$: 'Time', a: a};
+};
+var $elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
+var $elm$browser$Browser$AnimationManager$subMap = F2(
+	function (func, sub) {
+		if (sub.$ === 'Time') {
+			var tagger = sub.a;
+			return $elm$browser$Browser$AnimationManager$Time(
+				A2($elm$core$Basics$composeL, func, tagger));
+		} else {
+			var tagger = sub.a;
+			return $elm$browser$Browser$AnimationManager$Delta(
+				A2($elm$core$Basics$composeL, func, tagger));
+		}
+	});
+_Platform_effectManagers['Browser.AnimationManager'] = _Platform_createManager($elm$browser$Browser$AnimationManager$init, $elm$browser$Browser$AnimationManager$onEffects, $elm$browser$Browser$AnimationManager$onSelfMsg, 0, $elm$browser$Browser$AnimationManager$subMap);
+var $elm$browser$Browser$AnimationManager$subscription = _Platform_leaf('Browser.AnimationManager');
+var $elm$browser$Browser$AnimationManager$onAnimationFrameDelta = function (tagger) {
+	return $elm$browser$Browser$AnimationManager$subscription(
+		$elm$browser$Browser$AnimationManager$Delta(tagger));
+};
+var $elm$browser$Browser$Events$onAnimationFrameDelta = $elm$browser$Browser$AnimationManager$onAnimationFrameDelta;
+var $elm$browser$Browser$Events$Document = {$: 'Document'};
+var $elm$json$Json$Decode$bool = _Json_decodeBool;
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$browser$Browser$Events$MySub = F3(
+	function (a, b, c) {
+		return {$: 'MySub', a: a, b: b, c: c};
+	});
+var $elm$browser$Browser$Events$State = F2(
+	function (subs, pids) {
+		return {pids: pids, subs: subs};
+	});
+var $elm$browser$Browser$Events$init = $elm$core$Task$succeed(
+	A2($elm$browser$Browser$Events$State, _List_Nil, $elm$core$Dict$empty));
+var $elm$browser$Browser$Events$nodeToKey = function (node) {
+	if (node.$ === 'Document') {
+		return 'd_';
+	} else {
+		return 'w_';
+	}
+};
+var $elm$browser$Browser$Events$addKey = function (sub) {
+	var node = sub.a;
+	var name = sub.b;
+	return _Utils_Tuple2(
+		_Utils_ap(
+			$elm$browser$Browser$Events$nodeToKey(node),
+			name),
+		sub);
+};
+var $elm$core$Dict$fromList = function (assocs) {
+	return A3(
+		$elm$core$List$foldl,
+		F2(
+			function (_v0, dict) {
+				var key = _v0.a;
+				var value = _v0.b;
+				return A3($elm$core$Dict$insert, key, value, dict);
+			}),
+		$elm$core$Dict$empty,
+		assocs);
+};
+var $elm$core$Dict$foldl = F3(
+	function (func, acc, dict) {
+		foldl:
+		while (true) {
+			if (dict.$ === 'RBEmpty_elm_builtin') {
+				return acc;
+			} else {
+				var key = dict.b;
+				var value = dict.c;
+				var left = dict.d;
+				var right = dict.e;
+				var $temp$func = func,
+					$temp$acc = A3(
+					func,
+					key,
+					value,
+					A3($elm$core$Dict$foldl, func, acc, left)),
+					$temp$dict = right;
+				func = $temp$func;
+				acc = $temp$acc;
+				dict = $temp$dict;
+				continue foldl;
+			}
+		}
+	});
+var $elm$core$Dict$merge = F6(
+	function (leftStep, bothStep, rightStep, leftDict, rightDict, initialResult) {
+		var stepState = F3(
+			function (rKey, rValue, _v0) {
+				stepState:
+				while (true) {
+					var list = _v0.a;
+					var result = _v0.b;
+					if (!list.b) {
+						return _Utils_Tuple2(
+							list,
+							A3(rightStep, rKey, rValue, result));
+					} else {
+						var _v2 = list.a;
+						var lKey = _v2.a;
+						var lValue = _v2.b;
+						var rest = list.b;
+						if (_Utils_cmp(lKey, rKey) < 0) {
+							var $temp$rKey = rKey,
+								$temp$rValue = rValue,
+								$temp$_v0 = _Utils_Tuple2(
+								rest,
+								A3(leftStep, lKey, lValue, result));
+							rKey = $temp$rKey;
+							rValue = $temp$rValue;
+							_v0 = $temp$_v0;
+							continue stepState;
+						} else {
+							if (_Utils_cmp(lKey, rKey) > 0) {
+								return _Utils_Tuple2(
+									list,
+									A3(rightStep, rKey, rValue, result));
+							} else {
+								return _Utils_Tuple2(
+									rest,
+									A4(bothStep, lKey, lValue, rValue, result));
+							}
+						}
+					}
+				}
+			});
+		var _v3 = A3(
+			$elm$core$Dict$foldl,
+			stepState,
+			_Utils_Tuple2(
+				$elm$core$Dict$toList(leftDict),
+				initialResult),
+			rightDict);
+		var leftovers = _v3.a;
+		var intermediateResult = _v3.b;
+		return A3(
+			$elm$core$List$foldl,
+			F2(
+				function (_v4, result) {
+					var k = _v4.a;
+					var v = _v4.b;
+					return A3(leftStep, k, v, result);
+				}),
+			intermediateResult,
+			leftovers);
+	});
+var $elm$browser$Browser$Events$Event = F2(
+	function (key, event) {
+		return {event: event, key: key};
+	});
+var $elm$browser$Browser$Events$spawn = F3(
+	function (router, key, _v0) {
+		var node = _v0.a;
+		var name = _v0.b;
+		var actualNode = function () {
+			if (node.$ === 'Document') {
+				return _Browser_doc;
+			} else {
+				return _Browser_window;
+			}
+		}();
+		return A2(
+			$elm$core$Task$map,
+			function (value) {
+				return _Utils_Tuple2(key, value);
+			},
+			A3(
+				_Browser_on,
+				actualNode,
+				name,
+				function (event) {
+					return A2(
+						$elm$core$Platform$sendToSelf,
+						router,
+						A2($elm$browser$Browser$Events$Event, key, event));
+				}));
+	});
+var $elm$core$Dict$union = F2(
+	function (t1, t2) {
+		return A3($elm$core$Dict$foldl, $elm$core$Dict$insert, t2, t1);
+	});
+var $elm$browser$Browser$Events$onEffects = F3(
+	function (router, subs, state) {
+		var stepRight = F3(
+			function (key, sub, _v6) {
+				var deads = _v6.a;
+				var lives = _v6.b;
+				var news = _v6.c;
+				return _Utils_Tuple3(
+					deads,
+					lives,
+					A2(
+						$elm$core$List$cons,
+						A3($elm$browser$Browser$Events$spawn, router, key, sub),
+						news));
+			});
+		var stepLeft = F3(
+			function (_v4, pid, _v5) {
+				var deads = _v5.a;
+				var lives = _v5.b;
+				var news = _v5.c;
+				return _Utils_Tuple3(
+					A2($elm$core$List$cons, pid, deads),
+					lives,
+					news);
+			});
+		var stepBoth = F4(
+			function (key, pid, _v2, _v3) {
+				var deads = _v3.a;
+				var lives = _v3.b;
+				var news = _v3.c;
+				return _Utils_Tuple3(
+					deads,
+					A3($elm$core$Dict$insert, key, pid, lives),
+					news);
+			});
+		var newSubs = A2($elm$core$List$map, $elm$browser$Browser$Events$addKey, subs);
+		var _v0 = A6(
+			$elm$core$Dict$merge,
+			stepLeft,
+			stepBoth,
+			stepRight,
+			state.pids,
+			$elm$core$Dict$fromList(newSubs),
+			_Utils_Tuple3(_List_Nil, $elm$core$Dict$empty, _List_Nil));
+		var deadPids = _v0.a;
+		var livePids = _v0.b;
+		var makeNewPids = _v0.c;
+		return A2(
+			$elm$core$Task$andThen,
+			function (pids) {
+				return $elm$core$Task$succeed(
+					A2(
+						$elm$browser$Browser$Events$State,
+						newSubs,
+						A2(
+							$elm$core$Dict$union,
+							livePids,
+							$elm$core$Dict$fromList(pids))));
+			},
+			A2(
+				$elm$core$Task$andThen,
+				function (_v1) {
+					return $elm$core$Task$sequence(makeNewPids);
+				},
+				$elm$core$Task$sequence(
+					A2($elm$core$List$map, $elm$core$Process$kill, deadPids))));
+	});
+var $elm$core$List$maybeCons = F3(
+	function (f, mx, xs) {
+		var _v0 = f(mx);
+		if (_v0.$ === 'Just') {
+			var x = _v0.a;
+			return A2($elm$core$List$cons, x, xs);
+		} else {
+			return xs;
+		}
+	});
+var $elm$core$List$filterMap = F2(
+	function (f, xs) {
+		return A3(
+			$elm$core$List$foldr,
+			$elm$core$List$maybeCons(f),
+			_List_Nil,
+			xs);
+	});
+var $elm$browser$Browser$Events$onSelfMsg = F3(
+	function (router, _v0, state) {
+		var key = _v0.key;
+		var event = _v0.event;
+		var toMessage = function (_v2) {
+			var subKey = _v2.a;
+			var _v3 = _v2.b;
+			var node = _v3.a;
+			var name = _v3.b;
+			var decoder = _v3.c;
+			return _Utils_eq(subKey, key) ? A2(_Browser_decodeEvent, decoder, event) : $elm$core$Maybe$Nothing;
+		};
+		var messages = A2($elm$core$List$filterMap, toMessage, state.subs);
+		return A2(
+			$elm$core$Task$andThen,
+			function (_v1) {
+				return $elm$core$Task$succeed(state);
+			},
+			$elm$core$Task$sequence(
+				A2(
+					$elm$core$List$map,
+					$elm$core$Platform$sendToApp(router),
+					messages)));
+	});
+var $elm$browser$Browser$Events$subMap = F2(
+	function (func, _v0) {
+		var node = _v0.a;
+		var name = _v0.b;
+		var decoder = _v0.c;
+		return A3(
+			$elm$browser$Browser$Events$MySub,
+			node,
+			name,
+			A2($elm$json$Json$Decode$map, func, decoder));
+	});
+_Platform_effectManagers['Browser.Events'] = _Platform_createManager($elm$browser$Browser$Events$init, $elm$browser$Browser$Events$onEffects, $elm$browser$Browser$Events$onSelfMsg, 0, $elm$browser$Browser$Events$subMap);
+var $elm$browser$Browser$Events$subscription = _Platform_leaf('Browser.Events');
+var $elm$browser$Browser$Events$on = F3(
+	function (node, name, decoder) {
+		return $elm$browser$Browser$Events$subscription(
+			A3($elm$browser$Browser$Events$MySub, node, name, decoder));
+	});
+var $elm$browser$Browser$Events$Hidden = {$: 'Hidden'};
+var $elm$browser$Browser$Events$Visible = {$: 'Visible'};
+var $elm$browser$Browser$Events$withHidden = F2(
+	function (func, isHidden) {
+		return func(
+			isHidden ? $elm$browser$Browser$Events$Hidden : $elm$browser$Browser$Events$Visible);
+	});
+var $elm$browser$Browser$Events$onVisibilityChange = function (func) {
+	var info = _Browser_visibilityInfo(_Utils_Tuple0);
+	return A3(
+		$elm$browser$Browser$Events$on,
+		$elm$browser$Browser$Events$Document,
+		info.change,
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$browser$Browser$Events$withHidden(func),
+			A2(
+				$elm$json$Json$Decode$field,
+				'target',
+				A2($elm$json$Json$Decode$field, info.hidden, $elm$json$Json$Decode$bool))));
+};
+var $author$project$Main$subscriptions = function (model) {
+	return $elm$core$Platform$Sub$batch(
+		_List_fromArray(
+			[
+				model.paused ? $elm$core$Platform$Sub$none : $elm$browser$Browser$Events$onAnimationFrameDelta($author$project$Main$Delta),
+				$elm$browser$Browser$Events$onVisibilityChange(
+				function (v) {
+					if (v.$ === 'Hidden') {
+						return $author$project$Main$Paused;
+					} else {
+						return $author$project$Main$Resumed;
+					}
+				})
+			]));
+};
+var $elm$core$Basics$round = _Basics_round;
+var $author$project$Main$computeViewportSize = F2(
+	function (viewport, model) {
+		var vph = viewport.viewport.height;
+		var ratio = 16.0 / 9.0;
+		var vpw = vph / ratio;
+		var offset = $elm$core$Basics$round((viewport.viewport.width - vpw) / 2.0);
+		return _Utils_update(
+			model,
+			{
+				offset: offset,
+				viewportHeight: $elm$core$Basics$round(vph),
+				viewportWidth: $elm$core$Basics$round(vpw)
+			});
+	});
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $elm$core$String$toFloat = _String_toFloat;
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var $author$project$Main$update = F2(
+	function (msg, model) {
+		switch (msg.$) {
+			case 'Delta':
+				var f = msg.a;
+				var th = model.theta;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{theta: th + (f / 5000)}),
+					$elm$core$Platform$Cmd$none);
+			case 'Paused':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{paused: true}),
+					$elm$core$Platform$Cmd$none);
+			case 'Resumed':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{paused: false}),
+					$elm$core$Platform$Cmd$none);
+			case 'ViewPortLoaded':
+				var viewport = msg.a;
+				return _Utils_Tuple2(
+					A2($author$project$Main$computeViewportSize, viewport, model),
+					$elm$core$Platform$Cmd$none);
+			default:
+				var params = msg.a;
+				var prevParams = model.noiseParams;
+				var newParams = function () {
+					switch (params.$) {
+						case 'UpdateBaseRoughness':
+							var baseRoughness = params.a;
+							return _Utils_update(
+								prevParams,
+								{
+									baseRoughness: A2(
+										$elm$core$Maybe$withDefault,
+										prevParams.baseRoughness,
+										$elm$core$String$toFloat(baseRoughness))
+								});
+						case 'UpdateRoughness':
+							var roughness = params.a;
+							return _Utils_update(
+								prevParams,
+								{
+									roughness: A2(
+										$elm$core$Maybe$withDefault,
+										prevParams.roughness,
+										$elm$core$String$toFloat(roughness))
+								});
+						case 'UpdatePersistance':
+							var persistance = params.a;
+							return _Utils_update(
+								prevParams,
+								{
+									persistance: A2(
+										$elm$core$Maybe$withDefault,
+										prevParams.persistance,
+										$elm$core$String$toFloat(persistance))
+								});
+						case 'UpdateNumLayers':
+							var numLayers = params.a;
+							return _Utils_update(
+								prevParams,
+								{
+									numLayers: A2(
+										$elm$core$Maybe$withDefault,
+										prevParams.numLayers,
+										$elm$core$String$toInt(numLayers))
+								});
+						case 'UpdateSeed':
+							var seed = params.a;
+							return _Utils_update(
+								prevParams,
+								{
+									seed: A2(
+										$elm$core$Maybe$withDefault,
+										prevParams.seed,
+										$elm$core$String$toInt(seed))
+								});
+						case 'UpdateStrength':
+							var strength = params.a;
+							return _Utils_update(
+								prevParams,
+								{
+									strength: A2(
+										$elm$core$Maybe$withDefault,
+										prevParams.strength,
+										$elm$core$String$toFloat(strength))
+								});
+						default:
+							var minValue = params.a;
+							return _Utils_update(
+								prevParams,
+								{
+									minValue: A2(
+										$elm$core$Maybe$withDefault,
+										prevParams.strength,
+										$elm$core$String$toFloat(minValue))
+								});
+					}
+				}();
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							meshes: A2($author$project$Shaders$makeCube, model.res, model.noiseParams),
+							noiseParams: newParams
+						}),
+					$elm$core$Platform$Cmd$none);
+		}
+	});
+var $author$project$Main$UpdateBaseRoughness = function (a) {
+	return {$: 'UpdateBaseRoughness', a: a};
+};
+var $author$project$Main$UpdateMinValue = function (a) {
+	return {$: 'UpdateMinValue', a: a};
+};
+var $author$project$Main$UpdateNumLayers = function (a) {
+	return {$: 'UpdateNumLayers', a: a};
+};
+var $author$project$Main$UpdatePersistance = function (a) {
+	return {$: 'UpdatePersistance', a: a};
+};
+var $author$project$Main$UpdateRoughness = function (a) {
+	return {$: 'UpdateRoughness', a: a};
+};
+var $author$project$Main$UpdateStrength = function (a) {
+	return {$: 'UpdateStrength', a: a};
+};
+var $elm_explorations$webgl$WebGL$Internal$Depth = function (a) {
+	return {$: 'Depth', a: a};
+};
+var $elm_explorations$webgl$WebGL$depth = $elm_explorations$webgl$WebGL$Internal$Depth;
+var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm_explorations$webgl$WebGL$Settings$FaceMode = function (a) {
+	return {$: 'FaceMode', a: a};
+};
+var $elm_explorations$webgl$WebGL$Settings$back = $elm_explorations$webgl$WebGL$Settings$FaceMode(1029);
+var $elm_explorations$webgl$WebGL$Internal$CullFace = function (a) {
+	return {$: 'CullFace', a: a};
+};
+var $elm_explorations$webgl$WebGL$Settings$cullFace = function (_v0) {
+	var faceMode = _v0.a;
+	return $elm_explorations$webgl$WebGL$Internal$CullFace(faceMode);
+};
+var $elm_explorations$webgl$WebGL$Internal$DepthTest = F4(
+	function (a, b, c, d) {
+		return {$: 'DepthTest', a: a, b: b, c: c, d: d};
+	});
+var $elm_explorations$webgl$WebGL$Settings$DepthTest$less = function (_v0) {
+	var write = _v0.write;
+	var near = _v0.near;
+	var far = _v0.far;
+	return A4($elm_explorations$webgl$WebGL$Internal$DepthTest, 513, write, near, far);
+};
+var $elm_explorations$webgl$WebGL$Settings$DepthTest$default = $elm_explorations$webgl$WebGL$Settings$DepthTest$less(
+	{far: 1, near: 0, write: true});
+var $elm_explorations$webgl$WebGL$Internal$disableSetting = F2(
+	function (cache, setting) {
+		switch (setting.$) {
+			case 'Blend':
+				return _WebGL_disableBlend(cache);
+			case 'DepthTest':
+				return _WebGL_disableDepthTest(cache);
+			case 'StencilTest':
+				return _WebGL_disableStencilTest(cache);
+			case 'Scissor':
+				return _WebGL_disableScissor(cache);
+			case 'ColorMask':
+				return _WebGL_disableColorMask(cache);
+			case 'CullFace':
+				return _WebGL_disableCullFace(cache);
+			case 'PolygonOffset':
+				return _WebGL_disablePolygonOffset(cache);
+			case 'SampleCoverage':
+				return _WebGL_disableSampleCoverage(cache);
+			default:
+				return _WebGL_disableSampleAlphaToCoverage(cache);
+		}
+	});
+var $elm_explorations$webgl$WebGL$Internal$enableOption = F2(
+	function (ctx, option) {
+		switch (option.$) {
+			case 'Alpha':
+				return A2(_WebGL_enableAlpha, ctx, option);
+			case 'Depth':
+				return A2(_WebGL_enableDepth, ctx, option);
+			case 'Stencil':
+				return A2(_WebGL_enableStencil, ctx, option);
+			case 'Antialias':
+				return A2(_WebGL_enableAntialias, ctx, option);
+			case 'ClearColor':
+				return A2(_WebGL_enableClearColor, ctx, option);
+			default:
+				return A2(_WebGL_enablePreserveDrawingBuffer, ctx, option);
+		}
+	});
+var $elm_explorations$webgl$WebGL$Internal$enableSetting = F2(
+	function (gl, setting) {
+		switch (setting.$) {
+			case 'Blend':
+				return A2(_WebGL_enableBlend, gl, setting);
+			case 'DepthTest':
+				return A2(_WebGL_enableDepthTest, gl, setting);
+			case 'StencilTest':
+				return A2(_WebGL_enableStencilTest, gl, setting);
+			case 'Scissor':
+				return A2(_WebGL_enableScissor, gl, setting);
+			case 'ColorMask':
+				return A2(_WebGL_enableColorMask, gl, setting);
+			case 'CullFace':
+				return A2(_WebGL_enableCullFace, gl, setting);
+			case 'PolygonOffset':
+				return A2(_WebGL_enablePolygonOffset, gl, setting);
+			case 'SampleCoverage':
+				return A2(_WebGL_enableSampleCoverage, gl, setting);
+			default:
+				return A2(_WebGL_enableSampleAlphaToCoverage, gl, setting);
+		}
+	});
+var $elm_explorations$webgl$WebGL$entityWith = _WebGL_entity;
+var $author$project$Shaders$fragmentShader = {
+	src: '\n        precision mediump float;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            gl_FragColor = vec4(vec3(0.5, 0.5, 1) * vLighting, 1);\n        }\n    ',
+	attributes: {},
+	uniforms: {}
+};
+var $elm_explorations$linear_algebra$Math$Matrix4$identity = _MJS_m4x4identity;
+var $elm_explorations$linear_algebra$Math$Matrix4$inverse = _MJS_m4x4inverse;
+var $elm_explorations$linear_algebra$Math$Matrix4$makeRotate = _MJS_m4x4makeRotate;
+var $elm_explorations$linear_algebra$Math$Matrix4$mul = _MJS_m4x4mul;
+var $elm_explorations$linear_algebra$Math$Matrix4$transpose = _MJS_m4x4transpose;
+var $author$project$Shaders$uniforms = function (theta) {
+	var rotation = A2(
+		$elm_explorations$linear_algebra$Math$Matrix4$mul,
+		A2(
+			$elm_explorations$linear_algebra$Math$Matrix4$makeRotate,
+			3 * theta,
+			A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 1, 0)),
+		A2(
+			$elm_explorations$linear_algebra$Math$Matrix4$makeRotate,
+			2 * theta,
+			A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 1, 0, 0)));
+	var normalTransform = $elm_explorations$linear_algebra$Math$Matrix4$transpose(
+		A2(
+			$elm$core$Maybe$withDefault,
+			$elm_explorations$linear_algebra$Math$Matrix4$identity,
+			$elm_explorations$linear_algebra$Math$Matrix4$inverse(rotation)));
+	return {normalMatrix: normalTransform, rotation: rotation};
+};
+var $author$project$Shaders$vertexShader = {
+	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = rotation * vec4(position, 2);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.3, 0.3, 0.3);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n\n            float height = max(0.5, length(pos.xyz) - length(transformedNormal.xyz));\n            // if (height <= 0.4) {\n            //    heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);\n            // } else if (height <= 0.5) {\n            //     heightColor = vec3(188.0 / 255.0, 170.0/ 255.0, 35.0 / 255.0);\n            // } else if (height <= 0.55) {\n            //     heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);\n            // } else {\n            heightColor = vec3(height, height, height);\n            // };\n        }\n    ',
+	attributes: {normal: 'normal', position: 'position'},
+	uniforms: {normalMatrix: 'normalMatrix', rotation: 'rotation'}
+};
+var $author$project$Shaders$draw = F2(
+	function (theta, mesh) {
+		return A5(
+			$elm_explorations$webgl$WebGL$entityWith,
+			_List_fromArray(
+				[
+					$elm_explorations$webgl$WebGL$Settings$cullFace($elm_explorations$webgl$WebGL$Settings$back),
+					$elm_explorations$webgl$WebGL$Settings$DepthTest$default
+				]),
+			$author$project$Shaders$vertexShader,
+			$author$project$Shaders$fragmentShader,
+			mesh,
+			$author$project$Shaders$uniforms(theta));
 	});
 var $elm$html$Html$Attributes$height = function (n) {
 	return A2(
@@ -8704,7 +8711,10 @@ var $author$project$Main$view = function (model) {
 										$elm$html$Html$Attributes$width(model.width),
 										$elm$html$Html$Attributes$height(model.height)
 									]),
-								A3($author$project$Shaders$drawCube, model.res, model.theta, model.noiseParams)),
+								A2(
+									$elm$core$List$map,
+									$author$project$Shaders$draw(model.theta),
+									model.meshes)),
 								A2(
 								$elm$html$Html$div,
 								_List_fromArray(

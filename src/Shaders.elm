@@ -25,7 +25,7 @@ vertexShader =
         varying vec3 heightColor;
 
         void main() {
-            vec4 pos = vec4(position, 2) * rotation;
+            vec4 pos = rotation * vec4(position, 2);
             gl_Position = pos;
 
             vec3 ambientLight = vec3(0.3, 0.3, 0.3);
@@ -37,7 +37,7 @@ vertexShader =
             float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
             vLighting = ambientLight + (directionalLightColor * directional);
 
-            float height = max(0.0, length(pos.xyz) - length(transformedNormal.xyz));
+            float height = max(0.5, length(pos.xyz) - length(transformedNormal.xyz));
             // if (height <= 0.4) {
             //    heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);
             // } else if (height <= 0.5) {
@@ -122,11 +122,6 @@ uniforms theta =
 draw: Float -> Mesh Vertex -> WebGL.Entity
 draw theta mesh = WebGL.entityWith [ WebGL.Settings.cullFace back, DepthTest.default ] vertexShader fragmentShader mesh (uniforms theta)
 
-drawFace: Int -> (Float -> Float -> Float -> Float) -> Float -> Vec3 -> WebGL.Entity
-drawFace res noise theta dir =
-    draw theta (face noise res dir)
-
-
 type alias NoiseParameters =
     { seed: Int,
       baseRoughness: Float,
@@ -140,9 +135,8 @@ type alias NoiseParameters =
 emptyNoiseParams: NoiseParameters
 emptyNoiseParams = { seed = 42, baseRoughness = 8, numLayers = 8, roughness = 0.4, persistance = 0.5, strength = 1, minValue = 0 }
 
-
-drawCube: Int -> Float -> NoiseParameters -> List WebGL.Entity
-drawCube res theta noiseParams =
+makeCube: Int -> NoiseParameters -> List (Mesh Vertex)
+makeCube res noiseParams = 
     let
         noise = Simplex.noise3d (Simplex.permutationTableFromInt noiseParams.seed )
         initialParams = { value = 0.0, frequency = noiseParams.baseRoughness, amplidute = noiseParams.persistance }
@@ -162,5 +156,4 @@ drawCube res theta noiseParams =
       vec3 -1 0 0,
       vec3 0 -1 0,
       vec3 0 0 -1 ]
-        |> List.map (drawFace res noiseFunc theta)
-
+        |> List.map (face noiseFunc res)

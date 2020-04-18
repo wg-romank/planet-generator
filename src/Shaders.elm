@@ -28,7 +28,7 @@ vertexShader =
             vec4 pos = vec4(position, 2) * rotation;
             gl_Position = pos;
 
-            vec3 ambientLight = vec3(0.5, 0.5, 0.5);
+            vec3 ambientLight = vec3(0.3, 0.3, 0.3);
             vec3 directionalLightColor = vec3(1, 1, 1);
             vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));
 
@@ -36,8 +36,8 @@ vertexShader =
 
             float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
             vLighting = ambientLight + (directionalLightColor * directional);
-            float height = max(0.0, length(pos.xyz) - length(transformedNormal.xyz));
 
+            float height = max(0.0, length(pos.xyz) - length(transformedNormal.xyz));
             // if (height <= 0.4) {
             //    heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);
             // } else if (height <= 0.5) {
@@ -57,7 +57,7 @@ fragmentShader =
         varying vec3 heightColor;
 
         void main() {
-            gl_FragColor = vec4(vLighting * heightColor, 1);
+            gl_FragColor = vec4(vec3(0.5, 0.5, 1) * vLighting, 1);
         }
     |]
 
@@ -133,11 +133,12 @@ type alias NoiseParameters =
       numLayers: Int,
       roughness: Float,
       persistance: Float,
-      strength: Float }
+      strength: Float,
+      minValue: Float }
 
 
 emptyNoiseParams: NoiseParameters
-emptyNoiseParams = { seed = 42, baseRoughness = 8, numLayers = 8, roughness = 0.4, persistance = 0.5, strength = 1 }
+emptyNoiseParams = { seed = 42, baseRoughness = 8, numLayers = 8, roughness = 0.4, persistance = 0.5, strength = 1, minValue = 0 }
 
 
 drawCube: Int -> Float -> NoiseParameters -> List WebGL.Entity
@@ -153,7 +154,7 @@ drawCube res theta noiseParams =
                 newAmp = acc.amplidute * noiseParams.persistance
             in
                 { value = acc.value + v, frequency = newFrequency, amplidute = newAmp }
-            ) initialParams (List.range 1 noiseParams.numLayers) |> \f -> f.value * noiseParams.strength
+            ) initialParams (List.range 1 noiseParams.numLayers) |> \f -> max 0 (f.value * noiseParams.strength - noiseParams.minValue)
     in
     [ vec3 1 0 0,
       vec3 0 1 0,

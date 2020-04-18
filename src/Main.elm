@@ -44,7 +44,7 @@ init _ =
       , width = 400
       , height = 400
       , noiseParams = emptyNoiseParams
-      , res = 20
+      , res = 10
       }
     , Cmd.batch
         [ Task.perform ViewPortLoaded Browser.Dom.getViewport
@@ -60,7 +60,13 @@ type Msg
     | UpdateParams UpdateParams
 
 
-type UpdateParams = UpdateBaseRoughness String | UpdateRoughness String | UpdatePersistance String | UpdateNumLayers String | UpdateSeed String | UpdateStrength String
+type UpdateParams = UpdateBaseRoughness String
+    | UpdateRoughness String
+    | UpdatePersistance String
+    | UpdateNumLayers String
+    | UpdateSeed String
+    | UpdateStrength String
+    | UpdateMinValue String
 
 
 computeViewportSize : Viewport -> Model -> Model
@@ -102,6 +108,8 @@ update msg model =
                         { prevParams | seed = String.toInt seed |> Maybe.withDefault prevParams.seed }
                     UpdateStrength strength ->
                         { prevParams | strength = String.toFloat strength |> Maybe.withDefault prevParams.strength }
+                    UpdateMinValue minValue ->
+                        { prevParams | minValue = String.toFloat minValue |> Maybe.withDefault prevParams.strength }
             in
             ( { model | noiseParams = newParams }, Cmd.none )
 
@@ -184,6 +192,7 @@ view model =
             slider "roughness" UpdateRoughness 0.1 1 model.noiseParams.roughness,
             slider "persistance" UpdatePersistance 0 1 model.noiseParams.persistance,
             slider "strength" UpdateStrength 0 1 model.noiseParams.strength,
+            slider "minValue" UpdateMinValue 0 1 model.noiseParams.minValue,
             intSlider "numLayers" UpdateNumLayers 1 8 model.noiseParams.numLayers
           ] ]
          ]

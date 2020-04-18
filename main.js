@@ -6841,11 +6841,11 @@ var $author$project$Main$ViewPortLoaded = function (a) {
 	return {$: 'ViewPortLoaded', a: a};
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $author$project$Shaders$emptyNoiseParams = {baseRoughness: 8, numLayers: 8, persistance: 0.5, roughness: 0.4, seed: 42, strength: 1};
+var $author$project$Shaders$emptyNoiseParams = {baseRoughness: 8, minValue: 0, numLayers: 8, persistance: 0.5, roughness: 0.4, seed: 42, strength: 1};
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{height: 400, noiseParams: $author$project$Shaders$emptyNoiseParams, offset: 0, paused: false, res: 20, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 400},
+		{height: 400, noiseParams: $author$project$Shaders$emptyNoiseParams, offset: 0, paused: false, res: 10, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 400},
 		$elm$core$Platform$Cmd$batch(
 			_List_fromArray(
 				[
@@ -7538,7 +7538,7 @@ var $author$project$Main$update = F2(
 										prevParams.seed,
 										$elm$core$String$toInt(seed))
 								});
-						default:
+						case 'UpdateStrength':
 							var strength = params.a;
 							return _Utils_update(
 								prevParams,
@@ -7547,6 +7547,16 @@ var $author$project$Main$update = F2(
 										$elm$core$Maybe$withDefault,
 										prevParams.strength,
 										$elm$core$String$toFloat(strength))
+								});
+						default:
+							var minValue = params.a;
+							return _Utils_update(
+								prevParams,
+								{
+									minValue: A2(
+										$elm$core$Maybe$withDefault,
+										prevParams.strength,
+										$elm$core$String$toFloat(minValue))
 								});
 					}
 				}();
@@ -7559,6 +7569,9 @@ var $author$project$Main$update = F2(
 	});
 var $author$project$Main$UpdateBaseRoughness = function (a) {
 	return {$: 'UpdateBaseRoughness', a: a};
+};
+var $author$project$Main$UpdateMinValue = function (a) {
+	return {$: 'UpdateMinValue', a: a};
 };
 var $author$project$Main$UpdateNumLayers = function (a) {
 	return {$: 'UpdateNumLayers', a: a};
@@ -7665,7 +7678,7 @@ var $elm_explorations$webgl$WebGL$Internal$enableSetting = F2(
 	});
 var $elm_explorations$webgl$WebGL$entityWith = _WebGL_entity;
 var $author$project$Shaders$fragmentShader = {
-	src: '\n        precision mediump float;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            gl_FragColor = vec4(vLighting * heightColor, 1);\n        }\n    ',
+	src: '\n        precision mediump float;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            gl_FragColor = vec4(vec3(0.5, 0.5, 1) * vLighting, 1);\n        }\n    ',
 	attributes: {},
 	uniforms: {}
 };
@@ -7694,7 +7707,7 @@ var $author$project$Shaders$uniforms = function (theta) {
 	return {normalMatrix: normalTransform, rotation: rotation};
 };
 var $author$project$Shaders$vertexShader = {
-	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = vec4(position, 2) * rotation;\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.5, 0.5, 0.5);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n            float height = max(0.0, length(pos.xyz) - length(transformedNormal.xyz));\n\n            // if (height <= 0.4) {\n            //    heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);\n            // } else if (height <= 0.5) {\n            //     heightColor = vec3(188.0 / 255.0, 170.0/ 255.0, 35.0 / 255.0);\n            // } else if (height <= 0.55) {\n            //     heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);\n            // } else {\n            heightColor = vec3(height, height, height);\n            // };\n        }\n    ',
+	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = vec4(position, 2) * rotation;\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.3, 0.3, 0.3);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n\n            float height = max(0.0, length(pos.xyz) - length(transformedNormal.xyz));\n            // if (height <= 0.4) {\n            //    heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);\n            // } else if (height <= 0.5) {\n            //     heightColor = vec3(188.0 / 255.0, 170.0/ 255.0, 35.0 / 255.0);\n            // } else if (height <= 0.55) {\n            //     heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);\n            // } else {\n            heightColor = vec3(height, height, height);\n            // };\n        }\n    ',
 	attributes: {normal: 'normal', position: 'position'},
 	uniforms: {normalMatrix: 'normalMatrix', rotation: 'rotation'}
 };
@@ -8460,7 +8473,7 @@ var $author$project$Shaders$drawCube = F3(
 		var noiseFunc = F3(
 			function (x, y, z) {
 				return function (f) {
-					return f.value * noiseParams.strength;
+					return A2($elm$core$Basics$max, 0, (f.value * noiseParams.strength) - noiseParams.minValue);
 				}(
 					A3(
 						$elm$core$List$foldl,
@@ -8710,6 +8723,7 @@ var $author$project$Main$view = function (model) {
 										A5($author$project$Main$slider, 'roughness', $author$project$Main$UpdateRoughness, 0.1, 1, model.noiseParams.roughness),
 										A5($author$project$Main$slider, 'persistance', $author$project$Main$UpdatePersistance, 0, 1, model.noiseParams.persistance),
 										A5($author$project$Main$slider, 'strength', $author$project$Main$UpdateStrength, 0, 1, model.noiseParams.strength),
+										A5($author$project$Main$slider, 'minValue', $author$project$Main$UpdateMinValue, 0, 1, model.noiseParams.minValue),
 										A5($author$project$Main$intSlider, 'numLayers', $author$project$Main$UpdateNumLayers, 1, 8, model.noiseParams.numLayers)
 									]))
 							]))

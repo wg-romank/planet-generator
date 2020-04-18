@@ -30,7 +30,7 @@ vertexShader =
 
             vec3 ambientLight = vec3(0.3, 0.3, 0.3);
             vec3 directionalLightColor = vec3(1, 1, 1);
-            vec3 directionalVector = normalize(vec3(-0.85, -0.8, 0.75));
+            vec3 directionalVector = normalize(vec3(-0.85, -0.8, -0.75));
 
             vec4 transformedNormal = normalMatrix * vec4(normal, 1.0);
 
@@ -133,22 +133,23 @@ type alias NoiseParameters =
 
 
 emptyNoiseParams: NoiseParameters
-emptyNoiseParams = { seed = 42, baseRoughness = 0, numLayers = 1, roughness = 0, persistance = 0, strength = 0, minValue = 0 }
+emptyNoiseParams = { seed = 42, baseRoughness = 3, numLayers = 4, roughness = 0.5, persistance = 0.7, strength = 0.35, minValue = 0.5 }
 
 makeCube: Int -> NoiseParameters -> List (Mesh Vertex)
 makeCube res noiseParams = 
     let
         noise = Simplex.noise3d (Simplex.permutationTableFromInt noiseParams.seed )
-        initialParams = { value = 0.0, frequency = noiseParams.baseRoughness, amplidute = noiseParams.persistance }
+        initialParams = { value = 0.0, frequency = noiseParams.baseRoughness, amplidute = 1 }
         noiseFunc = \x y z ->
             List.foldl ( \_ acc ->
-            let
-                v = (noise (acc.frequency * x) (acc.frequency * y) (acc.frequency * z) + 1) * 0.5 * acc.amplidute
-                newFrequency = acc.frequency * noiseParams.roughness
-                newAmp = acc.amplidute * noiseParams.persistance
-            in
-                { value = acc.value + v, frequency = newFrequency, amplidute = newAmp }
-            ) initialParams (List.range 1 noiseParams.numLayers) |> \f -> max 0 (f.value * noiseParams.strength - noiseParams.minValue)
+                let
+                    v = (noise (acc.frequency * x) (acc.frequency * y) (acc.frequency * z) + 1) * 0.5 * acc.amplidute
+                    newFrequency = acc.frequency * noiseParams.roughness
+                    newAmp = acc.amplidute * noiseParams.persistance
+                in
+                    { value = acc.value + v, frequency = newFrequency, amplidute = newAmp }
+            ) initialParams (List.range 1 noiseParams.numLayers)
+            |> \f -> max 0 (f.value * noiseParams.strength - noiseParams.minValue)
     in
     [ vec3 1 0 0,
       vec3 0 1 0,

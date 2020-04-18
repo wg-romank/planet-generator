@@ -191,7 +191,7 @@ view model =
           ] [ 
             -- intSlider "seed" UpdateSeed 1 100 model.noiseParams.seed,
             slider "baseRoughness" UpdateBaseRoughness 1 5 model.noiseParams.baseRoughness,
-            slider "roughness" UpdateRoughness 0.1 1 model.noiseParams.roughness,
+            slider "roughness" UpdateRoughness 0 1 model.noiseParams.roughness,
             slider "persistance" UpdatePersistance 0 1 model.noiseParams.persistance,
             slider "strength" UpdateStrength 0 1 model.noiseParams.strength,
             slider "minValue" UpdateMinValue 0 1 model.noiseParams.minValue,

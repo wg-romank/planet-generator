@@ -6841,7 +6841,7 @@ var $author$project$Main$ViewPortLoaded = function (a) {
 	return {$: 'ViewPortLoaded', a: a};
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $author$project$Shaders$emptyNoiseParams = {baseRoughness: 0, minValue: 0, numLayers: 1, persistance: 0, roughness: 0, seed: 42, strength: 0};
+var $author$project$Shaders$emptyNoiseParams = {baseRoughness: 3, minValue: 0.5, numLayers: 4, persistance: 0.7, roughness: 0.5, seed: 42, strength: 0.35};
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $elm_explorations$linear_algebra$Math$Vector3$add = _MJS_v3add;
 var $elm$core$List$append = F2(
@@ -7692,7 +7692,7 @@ var $author$project$Shaders$makeCube = F2(
 	function (res, noiseParams) {
 		var noise = $Herteby$simplex_noise$Simplex$noise3d(
 			$Herteby$simplex_noise$Simplex$permutationTableFromInt(noiseParams.seed));
-		var initialParams = {amplidute: noiseParams.persistance, frequency: noiseParams.baseRoughness, value: 0.0};
+		var initialParams = {amplidute: 1, frequency: noiseParams.baseRoughness, value: 0.0};
 		var noiseFunc = F3(
 			function (x, y, z) {
 				return function (f) {
@@ -8491,7 +8491,7 @@ var $author$project$Shaders$uniforms = function (theta) {
 	return {normalMatrix: normalTransform, rotation: rotation};
 };
 var $author$project$Shaders$vertexShader = {
-	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = rotation * vec4(position, 2);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.3, 0.3, 0.3);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(-0.85, -0.8, 0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n\n            float height = max(0.5, length(pos.xyz) - length(transformedNormal.xyz));\n            // if (height <= 0.4) {\n            //    heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);\n            // } else if (height <= 0.5) {\n            //     heightColor = vec3(188.0 / 255.0, 170.0/ 255.0, 35.0 / 255.0);\n            // } else if (height <= 0.55) {\n            //     heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);\n            // } else {\n            heightColor = vec3(height, height, height);\n            // };\n        }\n    ',
+	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = rotation * vec4(position, 2);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.3, 0.3, 0.3);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(-0.85, -0.8, -0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n\n            float height = max(0.5, length(pos.xyz) - length(transformedNormal.xyz));\n            // if (height <= 0.4) {\n            //    heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);\n            // } else if (height <= 0.5) {\n            //     heightColor = vec3(188.0 / 255.0, 170.0/ 255.0, 35.0 / 255.0);\n            // } else if (height <= 0.55) {\n            //     heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);\n            // } else {\n            heightColor = vec3(height, height, height);\n            // };\n        }\n    ',
 	attributes: {normal: 'normal', position: 'position'},
 	uniforms: {normalMatrix: 'normalMatrix', rotation: 'rotation'}
 };
@@ -8733,7 +8733,7 @@ var $author$project$Main$view = function (model) {
 								_List_fromArray(
 									[
 										A5($author$project$Main$slider, 'baseRoughness', $author$project$Main$UpdateBaseRoughness, 1, 5, model.noiseParams.baseRoughness),
-										A5($author$project$Main$slider, 'roughness', $author$project$Main$UpdateRoughness, 0.1, 1, model.noiseParams.roughness),
+										A5($author$project$Main$slider, 'roughness', $author$project$Main$UpdateRoughness, 0, 1, model.noiseParams.roughness),
 										A5($author$project$Main$slider, 'persistance', $author$project$Main$UpdatePersistance, 0, 1, model.noiseParams.persistance),
 										A5($author$project$Main$slider, 'strength', $author$project$Main$UpdateStrength, 0, 1, model.noiseParams.strength),
 										A5($author$project$Main$slider, 'minValue', $author$project$Main$UpdateMinValue, 0, 1, model.noiseParams.minValue),

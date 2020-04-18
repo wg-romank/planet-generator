@@ -113,7 +113,7 @@ update msg model =
                     UpdateMinValue minValue ->
                         { prevParams | minValue = String.toFloat minValue |> Maybe.withDefault prevParams.strength }
             in
-            ( { model | noiseParams = newParams, meshes = makeCube model.res model.noiseParams }, Cmd.none )
+            ( { model | noiseParams = newParams, meshes = makeCube model.res newParams }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg

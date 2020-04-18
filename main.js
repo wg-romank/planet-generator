@@ -8344,7 +8344,7 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							meshes: A2($author$project$Shaders$makeCube, model.res, model.noiseParams),
+							meshes: A2($author$project$Shaders$makeCube, model.res, newParams),
 							noiseParams: newParams
 						}),
 					$elm$core$Platform$Cmd$none);
@@ -8491,7 +8491,7 @@ var $author$project$Shaders$uniforms = function (theta) {
 	return {normalMatrix: normalTransform, rotation: rotation};
 };
 var $author$project$Shaders$vertexShader = {
-	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = rotation * vec4(position, 2);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.3, 0.3, 0.3);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n\n            float height = max(0.5, length(pos.xyz) - length(transformedNormal.xyz));\n            // if (height <= 0.4) {\n            //    heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);\n            // } else if (height <= 0.5) {\n            //     heightColor = vec3(188.0 / 255.0, 170.0/ 255.0, 35.0 / 255.0);\n            // } else if (height <= 0.55) {\n            //     heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);\n            // } else {\n            heightColor = vec3(height, height, height);\n            // };\n        }\n    ',
+	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = rotation * vec4(position, 2);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.3, 0.3, 0.3);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(-0.85, -0.8, 0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n\n            float height = max(0.5, length(pos.xyz) - length(transformedNormal.xyz));\n            // if (height <= 0.4) {\n            //    heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);\n            // } else if (height <= 0.5) {\n            //     heightColor = vec3(188.0 / 255.0, 170.0/ 255.0, 35.0 / 255.0);\n            // } else if (height <= 0.55) {\n            //     heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);\n            // } else {\n            heightColor = vec3(height, height, height);\n            // };\n        }\n    ',
 	attributes: {normal: 'normal', position: 'position'},
 	uniforms: {normalMatrix: 'normalMatrix', rotation: 'rotation'}
 };

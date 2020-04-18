@@ -133,7 +133,7 @@ type alias NoiseParameters =
 
 
 emptyNoiseParams: NoiseParameters
-emptyNoiseParams = { seed = 42, baseRoughness = 8, numLayers = 8, roughness = 0.4, persistance = 0.5, strength = 1, minValue = 0 }
+emptyNoiseParams = { seed = 42, baseRoughness = 0, numLayers = 1, roughness = 0, persistance = 0, strength = 0, minValue = 0 }
 
 makeCube: Int -> NoiseParameters -> List (Mesh Vertex)
 makeCube res noiseParams = 

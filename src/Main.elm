@@ -176,7 +176,7 @@ view model =
             style "height" (String.fromInt model.viewportHeight ++ "px")
         ]
         [ div [] [
-            WebGL.toHtmlWith [ WebGL.depth 1 ]
+            WebGL.toHtmlWith [ WebGL.depth 1, WebGL.antialias ]
             [ style "backgroundColor" "#FFFFFF",
               style "display" "block",
               style "align" "center",

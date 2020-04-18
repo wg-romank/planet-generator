@@ -6841,7 +6841,7 @@ var $author$project$Main$ViewPortLoaded = function (a) {
 	return {$: 'ViewPortLoaded', a: a};
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $author$project$Shaders$emptyNoiseParams = {baseRoughness: 8, minValue: 0, numLayers: 8, persistance: 0.5, roughness: 0.4, seed: 42, strength: 1};
+var $author$project$Shaders$emptyNoiseParams = {baseRoughness: 0, minValue: 0, numLayers: 1, persistance: 0, roughness: 0, seed: 42, strength: 0};
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $elm_explorations$linear_algebra$Math$Vector3$add = _MJS_v3add;
 var $elm$core$List$append = F2(
@@ -8368,6 +8368,8 @@ var $author$project$Main$UpdateRoughness = function (a) {
 var $author$project$Main$UpdateStrength = function (a) {
 	return {$: 'UpdateStrength', a: a};
 };
+var $elm_explorations$webgl$WebGL$Internal$Antialias = {$: 'Antialias'};
+var $elm_explorations$webgl$WebGL$antialias = $elm_explorations$webgl$WebGL$Internal$Antialias;
 var $elm_explorations$webgl$WebGL$Internal$Depth = function (a) {
 	return {$: 'Depth', a: a};
 };
@@ -8700,7 +8702,8 @@ var $author$project$Main$view = function (model) {
 								$elm_explorations$webgl$WebGL$toHtmlWith,
 								_List_fromArray(
 									[
-										$elm_explorations$webgl$WebGL$depth(1)
+										$elm_explorations$webgl$WebGL$depth(1),
+										$elm_explorations$webgl$WebGL$antialias
 									]),
 								_List_fromArray(
 									[

@@ -7695,7 +7695,7 @@ var $author$project$Shaders$makeCube = function (noiseParams) {
 	var noiseFunc = F3(
 		function (x, y, z) {
 			return function (f) {
-				return A2($elm$core$Basics$max, 0, (f.value * noiseParams.strength) - noiseParams.minValue);
+				return A2($elm$core$Basics$max, 0, ((f.value * noiseParams.strength) - noiseParams.minValue) / noiseParams.numLayers);
 			}(
 				A3(
 					$elm$core$List$foldl,
@@ -8471,7 +8471,7 @@ var $elm_explorations$webgl$WebGL$Internal$enableSetting = F2(
 	});
 var $elm_explorations$webgl$WebGL$entityWith = _WebGL_entity;
 var $author$project$Shaders$fragmentShader = {
-	src: '\n        precision mediump float;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            gl_FragColor = vec4(vec3(0.5, 0.5, 1) * vLighting, 1);\n        }\n    ',
+	src: '\n        precision mediump float;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            gl_FragColor = vec4(heightColor * vLighting, 1);\n        }\n    ',
 	attributes: {},
 	uniforms: {}
 };
@@ -8666,6 +8666,10 @@ var $author$project$Main$slider = F5(
 					_List_Nil)
 				]));
 	});
+var $elm_explorations$webgl$WebGL$Internal$Stencil = function (a) {
+	return {$: 'Stencil', a: a};
+};
+var $elm_explorations$webgl$WebGL$stencil = $elm_explorations$webgl$WebGL$Internal$Stencil;
 var $elm_explorations$webgl$WebGL$toHtmlWith = F3(
 	function (options, attributes, entities) {
 		return A3(_WebGL_toHtml, options, attributes, entities);
@@ -8711,7 +8715,8 @@ var $author$project$Main$view = function (model) {
 								_List_fromArray(
 									[
 										$elm_explorations$webgl$WebGL$depth(1),
-										$elm_explorations$webgl$WebGL$antialias
+										$elm_explorations$webgl$WebGL$antialias,
+										$elm_explorations$webgl$WebGL$stencil(0)
 									]),
 								_List_fromArray(
 									[
@@ -8744,7 +8749,7 @@ var $author$project$Main$view = function (model) {
 										A5($author$project$Main$slider, 'roughness', $author$project$NoiseParameters$UpdateRoughness, 0, 1, model.noiseParams.roughness),
 										A5($author$project$Main$slider, 'persistance', $author$project$NoiseParameters$UpdatePersistance, 0, 1, model.noiseParams.persistance),
 										A5($author$project$Main$slider, 'strength', $author$project$NoiseParameters$UpdateStrength, 0, 1, model.noiseParams.strength),
-										A5($author$project$Main$slider, 'minValue', $author$project$NoiseParameters$UpdateMinValue, 0, 1, model.noiseParams.minValue),
+										A5($author$project$Main$slider, 'minValue', $author$project$NoiseParameters$UpdateMinValue, -0.3, 1, model.noiseParams.minValue),
 										A5($author$project$Main$intSlider, 'numLayers', $author$project$NoiseParameters$UpdateNumLayers, 1, 8, model.noiseParams.numLayers)
 									]))
 							]))

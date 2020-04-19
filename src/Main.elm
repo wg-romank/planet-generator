@@ -148,7 +148,7 @@ view model =
             style "height" (String.fromInt model.viewportHeight ++ "px")
         ]
         [ div [] [
-            WebGL.toHtmlWith [ WebGL.depth 1, WebGL.antialias ]
+            WebGL.toHtmlWith [ WebGL.depth 1, WebGL.antialias, WebGL.stencil 0 ]
             [ style "backgroundColor" "#FFFFFF",
               style "display" "block",
               style "align" "center",
@@ -166,7 +166,7 @@ view model =
             slider "roughness" UpdateRoughness 0 1 model.noiseParams.roughness,
             slider "persistance" UpdatePersistance 0 1 model.noiseParams.persistance,
             slider "strength" UpdateStrength 0 1 model.noiseParams.strength,
-            slider "minValue" UpdateMinValue 0 1 model.noiseParams.minValue,
+            slider "minValue" UpdateMinValue -0.3 1 model.noiseParams.minValue,
             intSlider "numLayers" UpdateNumLayers 1 8 model.noiseParams.numLayers
           ] ]
          ]

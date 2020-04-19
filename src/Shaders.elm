@@ -8,6 +8,7 @@ import Simplex
 import WebGL exposing (Mesh)
 import WebGL.Settings exposing (back)
 import WebGL.Settings.DepthTest as DepthTest
+import WebGL.Settings.StencilTest as StencilTest
 
 import NoiseParameters exposing (NoiseParameters)
 
@@ -58,7 +59,7 @@ fragmentShader =
         varying vec3 heightColor;
 
         void main() {
-            gl_FragColor = vec4(vec3(0.5, 0.5, 1) * vLighting, 1);
+            gl_FragColor = vec4(heightColor * vLighting, 1);
         }
     |]
 
@@ -117,16 +118,30 @@ uniforms theta =
             |> Mat4.inverse
             |> Maybe.withDefault Mat4.identity
             |> Mat4.transpose
+        -- rotation = Mat4.identity
+        -- normalTransform = Mat4.identity
     in
     { rotation = rotation, normalMatrix = normalTransform }
 
 draw: Float -> Mesh Vertex -> WebGL.Entity
-draw theta mesh = WebGL.entityWith [ WebGL.Settings.cullFace back, DepthTest.default ] vertexShader fragmentShader mesh (uniforms theta)
+draw theta mesh = WebGL.entityWith
+    [ WebGL.Settings.cullFace back
+    , DepthTest.default 
+    -- , StencilTest.test
+    --         { ref = 1
+    --         , mask = 0xFF
+    --         , test = StencilTest.equal
+    --         , fail = StencilTest.keep
+    --         , zfail = StencilTest.keep
+    --         , zpass = StencilTest.replace
+    --         , writeMask = 0
+    --         }
+    ] vertexShader fragmentShader mesh (uniforms theta)
 
 makeCube: NoiseParameters -> List (Mesh Vertex)
 makeCube noiseParams = 
     let
-        noise = Simplex.noise3d (Simplex.permutationTableFromInt noiseParams.seed )
+        noise = Simplex.noise3d (Simplex.permutationTableFromInt noiseParams.seed)  -- [0, 1]
         initialParams = { value = 0.0, frequency = noiseParams.baseRoughness, amplidute = 1 }
         noiseFunc = \x y z ->
             List.foldl ( \_ acc ->
@@ -137,7 +152,7 @@ makeCube noiseParams =
                 in
                     { value = acc.value + v, frequency = newFrequency, amplidute = newAmp }
             ) initialParams (List.range 1 noiseParams.numLayers)
-            |> \f -> max 0 (f.value * noiseParams.strength - noiseParams.minValue)
+            |> \f -> max 0 ((f.value * noiseParams.strength - noiseParams.minValue) / toFloat noiseParams.numLayers) -- [0, ???]
     in
     [ vec3 1 0 0,
       vec3 0 1 0,

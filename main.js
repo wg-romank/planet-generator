@@ -6841,7 +6841,7 @@ var $author$project$Main$ViewPortLoaded = function (a) {
 	return {$: 'ViewPortLoaded', a: a};
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $author$project$NoiseParameters$emptyNoiseParams = {baseRoughness: 3, minValue: 0.5, numLayers: 4, persistance: 0.7, roughness: 0.5, seed: 42, strength: 0.35};
+var $author$project$NoiseParameters$emptyNoiseParams = {baseRoughness: 3, minValue: 0.5, numLayers: 4, persistance: 0.7, resolution: 40, roughness: 0.5, seed: 42, strength: 0.35};
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $elm_explorations$linear_algebra$Math$Vector3$add = _MJS_v3add;
 var $elm$core$List$append = F2(
@@ -7688,50 +7688,48 @@ var $Herteby$simplex_noise$Simplex$permutationTableFromInt = function (_int) {
 		$Herteby$simplex_noise$Simplex$permutationTableGenerator,
 		$elm$random$Random$initialSeed(_int)).a;
 };
-var $author$project$Shaders$makeCube = F2(
-	function (res, noiseParams) {
-		var noise = $Herteby$simplex_noise$Simplex$noise3d(
-			$Herteby$simplex_noise$Simplex$permutationTableFromInt(noiseParams.seed));
-		var initialParams = {amplidute: 1, frequency: noiseParams.baseRoughness, value: 0.0};
-		var noiseFunc = F3(
-			function (x, y, z) {
-				return function (f) {
-					return A2($elm$core$Basics$max, 0, (f.value * noiseParams.strength) - noiseParams.minValue);
-				}(
-					A3(
-						$elm$core$List$foldl,
-						F2(
-							function (_v0, acc) {
-								var v = ((A3(noise, acc.frequency * x, acc.frequency * y, acc.frequency * z) + 1) * 0.5) * acc.amplidute;
-								var newFrequency = acc.frequency * noiseParams.roughness;
-								var newAmp = acc.amplidute * noiseParams.persistance;
-								return {amplidute: newAmp, frequency: newFrequency, value: acc.value + v};
-							}),
-						initialParams,
-						A2($elm$core$List$range, 1, noiseParams.numLayers)));
-			});
-		return A2(
-			$elm$core$List$map,
-			A2($author$project$Shaders$face, noiseFunc, res),
-			_List_fromArray(
-				[
-					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 1, 0, 0),
-					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 1, 0),
-					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 0, 1),
-					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, -1, 0, 0),
-					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, -1, 0),
-					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 0, -1)
-				]));
-	});
+var $author$project$Shaders$makeCube = function (noiseParams) {
+	var noise = $Herteby$simplex_noise$Simplex$noise3d(
+		$Herteby$simplex_noise$Simplex$permutationTableFromInt(noiseParams.seed));
+	var initialParams = {amplidute: 1, frequency: noiseParams.baseRoughness, value: 0.0};
+	var noiseFunc = F3(
+		function (x, y, z) {
+			return function (f) {
+				return A2($elm$core$Basics$max, 0, (f.value * noiseParams.strength) - noiseParams.minValue);
+			}(
+				A3(
+					$elm$core$List$foldl,
+					F2(
+						function (_v0, acc) {
+							var v = ((A3(noise, acc.frequency * x, acc.frequency * y, acc.frequency * z) + 1) * 0.5) * acc.amplidute;
+							var newFrequency = acc.frequency * noiseParams.roughness;
+							var newAmp = acc.amplidute * noiseParams.persistance;
+							return {amplidute: newAmp, frequency: newFrequency, value: acc.value + v};
+						}),
+					initialParams,
+					A2($elm$core$List$range, 1, noiseParams.numLayers)));
+		});
+	return A2(
+		$elm$core$List$map,
+		A2($author$project$Shaders$face, noiseFunc, noiseParams.resolution),
+		_List_fromArray(
+			[
+				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 1, 0, 0),
+				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 1, 0),
+				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 0, 1),
+				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, -1, 0, 0),
+				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, -1, 0),
+				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 0, -1)
+			]));
+};
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
 		{
 			height: 400,
-			meshes: A2($author$project$Shaders$makeCube, 40, $author$project$NoiseParameters$emptyNoiseParams),
+			meshes: $author$project$Shaders$makeCube($author$project$NoiseParameters$emptyNoiseParams),
 			noiseParams: $author$project$NoiseParameters$emptyNoiseParams,
 			offset: 0,
 			paused: false,
-			res: 40,
 			theta: 0,
 			viewportHeight: 0,
 			viewportWidth: 0,
@@ -8288,6 +8286,16 @@ var $author$project$NoiseParameters$updateParameter = F2(
 							prevParams.seed,
 							$elm$core$String$toInt(seed))
 					});
+			case 'UpdateResolution':
+				var resolution = updateMsg.a;
+				return _Utils_update(
+					prevParams,
+					{
+						resolution: A2(
+							$elm$core$Maybe$withDefault,
+							prevParams.resolution,
+							$elm$core$String$toInt(resolution))
+					});
 			case 'UpdateStrength':
 				var strength = updateMsg.a;
 				return _Utils_update(
@@ -8344,7 +8352,7 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							meshes: A2($author$project$Shaders$makeCube, model.res, newParams),
+							meshes: $author$project$Shaders$makeCube(newParams),
 							noiseParams: newParams
 						}),
 					$elm$core$Platform$Cmd$none);

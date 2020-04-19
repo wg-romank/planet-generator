@@ -1,4 +1,4 @@
-module Main exposing (Model, Msg, init, subscriptions, update, view)
+module Main exposing (Model, Msg, init, subscriptions, update, view, main)
 
 import Browser
 import Browser.Dom exposing (Viewport)
@@ -31,7 +31,6 @@ type alias Model =
     , height : Int
     , offset : Int
     , noiseParams : NoiseParameters
-    , res : Int
     , meshes: List (WebGL.Mesh Vertex)
     }
 
@@ -46,8 +45,7 @@ init _ =
       , width = 400
       , height = 400
       , noiseParams = emptyNoiseParams
-      , res = 40
-      , meshes = makeCube 40 emptyNoiseParams
+      , meshes = makeCube emptyNoiseParams
       }
     , Cmd.batch
         [ Task.perform ViewPortLoaded Browser.Dom.getViewport
@@ -87,7 +85,7 @@ update msg model =
             let
                 newParams = updateParameter model.noiseParams paramsUpdate
             in
-            ( { model | noiseParams = newParams, meshes = makeCube model.res newParams }, Cmd.none )
+            ( { model | noiseParams = newParams, meshes = makeCube newParams }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg

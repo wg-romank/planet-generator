@@ -123,8 +123,8 @@ uniforms theta =
 draw: Float -> Mesh Vertex -> WebGL.Entity
 draw theta mesh = WebGL.entityWith [ WebGL.Settings.cullFace back, DepthTest.default ] vertexShader fragmentShader mesh (uniforms theta)
 
-makeCube: Int -> NoiseParameters -> List (Mesh Vertex)
-makeCube res noiseParams = 
+makeCube: NoiseParameters -> List (Mesh Vertex)
+makeCube noiseParams = 
     let
         noise = Simplex.noise3d (Simplex.permutationTableFromInt noiseParams.seed )
         initialParams = { value = 0.0, frequency = noiseParams.baseRoughness, amplidute = 1 }
@@ -145,4 +145,4 @@ makeCube res noiseParams =
       vec3 -1 0 0,
       vec3 0 -1 0,
       vec3 0 0 -1 ]
-        |> List.map (face noiseFunc res)
+        |> List.map (face noiseFunc noiseParams.resolution)

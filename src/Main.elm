@@ -6,10 +6,11 @@ import Browser.Events exposing (onAnimationFrameDelta)
 import Html exposing (..)
 import Html.Attributes as H exposing (..)
 import Html.Events exposing (onInput)
-import Shaders exposing (..)
 import Task
 import WebGL
 
+import Shaders exposing (..)
+import NoiseParameters exposing (..)
 
 main : Program {} Model Msg
 main =
@@ -62,13 +63,6 @@ type Msg
     | UpdateParams UpdateParams
 
 
-type UpdateParams = UpdateBaseRoughness String
-    | UpdateRoughness String
-    | UpdatePersistance String
-    | UpdateNumLayers String
-    | UpdateSeed String
-    | UpdateStrength String
-    | UpdateMinValue String
 
 
 computeViewportSize : Viewport -> Model -> Model
@@ -94,24 +88,9 @@ update msg model =
             ( { model | paused = False }, Cmd.none )
         ViewPortLoaded viewport ->
             ( computeViewportSize viewport model, Cmd.none )
-        UpdateParams params ->
+        UpdateParams paramsUpdate ->
             let
-                prevParams = model.noiseParams
-                newParams = case params of 
-                    UpdateBaseRoughness baseRoughness ->
-                        { prevParams | baseRoughness = String.toFloat baseRoughness |> Maybe.withDefault prevParams.baseRoughness }
-                    UpdateRoughness roughness ->
-                        { prevParams | roughness = String.toFloat roughness |> Maybe.withDefault prevParams.roughness }
-                    UpdatePersistance persistance ->
-                        { prevParams | persistance = String.toFloat persistance |> Maybe.withDefault prevParams.persistance }
-                    UpdateNumLayers numLayers ->
-                        { prevParams | numLayers = String.toInt numLayers |> Maybe.withDefault prevParams.numLayers }
-                    UpdateSeed seed ->
-                        { prevParams | seed = String.toInt seed |> Maybe.withDefault prevParams.seed }
-                    UpdateStrength strength ->
-                        { prevParams | strength = String.toFloat strength |> Maybe.withDefault prevParams.strength }
-                    UpdateMinValue minValue ->
-                        { prevParams | minValue = String.toFloat minValue |> Maybe.withDefault prevParams.strength }
+                newParams = updateParameter model.noiseParams paramsUpdate
             in
             ( { model | noiseParams = newParams, meshes = makeCube model.res newParams }, Cmd.none )
 

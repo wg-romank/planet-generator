@@ -1,4 +1,4 @@
-module Shaders exposing (..)
+module Shaders exposing (makeCube, draw, Vertex)
 
 import Math.Vector4 exposing (vec4, Vec4)
 import Math.Vector3 as Vec3 exposing (vec3, Vec3)
@@ -9,6 +9,8 @@ import Simplex exposing (PermutationTable)
 import WebGL exposing (Mesh)
 import WebGL.Settings exposing (back)
 import WebGL.Settings.DepthTest as DepthTest
+
+import NoiseParameters exposing (NoiseParameters)
 
 type alias Vertex = {
         position : Vec3,
@@ -121,19 +123,6 @@ uniforms theta =
 
 draw: Float -> Mesh Vertex -> WebGL.Entity
 draw theta mesh = WebGL.entityWith [ WebGL.Settings.cullFace back, DepthTest.default ] vertexShader fragmentShader mesh (uniforms theta)
-
-type alias NoiseParameters =
-    { seed: Int,
-      baseRoughness: Float,
-      numLayers: Int,
-      roughness: Float,
-      persistance: Float,
-      strength: Float,
-      minValue: Float }
-
-
-emptyNoiseParams: NoiseParameters
-emptyNoiseParams = { seed = 42, baseRoughness = 3, numLayers = 4, roughness = 0.5, persistance = 0.7, strength = 0.35, minValue = 0.5 }
 
 makeCube: Int -> NoiseParameters -> List (Mesh Vertex)
 makeCube res noiseParams = 

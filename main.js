@@ -6841,7 +6841,7 @@ var $author$project$Main$ViewPortLoaded = function (a) {
 	return {$: 'ViewPortLoaded', a: a};
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $author$project$Shaders$emptyNoiseParams = {baseRoughness: 3, minValue: 0.5, numLayers: 4, persistance: 0.7, roughness: 0.5, seed: 42, strength: 0.35};
+var $author$project$NoiseParameters$emptyNoiseParams = {baseRoughness: 3, minValue: 0.5, numLayers: 4, persistance: 0.7, roughness: 0.5, seed: 42, strength: 0.35};
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $elm_explorations$linear_algebra$Math$Vector3$add = _MJS_v3add;
 var $elm$core$List$append = F2(
@@ -7727,8 +7727,8 @@ var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
 		{
 			height: 400,
-			meshes: A2($author$project$Shaders$makeCube, 40, $author$project$Shaders$emptyNoiseParams),
-			noiseParams: $author$project$Shaders$emptyNoiseParams,
+			meshes: A2($author$project$Shaders$makeCube, 40, $author$project$NoiseParameters$emptyNoiseParams),
+			noiseParams: $author$project$NoiseParameters$emptyNoiseParams,
 			offset: 0,
 			paused: false,
 			res: 40,
@@ -8235,6 +8235,81 @@ var $elm$core$Maybe$withDefault = F2(
 			return _default;
 		}
 	});
+var $author$project$NoiseParameters$updateParameter = F2(
+	function (prevParams, updateMsg) {
+		switch (updateMsg.$) {
+			case 'UpdateBaseRoughness':
+				var baseRoughness = updateMsg.a;
+				return _Utils_update(
+					prevParams,
+					{
+						baseRoughness: A2(
+							$elm$core$Maybe$withDefault,
+							prevParams.baseRoughness,
+							$elm$core$String$toFloat(baseRoughness))
+					});
+			case 'UpdateRoughness':
+				var roughness = updateMsg.a;
+				return _Utils_update(
+					prevParams,
+					{
+						roughness: A2(
+							$elm$core$Maybe$withDefault,
+							prevParams.roughness,
+							$elm$core$String$toFloat(roughness))
+					});
+			case 'UpdatePersistance':
+				var persistance = updateMsg.a;
+				return _Utils_update(
+					prevParams,
+					{
+						persistance: A2(
+							$elm$core$Maybe$withDefault,
+							prevParams.persistance,
+							$elm$core$String$toFloat(persistance))
+					});
+			case 'UpdateNumLayers':
+				var numLayers = updateMsg.a;
+				return _Utils_update(
+					prevParams,
+					{
+						numLayers: A2(
+							$elm$core$Maybe$withDefault,
+							prevParams.numLayers,
+							$elm$core$String$toInt(numLayers))
+					});
+			case 'UpdateSeed':
+				var seed = updateMsg.a;
+				return _Utils_update(
+					prevParams,
+					{
+						seed: A2(
+							$elm$core$Maybe$withDefault,
+							prevParams.seed,
+							$elm$core$String$toInt(seed))
+					});
+			case 'UpdateStrength':
+				var strength = updateMsg.a;
+				return _Utils_update(
+					prevParams,
+					{
+						strength: A2(
+							$elm$core$Maybe$withDefault,
+							prevParams.strength,
+							$elm$core$String$toFloat(strength))
+					});
+			default:
+				var minValue = updateMsg.a;
+				return _Utils_update(
+					prevParams,
+					{
+						minValue: A2(
+							$elm$core$Maybe$withDefault,
+							prevParams.strength,
+							$elm$core$String$toFloat(minValue))
+					});
+		}
+	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -8264,82 +8339,8 @@ var $author$project$Main$update = F2(
 					A2($author$project$Main$computeViewportSize, viewport, model),
 					$elm$core$Platform$Cmd$none);
 			default:
-				var params = msg.a;
-				var prevParams = model.noiseParams;
-				var newParams = function () {
-					switch (params.$) {
-						case 'UpdateBaseRoughness':
-							var baseRoughness = params.a;
-							return _Utils_update(
-								prevParams,
-								{
-									baseRoughness: A2(
-										$elm$core$Maybe$withDefault,
-										prevParams.baseRoughness,
-										$elm$core$String$toFloat(baseRoughness))
-								});
-						case 'UpdateRoughness':
-							var roughness = params.a;
-							return _Utils_update(
-								prevParams,
-								{
-									roughness: A2(
-										$elm$core$Maybe$withDefault,
-										prevParams.roughness,
-										$elm$core$String$toFloat(roughness))
-								});
-						case 'UpdatePersistance':
-							var persistance = params.a;
-							return _Utils_update(
-								prevParams,
-								{
-									persistance: A2(
-										$elm$core$Maybe$withDefault,
-										prevParams.persistance,
-										$elm$core$String$toFloat(persistance))
-								});
-						case 'UpdateNumLayers':
-							var numLayers = params.a;
-							return _Utils_update(
-								prevParams,
-								{
-									numLayers: A2(
-										$elm$core$Maybe$withDefault,
-										prevParams.numLayers,
-										$elm$core$String$toInt(numLayers))
-								});
-						case 'UpdateSeed':
-							var seed = params.a;
-							return _Utils_update(
-								prevParams,
-								{
-									seed: A2(
-										$elm$core$Maybe$withDefault,
-										prevParams.seed,
-										$elm$core$String$toInt(seed))
-								});
-						case 'UpdateStrength':
-							var strength = params.a;
-							return _Utils_update(
-								prevParams,
-								{
-									strength: A2(
-										$elm$core$Maybe$withDefault,
-										prevParams.strength,
-										$elm$core$String$toFloat(strength))
-								});
-						default:
-							var minValue = params.a;
-							return _Utils_update(
-								prevParams,
-								{
-									minValue: A2(
-										$elm$core$Maybe$withDefault,
-										prevParams.strength,
-										$elm$core$String$toFloat(minValue))
-								});
-					}
-				}();
+				var paramsUpdate = msg.a;
+				var newParams = A2($author$project$NoiseParameters$updateParameter, model.noiseParams, paramsUpdate);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -8350,22 +8351,22 @@ var $author$project$Main$update = F2(
 					$elm$core$Platform$Cmd$none);
 		}
 	});
-var $author$project$Main$UpdateBaseRoughness = function (a) {
+var $author$project$NoiseParameters$UpdateBaseRoughness = function (a) {
 	return {$: 'UpdateBaseRoughness', a: a};
 };
-var $author$project$Main$UpdateMinValue = function (a) {
+var $author$project$NoiseParameters$UpdateMinValue = function (a) {
 	return {$: 'UpdateMinValue', a: a};
 };
-var $author$project$Main$UpdateNumLayers = function (a) {
+var $author$project$NoiseParameters$UpdateNumLayers = function (a) {
 	return {$: 'UpdateNumLayers', a: a};
 };
-var $author$project$Main$UpdatePersistance = function (a) {
+var $author$project$NoiseParameters$UpdatePersistance = function (a) {
 	return {$: 'UpdatePersistance', a: a};
 };
-var $author$project$Main$UpdateRoughness = function (a) {
+var $author$project$NoiseParameters$UpdateRoughness = function (a) {
 	return {$: 'UpdateRoughness', a: a};
 };
-var $author$project$Main$UpdateStrength = function (a) {
+var $author$project$NoiseParameters$UpdateStrength = function (a) {
 	return {$: 'UpdateStrength', a: a};
 };
 var $elm_explorations$webgl$WebGL$Internal$Antialias = {$: 'Antialias'};
@@ -8732,12 +8733,12 @@ var $author$project$Main$view = function (model) {
 									]),
 								_List_fromArray(
 									[
-										A5($author$project$Main$slider, 'baseRoughness', $author$project$Main$UpdateBaseRoughness, 1, 5, model.noiseParams.baseRoughness),
-										A5($author$project$Main$slider, 'roughness', $author$project$Main$UpdateRoughness, 0, 1, model.noiseParams.roughness),
-										A5($author$project$Main$slider, 'persistance', $author$project$Main$UpdatePersistance, 0, 1, model.noiseParams.persistance),
-										A5($author$project$Main$slider, 'strength', $author$project$Main$UpdateStrength, 0, 1, model.noiseParams.strength),
-										A5($author$project$Main$slider, 'minValue', $author$project$Main$UpdateMinValue, 0, 1, model.noiseParams.minValue),
-										A5($author$project$Main$intSlider, 'numLayers', $author$project$Main$UpdateNumLayers, 1, 8, model.noiseParams.numLayers)
+										A5($author$project$Main$slider, 'baseRoughness', $author$project$NoiseParameters$UpdateBaseRoughness, 1, 5, model.noiseParams.baseRoughness),
+										A5($author$project$Main$slider, 'roughness', $author$project$NoiseParameters$UpdateRoughness, 0, 1, model.noiseParams.roughness),
+										A5($author$project$Main$slider, 'persistance', $author$project$NoiseParameters$UpdatePersistance, 0, 1, model.noiseParams.persistance),
+										A5($author$project$Main$slider, 'strength', $author$project$NoiseParameters$UpdateStrength, 0, 1, model.noiseParams.strength),
+										A5($author$project$Main$slider, 'minValue', $author$project$NoiseParameters$UpdateMinValue, 0, 1, model.noiseParams.minValue),
+										A5($author$project$Main$intSlider, 'numLayers', $author$project$NoiseParameters$UpdateNumLayers, 1, 8, model.noiseParams.numLayers)
 									]))
 							]))
 					]))

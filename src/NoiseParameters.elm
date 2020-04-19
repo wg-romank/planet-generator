@@ -1,19 +1,21 @@
 module NoiseParameters exposing (..)
 
 type alias NoiseParameters =
-    { seed: Int,
-      baseRoughness: Float,
-      numLayers: Int,
-      roughness: Float,
-      persistance: Float,
-      strength: Float,
-      minValue: Float }
+    { seed: Int
+    , baseRoughness: Float
+    , numLayers: Int
+    , roughness: Float
+    , persistance: Float
+    , strength: Float
+    , minValue: Float
+    }
 
 
 emptyNoiseParams: NoiseParameters
 emptyNoiseParams = { seed = 42, baseRoughness = 3, numLayers = 4, roughness = 0.5, persistance = 0.7, strength = 0.35, minValue = 0.5 }
 
-type UpdateParams = UpdateBaseRoughness String
+type UpdateParams
+    = UpdateBaseRoughness String
     | UpdateRoughness String
     | UpdatePersistance String
     | UpdateNumLayers String

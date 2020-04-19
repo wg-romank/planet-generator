@@ -8315,11 +8315,10 @@ var $author$project$Main$update = F2(
 		switch (msg.$) {
 			case 'Delta':
 				var f = msg.a;
-				var th = model.theta;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{theta: th + (f / 5000)}),
+						{theta: model.theta + (f / 5000)}),
 					$elm$core$Platform$Cmd$none);
 			case 'Paused':
 				return _Utils_Tuple2(

@@ -79,15 +79,10 @@ computeViewportSize viewport model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Delta f ->
-            let th = model.theta in
-            ( { model | theta = th + f / 5000 }, Cmd.none )
-        Paused ->
-            ( { model | paused = True }, Cmd.none )
-        Resumed ->
-            ( { model | paused = False }, Cmd.none )
-        ViewPortLoaded viewport ->
-            ( computeViewportSize viewport model, Cmd.none )
+        Delta f -> ( { model | theta = model.theta + f / 5000 }, Cmd.none )
+        Paused -> ( { model | paused = True }, Cmd.none )
+        Resumed -> ( { model | paused = False }, Cmd.none )
+        ViewPortLoaded viewport -> ( computeViewportSize viewport model, Cmd.none )
         UpdateParams paramsUpdate ->
             let
                 newParams = updateParameter model.noiseParams paramsUpdate

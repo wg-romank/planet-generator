@@ -11,9 +11,9 @@ import WebGL.Settings.DepthTest as DepthTest
 
 import NoiseParameters exposing (NoiseParameters)
 
-type alias Vertex = {
-        position : Vec3,
-        normal: Vec3
+type alias Vertex =
+    { position : Vec3
+    , normal: Vec3
     }
 
 vertexShader = 
@@ -102,9 +102,9 @@ face noise res direction =
         WebGL.indexedTriangles vertexes indices
         
 
-type alias Uniforms = {
-        rotation: Mat4
-        , normalMatrix: Mat4
+type alias Uniforms = 
+    { rotation: Mat4
+    , normalMatrix: Mat4
     }
 
 uniforms: Float -> Uniforms

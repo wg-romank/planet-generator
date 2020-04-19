@@ -1,11 +1,10 @@
 module Shaders exposing (makeCube, draw, Vertex)
 
-import Math.Vector4 exposing (vec4, Vec4)
 import Math.Vector3 as Vec3 exposing (vec3, Vec3)
-import Math.Vector2 as Vec2 exposing (vec2, Vec2)
+import Math.Vector2 as Vec2 exposing (vec2)
 import Math.Matrix4 as Mat4 exposing (Mat4)
 
-import Simplex exposing (PermutationTable)
+import Simplex
 import WebGL exposing (Mesh)
 import WebGL.Settings exposing (back)
 import WebGL.Settings.DepthTest as DepthTest

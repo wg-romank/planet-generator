@@ -27,14 +27,14 @@ vertexShader =
         varying vec3 heightColor;
 
         void main() {
-            vec4 pos = rotation * vec4(position, 2);
+            vec4 pos = perspective * rotation * vec4(position, 2);
             gl_Position = pos;
 
             vec3 ambientLight = vec3(0.3, 0.3, 0.3);
             vec3 directionalLightColor = vec3(1, 1, 1);
             vec3 directionalVector = normalize(vec3(-0.85, -0.8, -0.75));
 
-            vec4 transformedNormal = normalMatrix * vec4(normal, 1.0);
+            vec4 transformedNormal = normalMatrix * vec4(normal, 0.0);
 
             float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
             vLighting = ambientLight + (directionalLightColor * directional);
@@ -98,12 +98,25 @@ face noise res direction =
 
 type alias Uniforms = 
     { rotation: Mat4
+    , perspective: Mat4
     , normalMatrix: Mat4
     , maxHeight: Float
     }
 
-uniforms: Float -> Float -> Uniforms
-uniforms maxHeight theta =
+perspective : Float -> Float -> Float -> Float -> Mat4
+perspective width height x y =
+    let
+        eye =
+            vec3 (0.5 - x / width) -(0.5 - y / height) 1
+                |> Vec3.normalize
+                |> Vec3.scale 6
+    in
+        Mat4.mul
+            (Mat4.makePerspective 45 (width / height) 0.01 100)
+            (Mat4.makeLookAt eye (vec3 0 0 0) Vec3.j)
+
+uniforms: Float -> Float -> Float -> Float -> Uniforms
+uniforms width height maxHeight theta =
     let
         rotation = Mat4.mul
             (Mat4.makeRotate (3 * theta) (vec3 0 1 0))
@@ -116,13 +129,13 @@ uniforms maxHeight theta =
         -- rotation = Mat4.identity
         -- normalTransform = Mat4.identity
     in
-    { rotation = rotation, normalMatrix = normalTransform, maxHeight = maxHeight }
+    { rotation = rotation, normalMatrix = normalTransform, maxHeight = maxHeight, perspective = perspective width height 0 0 }
 
-draw: Float -> Float -> Mesh Vertex -> WebGL.Entity
-draw maxHeight theta mesh = WebGL.entityWith
+draw: Float -> Float -> Float -> Float -> Mesh Vertex -> WebGL.Entity
+draw width height maxHeight theta mesh = WebGL.entityWith
     [ WebGL.Settings.cullFace back
     , DepthTest.default 
-    ] vertexShader fragmentShader mesh (uniforms maxHeight theta)
+    ] vertexShader fragmentShader mesh (uniforms width height maxHeight theta)
 
 makeCube: NoiseParameters -> (Float, List (Mesh Vertex))
 makeCube noiseParams = 

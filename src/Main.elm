@@ -158,8 +158,8 @@ view model =
             [ 
               style "display" "block",
               style "align" "center",
-              width model.height,
-              height model.height ] (List.map (draw model.maxHeight model.theta) model.meshes),
+              width model.width,
+              height model.height ] (List.map (draw (toFloat model.width) (toFloat model.height) model.maxHeight model.theta) model.meshes),
           div [
             -- style "top" (String.fromInt model.height ++ "px"),
             style "align" "center",

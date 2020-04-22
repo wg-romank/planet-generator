@@ -8528,9 +8528,28 @@ var $elm_explorations$linear_algebra$Math$Matrix4$identity = _MJS_m4x4identity;
 var $elm_explorations$linear_algebra$Math$Matrix4$inverse = _MJS_m4x4inverse;
 var $elm_explorations$linear_algebra$Math$Matrix4$makeRotate = _MJS_m4x4makeRotate;
 var $elm_explorations$linear_algebra$Math$Matrix4$mul = _MJS_m4x4mul;
+var $elm_explorations$linear_algebra$Math$Vector3$j = A3(_MJS_v3, 0, 1, 0);
+var $elm_explorations$linear_algebra$Math$Matrix4$makeLookAt = _MJS_m4x4makeLookAt;
+var $elm_explorations$linear_algebra$Math$Matrix4$makePerspective = _MJS_m4x4makePerspective;
+var $author$project$Shaders$perspective = F4(
+	function (width, height, x, y) {
+		var eye = A2(
+			$elm_explorations$linear_algebra$Math$Vector3$scale,
+			6,
+			$elm_explorations$linear_algebra$Math$Vector3$normalize(
+				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0.5 - (x / width), -(0.5 - (y / height)), 1)));
+		return A2(
+			$elm_explorations$linear_algebra$Math$Matrix4$mul,
+			A4($elm_explorations$linear_algebra$Math$Matrix4$makePerspective, 45, width / height, 0.01, 100),
+			A3(
+				$elm_explorations$linear_algebra$Math$Matrix4$makeLookAt,
+				eye,
+				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 0, 0),
+				$elm_explorations$linear_algebra$Math$Vector3$j));
+	});
 var $elm_explorations$linear_algebra$Math$Matrix4$transpose = _MJS_m4x4transpose;
-var $author$project$Shaders$uniforms = F2(
-	function (maxHeight, theta) {
+var $author$project$Shaders$uniforms = F4(
+	function (width, height, maxHeight, theta) {
 		var rotation = A2(
 			$elm_explorations$linear_algebra$Math$Matrix4$mul,
 			A2(
@@ -8543,15 +8562,20 @@ var $author$project$Shaders$uniforms = F2(
 				$elm$core$Maybe$withDefault,
 				$elm_explorations$linear_algebra$Math$Matrix4$identity,
 				$elm_explorations$linear_algebra$Math$Matrix4$inverse(rotation)));
-		return {maxHeight: maxHeight, normalMatrix: normalTransform, rotation: rotation};
+		return {
+			maxHeight: maxHeight,
+			normalMatrix: normalTransform,
+			perspective: A4($author$project$Shaders$perspective, width, height, 0, 0),
+			rotation: rotation
+		};
 	});
 var $author$project$Shaders$vertexShader = {
-	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        uniform float maxHeight;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = rotation * vec4(position, 2);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.3, 0.3, 0.3);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(-0.85, -0.8, -0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 0.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n\n            float height = max(0.2, length(pos.xyz) - length(transformedNormal.xyz)) / maxHeight;\n            heightColor = vec3(height * height, (1.0 - height) / (2.0), (1.0 - height * height) / 2.0);\n        }\n    ',
+	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        uniform mat4 perspective;\n        uniform float maxHeight;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = rotation * perspective * vec4(position, 1);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.3, 0.3, 0.3);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(-0.85, -0.8, -0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 0.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n\n            float height = max(0.2, length(pos.xyz) - length(transformedNormal.xyz)) / maxHeight;\n            heightColor = vec3(height * height, (1.0 - height) / (2.0), (1.0 - height * height) / 2.0);\n        }\n    ',
 	attributes: {normal: 'normal', position: 'position'},
-	uniforms: {maxHeight: 'maxHeight', normalMatrix: 'normalMatrix', rotation: 'rotation'}
+	uniforms: {maxHeight: 'maxHeight', normalMatrix: 'normalMatrix', perspective: 'perspective', rotation: 'rotation'}
 };
-var $author$project$Shaders$draw = F3(
-	function (maxHeight, theta, mesh) {
+var $author$project$Shaders$draw = F5(
+	function (width, height, maxHeight, theta, mesh) {
 		return A5(
 			$elm_explorations$webgl$WebGL$entityWith,
 			_List_fromArray(
@@ -8562,7 +8586,7 @@ var $author$project$Shaders$draw = F3(
 			$author$project$Shaders$vertexShader,
 			$author$project$Shaders$fragmentShader,
 			mesh,
-			A2($author$project$Shaders$uniforms, maxHeight, theta));
+			A4($author$project$Shaders$uniforms, width, height, maxHeight, theta));
 	});
 var $elm$html$Html$Attributes$height = function (n) {
 	return A2(
@@ -8775,12 +8799,12 @@ var $author$project$Main$view = function (model) {
 									[
 										A2($elm$html$Html$Attributes$style, 'display', 'block'),
 										A2($elm$html$Html$Attributes$style, 'align', 'center'),
-										$elm$html$Html$Attributes$width(model.height),
+										$elm$html$Html$Attributes$width(model.width),
 										$elm$html$Html$Attributes$height(model.height)
 									]),
 								A2(
 									$elm$core$List$map,
-									A2($author$project$Shaders$draw, model.maxHeight, model.theta),
+									A4($author$project$Shaders$draw, model.width, model.height, model.maxHeight, model.theta),
 									model.meshes)),
 								A2(
 								$elm$html$Html$div,

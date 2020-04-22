@@ -22,12 +22,13 @@ vertexShader =
         attribute vec3 normal;
         uniform mat4 rotation;
         uniform mat4 normalMatrix;
+        uniform mat4 perspective;
         uniform float maxHeight;
         varying vec3 vLighting;
         varying vec3 heightColor;
 
         void main() {
-            vec4 pos = perspective * rotation * vec4(position, 2);
+            vec4 pos = perspective * rotation * vec4(position, 1);
             gl_Position = pos;
 
             vec3 ambientLight = vec3(0.3, 0.3, 0.3);

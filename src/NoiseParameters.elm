@@ -19,8 +19,8 @@ emptyNoiseParams =
     , numLayers = 4
     , roughness = 0.5
     , persistance = 0.7
-    , strength = 0.35
-    , minValue = 0.5
+    , strength = 0.8
+    , minValue = 0.2
     , resolution = 40
      }
 

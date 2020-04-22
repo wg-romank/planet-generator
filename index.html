@@ -3,10 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="minimal-ui, width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <style>
+    body {
+      background-color: black;
+    }
+  </style>
   <title>Main</title>
   <script src="main.js"></script>
 </head>
 <body scroll="no" style="overflow: hidden;">
-  <script>var app = Elm.Main.init();</script>
+  <script>
+    var app = Elm.Main.init();
+    Elm.Main.fullscreen();
+  </script>
 </body>
 </html>

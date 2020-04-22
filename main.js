@@ -6841,7 +6841,7 @@ var $author$project$Main$ViewPortLoaded = function (a) {
 	return {$: 'ViewPortLoaded', a: a};
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $author$project$NoiseParameters$emptyNoiseParams = {baseRoughness: 3, minValue: 0.5, numLayers: 4, persistance: 0.7, resolution: 40, roughness: 0.5, seed: 42, strength: 0.35};
+var $author$project$NoiseParameters$emptyNoiseParams = {baseRoughness: 3, minValue: 0.2, numLayers: 4, persistance: 0.7, resolution: 40, roughness: 0.5, seed: 42, strength: 0.8};
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $elm_explorations$linear_algebra$Math$Vector3$add = _MJS_v3add;
 var $elm$core$List$append = F2(
@@ -6867,10 +6867,31 @@ var $elm_explorations$webgl$WebGL$MeshIndexed3 = F3(
 	});
 var $elm_explorations$webgl$WebGL$indexedTriangles = $elm_explorations$webgl$WebGL$MeshIndexed3(
 	{elemSize: 1, indexSize: 3, mode: 4});
+var $elm_explorations$linear_algebra$Math$Vector3$length = _MJS_v3length;
+var $elm$core$List$maximum = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(
+			A3($elm$core$List$foldl, $elm$core$Basics$max, x, xs));
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
 var $elm_explorations$linear_algebra$Math$Vector3$normalize = _MJS_v3normalize;
 var $elm_explorations$linear_algebra$Math$Vector3$scale = _MJS_v3scale;
+var $elm_explorations$linear_algebra$Math$Vector3$sub = _MJS_v3sub;
 var $elm_explorations$linear_algebra$Math$Vector2$vec2 = _MJS_v2;
 var $elm_explorations$linear_algebra$Math$Vector3$vec3 = _MJS_v3;
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var $author$project$Shaders$face = F3(
 	function (noise, res, direction) {
 		var indices = $elm$core$List$concat(
@@ -6933,7 +6954,20 @@ var $author$project$Shaders$face = F3(
 						A2($elm$core$List$range, 0, res - 1));
 				},
 				A2($elm$core$List$range, 0, res - 1)));
-		return A2($elm_explorations$webgl$WebGL$indexedTriangles, vertexes, indices);
+		var maxHeight = A2(
+			$elm$core$Maybe$withDefault,
+			0,
+			$elm$core$List$maximum(
+				A2(
+					$elm$core$List$map,
+					function (v) {
+						return $elm_explorations$linear_algebra$Math$Vector3$length(
+							A2($elm_explorations$linear_algebra$Math$Vector3$sub, v.position, v.normal));
+					},
+					vertexes)));
+		return _Utils_Tuple2(
+			maxHeight,
+			A2($elm_explorations$webgl$WebGL$indexedTriangles, vertexes, indices));
 	});
 var $elm$core$Basics$negate = function (n) {
 	return -n;
@@ -7688,6 +7722,23 @@ var $Herteby$simplex_noise$Simplex$permutationTableFromInt = function (_int) {
 		$Herteby$simplex_noise$Simplex$permutationTableGenerator,
 		$elm$random$Random$initialSeed(_int)).a;
 };
+var $elm$core$List$unzip = function (pairs) {
+	var step = F2(
+		function (_v0, _v1) {
+			var x = _v0.a;
+			var y = _v0.b;
+			var xs = _v1.a;
+			var ys = _v1.b;
+			return _Utils_Tuple2(
+				A2($elm$core$List$cons, x, xs),
+				A2($elm$core$List$cons, y, ys));
+		});
+	return A3(
+		$elm$core$List$foldr,
+		step,
+		_Utils_Tuple2(_List_Nil, _List_Nil),
+		pairs);
+};
 var $author$project$Shaders$makeCube = function (noiseParams) {
 	var noise = $Herteby$simplex_noise$Simplex$noise3d(
 		$Herteby$simplex_noise$Simplex$permutationTableFromInt(noiseParams.seed));
@@ -7700,8 +7751,10 @@ var $author$project$Shaders$makeCube = function (noiseParams) {
 				A3(
 					$elm$core$List$foldl,
 					F2(
-						function (_v0, acc) {
-							var v = ((A3(noise, acc.frequency * x, acc.frequency * y, acc.frequency * z) + 1) * 0.5) * acc.amplidute;
+						function (_v1, acc) {
+							var noiseMinusOneOne = A3(noise, acc.frequency * x, acc.frequency * y, acc.frequency * z);
+							var noiseZeroOne = (noiseMinusOneOne + 1) * 0.5;
+							var v = noiseZeroOne * acc.amplidute;
 							var newFrequency = acc.frequency * noiseParams.roughness;
 							var newAmp = acc.amplidute * noiseParams.persistance;
 							return {amplidute: newAmp, frequency: newFrequency, value: acc.value + v};
@@ -7709,32 +7762,34 @@ var $author$project$Shaders$makeCube = function (noiseParams) {
 					initialParams,
 					A2($elm$core$List$range, 1, noiseParams.numLayers)));
 		});
-	return A2(
-		$elm$core$List$map,
-		A2($author$project$Shaders$face, noiseFunc, noiseParams.resolution),
-		_List_fromArray(
-			[
-				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 1, 0, 0),
-				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 1, 0),
-				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 0, 1),
-				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, -1, 0, 0),
-				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, -1, 0),
-				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 0, -1)
-			]));
+	var _v0 = $elm$core$List$unzip(
+		A2(
+			$elm$core$List$map,
+			A2($author$project$Shaders$face, noiseFunc, noiseParams.resolution),
+			_List_fromArray(
+				[
+					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 1, 0, 0),
+					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 1, 0),
+					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 0, 1),
+					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, -1, 0, 0),
+					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, -1, 0),
+					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 0, -1)
+				])));
+	var a = _v0.a;
+	var b = _v0.b;
+	return _Utils_Tuple2(
+		A2(
+			$elm$core$Maybe$withDefault,
+			0,
+			$elm$core$List$maximum(a)),
+		b);
 };
 var $author$project$Main$init = function (_v0) {
+	var _v1 = $author$project$Shaders$makeCube($author$project$NoiseParameters$emptyNoiseParams);
+	var maxHeight = _v1.a;
+	var cubeMesh = _v1.b;
 	return _Utils_Tuple2(
-		{
-			height: 400,
-			meshes: $author$project$Shaders$makeCube($author$project$NoiseParameters$emptyNoiseParams),
-			noiseParams: $author$project$NoiseParameters$emptyNoiseParams,
-			offset: 0,
-			paused: false,
-			theta: 0,
-			viewportHeight: 0,
-			viewportWidth: 0,
-			width: 400
-		},
+		{height: 240, maxHeight: maxHeight, meshes: cubeMesh, noiseParams: $author$project$NoiseParameters$emptyNoiseParams, offset: 0, paused: false, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 240},
 		$elm$core$Platform$Cmd$batch(
 			_List_fromArray(
 				[
@@ -8211,7 +8266,7 @@ var $elm$core$Basics$round = _Basics_round;
 var $author$project$Main$computeViewportSize = F2(
 	function (viewport, model) {
 		var vph = viewport.viewport.height;
-		var ratio = 16.0 / 9.0;
+		var ratio = 4.0 / 3.0;
 		var vpw = vph / ratio;
 		var offset = $elm$core$Basics$round((viewport.viewport.width - vpw) / 2.0);
 		return _Utils_update(
@@ -8224,15 +8279,6 @@ var $author$project$Main$computeViewportSize = F2(
 	});
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $elm$core$String$toFloat = _String_toFloat;
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
 var $author$project$NoiseParameters$updateParameter = F2(
 	function (prevParams, updateMsg) {
 		switch (updateMsg.$) {
@@ -8348,13 +8394,13 @@ var $author$project$Main$update = F2(
 			default:
 				var paramsUpdate = msg.a;
 				var newParams = A2($author$project$NoiseParameters$updateParameter, model.noiseParams, paramsUpdate);
+				var _v1 = $author$project$Shaders$makeCube(newParams);
+				var newHeight = _v1.a;
+				var newCube = _v1.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{
-							meshes: $author$project$Shaders$makeCube(newParams),
-							noiseParams: newParams
-						}),
+						{maxHeight: newHeight, meshes: newCube, noiseParams: newParams}),
 					$elm$core$Platform$Cmd$none);
 		}
 	});
@@ -8372,6 +8418,9 @@ var $author$project$NoiseParameters$UpdatePersistance = function (a) {
 };
 var $author$project$NoiseParameters$UpdateRoughness = function (a) {
 	return {$: 'UpdateRoughness', a: a};
+};
+var $author$project$NoiseParameters$UpdateSeed = function (a) {
+	return {$: 'UpdateSeed', a: a};
 };
 var $author$project$NoiseParameters$UpdateStrength = function (a) {
 	return {$: 'UpdateStrength', a: a};
@@ -8480,31 +8529,29 @@ var $elm_explorations$linear_algebra$Math$Matrix4$inverse = _MJS_m4x4inverse;
 var $elm_explorations$linear_algebra$Math$Matrix4$makeRotate = _MJS_m4x4makeRotate;
 var $elm_explorations$linear_algebra$Math$Matrix4$mul = _MJS_m4x4mul;
 var $elm_explorations$linear_algebra$Math$Matrix4$transpose = _MJS_m4x4transpose;
-var $author$project$Shaders$uniforms = function (theta) {
-	var rotation = A2(
-		$elm_explorations$linear_algebra$Math$Matrix4$mul,
-		A2(
-			$elm_explorations$linear_algebra$Math$Matrix4$makeRotate,
-			3 * theta,
-			A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 1, 0)),
-		A2(
-			$elm_explorations$linear_algebra$Math$Matrix4$makeRotate,
-			2 * theta,
-			A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 1, 0, 0)));
-	var normalTransform = $elm_explorations$linear_algebra$Math$Matrix4$transpose(
-		A2(
-			$elm$core$Maybe$withDefault,
-			$elm_explorations$linear_algebra$Math$Matrix4$identity,
-			$elm_explorations$linear_algebra$Math$Matrix4$inverse(rotation)));
-	return {normalMatrix: normalTransform, rotation: rotation};
-};
+var $author$project$Shaders$uniforms = F2(
+	function (maxHeight, theta) {
+		var rotation = A2(
+			$elm_explorations$linear_algebra$Math$Matrix4$mul,
+			A2(
+				$elm_explorations$linear_algebra$Math$Matrix4$makeRotate,
+				3 * theta,
+				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 1, 0)),
+			$elm_explorations$linear_algebra$Math$Matrix4$identity);
+		var normalTransform = $elm_explorations$linear_algebra$Math$Matrix4$transpose(
+			A2(
+				$elm$core$Maybe$withDefault,
+				$elm_explorations$linear_algebra$Math$Matrix4$identity,
+				$elm_explorations$linear_algebra$Math$Matrix4$inverse(rotation)));
+		return {maxHeight: maxHeight, normalMatrix: normalTransform, rotation: rotation};
+	});
 var $author$project$Shaders$vertexShader = {
-	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = rotation * vec4(position, 2);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.3, 0.3, 0.3);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(-0.85, -0.8, -0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n\n            float height = max(0.5, length(pos.xyz) - length(transformedNormal.xyz));\n            // if (height <= 0.4) {\n            //    heightColor = vec3(35.0 / 255.0, 107.0/ 255.0, 188.0 / 255.0);\n            // } else if (height <= 0.5) {\n            //     heightColor = vec3(188.0 / 255.0, 170.0/ 255.0, 35.0 / 255.0);\n            // } else if (height <= 0.55) {\n            //     heightColor = vec3(43.0 / 255.0, 198.0 / 255.0, 59.0 / 255.0);\n            // } else {\n            heightColor = vec3(height, height, height);\n            // };\n        }\n    ',
+	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        uniform float maxHeight;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = rotation * vec4(position, 2);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.3, 0.3, 0.3);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(-0.85, -0.8, -0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 1.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n\n            float height = max(0.2, length(pos.xyz) - length(transformedNormal.xyz)) / maxHeight;\n            heightColor = vec3(height * height, (1.0 - height) / (2.0), (1.0 - height * height) / 2.0);\n        }\n    ',
 	attributes: {normal: 'normal', position: 'position'},
-	uniforms: {normalMatrix: 'normalMatrix', rotation: 'rotation'}
+	uniforms: {maxHeight: 'maxHeight', normalMatrix: 'normalMatrix', rotation: 'rotation'}
 };
-var $author$project$Shaders$draw = F2(
-	function (theta, mesh) {
+var $author$project$Shaders$draw = F3(
+	function (maxHeight, theta, mesh) {
 		return A5(
 			$elm_explorations$webgl$WebGL$entityWith,
 			_List_fromArray(
@@ -8515,7 +8562,7 @@ var $author$project$Shaders$draw = F2(
 			$author$project$Shaders$vertexShader,
 			$author$project$Shaders$fragmentShader,
 			mesh,
-			$author$project$Shaders$uniforms(theta));
+			A2($author$project$Shaders$uniforms, maxHeight, theta));
 	});
 var $elm$html$Html$Attributes$height = function (n) {
 	return A2(
@@ -8585,9 +8632,8 @@ var $author$project$Main$intSlider = F5(
 			$elm$html$Html$div,
 			_List_fromArray(
 				[
-					A2($elm$html$Html$Attributes$style, 'width', '80%'),
-					A2($elm$html$Html$Attributes$style, 'height', '4em'),
-					A2($elm$html$Html$Attributes$style, 'align', 'center')
+					A2($elm$html$Html$Attributes$style, 'width', '100%'),
+					A2($elm$html$Html$Attributes$style, 'height', '4em')
 				]),
 			_List_fromArray(
 				[
@@ -8595,7 +8641,8 @@ var $author$project$Main$intSlider = F5(
 					$elm$html$Html$div,
 					_List_fromArray(
 						[
-							A2($elm$html$Html$Attributes$style, 'align', 'left')
+							A2($elm$html$Html$Attributes$style, 'align', 'left'),
+							A2($elm$html$Html$Attributes$style, 'color', 'white')
 						]),
 					_List_fromArray(
 						[
@@ -8617,7 +8664,8 @@ var $author$project$Main$intSlider = F5(
 							function (x) {
 								return $author$project$Main$UpdateParams(
 									up(x));
-							})
+							}),
+							A2($elm$html$Html$Attributes$style, 'width', '100%')
 						]),
 					_List_Nil)
 				]));
@@ -8629,9 +8677,8 @@ var $author$project$Main$slider = F5(
 			$elm$html$Html$div,
 			_List_fromArray(
 				[
-					A2($elm$html$Html$Attributes$style, 'width', '80%'),
-					A2($elm$html$Html$Attributes$style, 'height', '4em'),
-					A2($elm$html$Html$Attributes$style, 'align', 'center')
+					A2($elm$html$Html$Attributes$style, 'width', '100%'),
+					A2($elm$html$Html$Attributes$style, 'height', '4em')
 				]),
 			_List_fromArray(
 				[
@@ -8639,7 +8686,8 @@ var $author$project$Main$slider = F5(
 					$elm$html$Html$div,
 					_List_fromArray(
 						[
-							A2($elm$html$Html$Attributes$style, 'align', 'left')
+							A2($elm$html$Html$Attributes$style, 'align', 'left'),
+							A2($elm$html$Html$Attributes$style, 'color', 'white')
 						]),
 					_List_fromArray(
 						[
@@ -8661,7 +8709,8 @@ var $author$project$Main$slider = F5(
 							function (x) {
 								return $author$project$Main$UpdateParams(
 									up(x));
-							})
+							}),
+							A2($elm$html$Html$Attributes$style, 'width', '100%')
 						]),
 					_List_Nil)
 				]));
@@ -8707,7 +8756,11 @@ var $author$project$Main$view = function (model) {
 					[
 						A2(
 						$elm$html$Html$div,
-						_List_Nil,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'align', 'center'),
+								A2($elm$html$Html$Attributes$style, 'position', 'absolute')
+							]),
 						_List_fromArray(
 							[
 								A3(
@@ -8720,37 +8773,32 @@ var $author$project$Main$view = function (model) {
 									]),
 								_List_fromArray(
 									[
-										A2($elm$html$Html$Attributes$style, 'backgroundColor', '#FFFFFF'),
 										A2($elm$html$Html$Attributes$style, 'display', 'block'),
 										A2($elm$html$Html$Attributes$style, 'align', 'center'),
-										A2($elm$html$Html$Attributes$style, 'width', '95%'),
-										$elm$html$Html$Attributes$width(model.width),
+										$elm$html$Html$Attributes$width(model.height),
 										$elm$html$Html$Attributes$height(model.height)
 									]),
 								A2(
 									$elm$core$List$map,
-									$author$project$Shaders$draw(model.theta),
+									A2($author$project$Shaders$draw, model.maxHeight, model.theta),
 									model.meshes)),
 								A2(
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										A2(
-										$elm$html$Html$Attributes$style,
-										'top',
-										$elm$core$String$fromInt(model.height) + 'px'),
 										A2($elm$html$Html$Attributes$style, 'align', 'center'),
 										A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-										A2($elm$html$Html$Attributes$style, 'width', '95%')
+										A2($elm$html$Html$Attributes$style, 'width', '100%')
 									]),
 								_List_fromArray(
 									[
-										A5($author$project$Main$slider, 'baseRoughness', $author$project$NoiseParameters$UpdateBaseRoughness, 1, 5, model.noiseParams.baseRoughness),
-										A5($author$project$Main$slider, 'roughness', $author$project$NoiseParameters$UpdateRoughness, 0, 1, model.noiseParams.roughness),
-										A5($author$project$Main$slider, 'persistance', $author$project$NoiseParameters$UpdatePersistance, 0, 1, model.noiseParams.persistance),
-										A5($author$project$Main$slider, 'strength', $author$project$NoiseParameters$UpdateStrength, 0, 1, model.noiseParams.strength),
-										A5($author$project$Main$slider, 'minValue', $author$project$NoiseParameters$UpdateMinValue, -0.3, 1, model.noiseParams.minValue),
-										A5($author$project$Main$intSlider, 'numLayers', $author$project$NoiseParameters$UpdateNumLayers, 1, 8, model.noiseParams.numLayers)
+										A5($author$project$Main$intSlider, 'Seed', $author$project$NoiseParameters$UpdateSeed, 1, 100, model.noiseParams.seed),
+										A5($author$project$Main$slider, 'Base Roughness', $author$project$NoiseParameters$UpdateBaseRoughness, 1, 5, model.noiseParams.baseRoughness),
+										A5($author$project$Main$slider, 'Roughness', $author$project$NoiseParameters$UpdateRoughness, 0, 1, model.noiseParams.roughness),
+										A5($author$project$Main$slider, 'Persistance', $author$project$NoiseParameters$UpdatePersistance, 0, 1, model.noiseParams.persistance),
+										A5($author$project$Main$slider, 'Strength', $author$project$NoiseParameters$UpdateStrength, 0, 1, model.noiseParams.strength),
+										A5($author$project$Main$slider, 'Min Value', $author$project$NoiseParameters$UpdateMinValue, -0.3, 1, model.noiseParams.minValue),
+										A5($author$project$Main$intSlider, 'Num Layers', $author$project$NoiseParameters$UpdateNumLayers, 1, 8, model.noiseParams.numLayers)
 									]))
 							]))
 					]))

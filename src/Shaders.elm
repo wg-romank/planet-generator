@@ -123,14 +123,16 @@ uniforms width height maxHeight theta =
             (Mat4.makeRotate (3 * theta) (vec3 0 1 0))
             Mat4.identity
             -- (Mat4.makeRotate (2 * theta) (vec3 1 0 0))
-        normalTransform = rotation
+        perspectiveP = perspective width height 0 0
+        normalTransform = 
+            Mat4.mul rotation perspectiveP
             |> Mat4.inverse
             |> Maybe.withDefault Mat4.identity
             |> Mat4.transpose
         -- rotation = Mat4.identity
         -- normalTransform = Mat4.identity
     in
-    { rotation = rotation, normalMatrix = normalTransform, maxHeight = maxHeight, perspective = perspective width height 0 0 }
+    { rotation = rotation, normalMatrix = normalTransform, maxHeight = maxHeight, perspective = perspectiveP }
 
 draw: Float -> Float -> Float -> Float -> Mesh Vertex -> WebGL.Entity
 draw width height maxHeight theta mesh = WebGL.entityWith

@@ -35,7 +35,7 @@ vertexShader =
             float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
             vLighting = ambientLight + (directionalLightColor * directional);
 
-            float height = max(0.2, length(pos.xyz) - length(transformedNormal.xyz)) / maxHeight;
+            float height = max(0.0, length(pos.xyz) - length(transformedNormal.xyz)) / maxHeight;
             heightColor = vec3(height, (1.0 - height * height), (1.0 - height));
         }
     |]
@@ -47,7 +47,7 @@ fragmentShader =
         varying vec3 heightColor;
 
         void main() {
-            gl_FragColor = vec4(heightColor * vLighting, 1);
+            gl_FragColor = vec4(vLighting * heightColor.x, 1);
         }
     |]
 

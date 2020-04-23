@@ -7821,7 +7821,7 @@ var $author$project$Main$init = function (_v0) {
 	var maxHeight = _v1.a;
 	var cubeMesh = _v1.b;
 	return _Utils_Tuple2(
-		{height: 240, maxHeight: maxHeight, meshes: cubeMesh, noiseParams: noiesParams, offset: 0, paused: false, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 240},
+		{height: 400, maxHeight: maxHeight, meshes: cubeMesh, noiseParams: noiesParams, offset: 0, paused: false, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 400},
 		$elm$core$Platform$Cmd$batch(
 			_List_fromArray(
 				[
@@ -8586,7 +8586,7 @@ var $elm_explorations$webgl$WebGL$Internal$enableSetting = F2(
 	});
 var $elm_explorations$webgl$WebGL$entityWith = _WebGL_entity;
 var $author$project$Shaders$fragmentShader = {
-	src: '\n        precision mediump float;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            gl_FragColor = vec4(heightColor * vLighting, 1);\n        }\n    ',
+	src: '\n        precision mediump float;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            gl_FragColor = vec4(heightColor.x * heightColor.x, 1);\n        }\n    ',
 	attributes: {},
 	uniforms: {}
 };
@@ -8632,7 +8632,7 @@ var $author$project$Shaders$makeUniforms = F4(
 		return {maxHeight: maxHeight, normalMatrix: normalTransform, perspective: perspectiveP, rotation: rotation};
 	});
 var $author$project$Shaders$vertexShader = {
-	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        uniform mat4 perspective;\n        uniform float maxHeight;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = rotation * vec4(position, 2);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.3, 0.3, 0.3);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(-0.85, -0.8, -0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 0.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n\n            float height = max(0.2, length(pos.xyz) - length(transformedNormal.xyz)) / maxHeight;\n            heightColor = vec3(height, (1.0 - height * height), (1.0 - height));\n        }\n    ',
+	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        uniform mat4 perspective;\n        uniform float maxHeight;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = rotation * vec4(position, 2);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.3, 0.3, 0.3);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(-0.85, -0.8, -0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 0.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n\n            float height = max(0.0, length(pos.xyz) - length(transformedNormal.xyz)) / maxHeight;\n            heightColor = vec3(height, (1.0 - height * height), (1.0 - height));\n        }\n    ',
 	attributes: {normal: 'normal', position: 'position'},
 	uniforms: {maxHeight: 'maxHeight', normalMatrix: 'normalMatrix', perspective: 'perspective', rotation: 'rotation'}
 };
@@ -8822,7 +8822,7 @@ var $author$project$Main$slider = F6(
 		return A8($author$project$Main$gSlider, '0.01', idx, label, up, $elm$core$String$fromFloat, minValue, maxValue, actualValue);
 	});
 var $elm$html$Html$span = _VirtualDom_node('span');
-var $author$project$Main$makeParamControl = F2(
+var $author$project$Main$makeFilterControl = F2(
 	function (idx, noiseParams) {
 		return A2(
 			$elm$html$Html$span,
@@ -8964,7 +8964,7 @@ var $author$project$Main$view = function (model) {
 										A2(
 										$elm$html$Html$div,
 										_List_Nil,
-										A2($elm$core$List$indexedMap, $author$project$Main$makeParamControl, model.noiseParams))
+										A2($elm$core$List$indexedMap, $author$project$Main$makeFilterControl, model.noiseParams))
 									]))
 							]))
 					]))

@@ -8725,6 +8725,7 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			$elm$html$Html$Events$alwaysStop,
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
+var $elm$html$Html$output = _VirtualDom_node('output');
 var $elm$html$Html$Attributes$step = function (n) {
 	return A2($elm$html$Html$Attributes$stringProperty, 'step', n);
 };
@@ -8734,8 +8735,8 @@ var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
-var $author$project$Main$intSlider = F6(
-	function (idx, label, up, minValue, maxValue, actualValue) {
+var $author$project$Main$gSlider = F8(
+	function (step, idx, label, up, toString, minValue, maxValue, actualValue) {
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -8747,85 +8748,78 @@ var $author$project$Main$intSlider = F6(
 				[
 					A2(
 					$elm$html$Html$div,
+					_List_Nil,
 					_List_fromArray(
 						[
-							A2($elm$html$Html$Attributes$style, 'align', 'left'),
-							A2($elm$html$Html$Attributes$style, 'color', 'white')
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text(label)
+							A2(
+							$elm$html$Html$output,
+							_List_fromArray(
+								[
+									A2($elm$html$Html$Attributes$style, 'color', 'white')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text(label)
+								]))
 						])),
 					A2(
-					$elm$html$Html$input,
+					$elm$html$Html$div,
+					_List_Nil,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$type_('range'),
-							$elm$html$Html$Attributes$min(
-							$elm$core$String$fromInt(minValue)),
-							$elm$html$Html$Attributes$max(
-							$elm$core$String$fromInt(maxValue)),
-							$elm$html$Html$Attributes$step('1'),
-							$elm$html$Html$Attributes$value(
-							$elm$core$String$fromInt(actualValue)),
-							$elm$html$Html$Events$onInput(
-							function (x) {
-								return A2(
-									$author$project$Main$UpdateParams,
-									idx,
-									up(x));
-							}),
-							A2($elm$html$Html$Attributes$style, 'width', '100%')
-						]),
-					_List_Nil)
+							A2(
+							$elm$html$Html$input,
+							_List_fromArray(
+								[
+									A2($elm$html$Html$Attributes$style, 'width', '100%'),
+									$elm$html$Html$Attributes$type_('range'),
+									A2($elm$html$Html$Attributes$style, 'align', 'auto'),
+									$elm$html$Html$Attributes$min(
+									toString(minValue)),
+									$elm$html$Html$Attributes$max(
+									toString(maxValue)),
+									$elm$html$Html$Attributes$step(step),
+									$elm$html$Html$Attributes$value(
+									toString(actualValue)),
+									$elm$html$Html$Events$onInput(
+									function (x) {
+										return A2(
+											$author$project$Main$UpdateParams,
+											idx,
+											up(x));
+									})
+								]),
+							_List_Nil)
+						])),
+					A2(
+					$elm$html$Html$div,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$output,
+							_List_fromArray(
+								[
+									A2($elm$html$Html$Attributes$style, 'color', 'white'),
+									A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+									A2($elm$html$Html$Attributes$style, 'right', '0px')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text(
+									toString(actualValue))
+								]))
+						]))
 				]));
+	});
+var $author$project$Main$intSlider = F6(
+	function (idx, label, up, minValue, maxValue, actualValue) {
+		return A8($author$project$Main$gSlider, '1', idx, label, up, $elm$core$String$fromInt, minValue, maxValue, actualValue);
 	});
 var $elm$core$String$fromFloat = _String_fromNumber;
 var $author$project$Main$slider = F6(
 	function (idx, label, up, minValue, maxValue, actualValue) {
-		return A2(
-			$elm$html$Html$div,
-			_List_fromArray(
-				[
-					A2($elm$html$Html$Attributes$style, 'width', '100%'),
-					A2($elm$html$Html$Attributes$style, 'height', '4em')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$div,
-					_List_fromArray(
-						[
-							A2($elm$html$Html$Attributes$style, 'align', 'left'),
-							A2($elm$html$Html$Attributes$style, 'color', 'white')
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text(label)
-						])),
-					A2(
-					$elm$html$Html$input,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$type_('range'),
-							$elm$html$Html$Attributes$min(
-							$elm$core$String$fromFloat(minValue)),
-							$elm$html$Html$Attributes$max(
-							$elm$core$String$fromFloat(maxValue)),
-							$elm$html$Html$Attributes$step('0.01'),
-							$elm$html$Html$Attributes$value(
-							$elm$core$String$fromFloat(actualValue)),
-							$elm$html$Html$Events$onInput(
-							function (x) {
-								return A2(
-									$author$project$Main$UpdateParams,
-									idx,
-									up(x));
-							}),
-							A2($elm$html$Html$Attributes$style, 'width', '100%')
-						]),
-					_List_Nil)
-				]));
+		return A8($author$project$Main$gSlider, '0.01', idx, label, up, $elm$core$String$fromFloat, minValue, maxValue, actualValue);
 	});
 var $elm$html$Html$span = _VirtualDom_node('span');
 var $author$project$Main$makeParamControl = F2(
@@ -8856,8 +8850,8 @@ var $author$project$Main$makeParamControl = F2(
 							A6($author$project$Main$slider, idx, 'Base Roughness', $author$project$NoiseParameters$UpdateBaseRoughness, 1, 5, noiseParams.baseRoughness),
 							A6($author$project$Main$slider, idx, 'Roughness', $author$project$NoiseParameters$UpdateRoughness, 0, 1, noiseParams.roughness),
 							A6($author$project$Main$slider, idx, 'Persistance', $author$project$NoiseParameters$UpdatePersistance, 0, 1, noiseParams.persistance),
-							A6($author$project$Main$slider, idx, 'Strength', $author$project$NoiseParameters$UpdateStrength, 0, 2, noiseParams.strength),
-							A6($author$project$Main$slider, idx, 'Min Value', $author$project$NoiseParameters$UpdateMinValue, -0.3, 1, noiseParams.minValue),
+							A6($author$project$Main$slider, idx, 'Strength', $author$project$NoiseParameters$UpdateStrength, 0, 4, noiseParams.strength),
+							A6($author$project$Main$slider, idx, 'Min Value', $author$project$NoiseParameters$UpdateMinValue, 0, 1, noiseParams.minValue),
 							A6($author$project$Main$intSlider, idx, 'Num Layers', $author$project$NoiseParameters$UpdateNumLayers, 1, 8, noiseParams.numLayers)
 						]))
 				]));

@@ -122,41 +122,50 @@ subscriptions model =
             )
         ]
 
-slider: Int -> String -> (String -> UpdateParams) -> Float -> Float -> Float -> Html Msg
-slider idx label up minValue maxValue actualValue = 
+gSlider: String -> Int -> String -> (String -> UpdateParams)  -> (a -> String) -> a -> a -> a -> Html Msg
+gSlider step idx label up toString minValue maxValue actualValue =
     div [
         style "width" "100%",
         style "height" "4em"
         -- style "align" "center"
     ] [
-        div [ style "align" "left", style "color" "white" ] [text label],
-    input [
-        type_ "range",
-        H.min (String.fromFloat minValue),
-        H.max (String.fromFloat maxValue),
-        H.step "0.01",
-        value <| String.fromFloat actualValue,
-        onInput (\x -> UpdateParams idx (up x)),
-        style "width" "100%"
-    ] [ ] ]
+        div [ ]
+        [
+            output [
+                style "color" "white"
+            ] [text label]
+        ],
+        div [ ]
+        [
+            input [
+                style "width" "100%",
+                type_ "range",
+                style "align" "auto",
+                H.min (toString minValue),
+                H.max (toString maxValue),
+                H.step step,
+                value <| toString actualValue,
+                onInput (\x -> UpdateParams idx (up x))
+            ] [ ]
+        ],
+        div [ ]
+        [
+            output [
+                style "color" "white",
+                style "position" "absolute",
+                style "right" "0px"
+            ] [ text (toString actualValue) ]
+        ]
+    ]
+
+
+slider: Int -> String -> (String -> UpdateParams) -> Float -> Float -> Float -> Html Msg
+slider idx label up minValue maxValue actualValue = 
+    gSlider  "0.01" idx label up String.fromFloat minValue maxValue actualValue
 
 intSlider: Int -> String -> (String -> UpdateParams) -> Int -> Int -> Int -> Html Msg
 intSlider idx label up minValue maxValue actualValue = 
-    div [
-        style "width" "100%",
-        style "height" "4em"
-        -- style "align" "center"
-    ] [
-        div [ style "align" "left", style "color" "white" ] [text label],
-    input [
-        type_ "range",
-        H.min (String.fromInt minValue),
-        H.max (String.fromInt maxValue),
-        H.step "1",
-        value <| String.fromInt actualValue,
-        onInput (\x -> UpdateParams idx (up x)),
-        style "width" "100%"
-    ] [ ] ]
+    gSlider "1" idx label up String.fromInt minValue maxValue actualValue
 
 
 makeParamControl: Int -> NoiseParameters -> Html Msg
@@ -172,8 +181,8 @@ makeParamControl idx noiseParams =
           slider idx "Base Roughness" UpdateBaseRoughness 1 5 noiseParams.baseRoughness,
           slider idx "Roughness" UpdateRoughness 0 1 noiseParams.roughness,
           slider idx "Persistance" UpdatePersistance 0 1 noiseParams.persistance,
-          slider idx "Strength" UpdateStrength 0 2 noiseParams.strength,
-          slider idx "Min Value" UpdateMinValue -0.3 1 noiseParams.minValue,
+          slider idx "Strength" UpdateStrength 0 4 noiseParams.strength,
+          slider idx "Min Value" UpdateMinValue 0 1 noiseParams.minValue,
           intSlider idx "Num Layers" UpdateNumLayers 1 8 noiseParams.numLayers
         ]
     ]

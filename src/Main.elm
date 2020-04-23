@@ -183,7 +183,8 @@ makeFilterControl idx noiseParams =
           slider idx "Persistance" UpdatePersistance 0 1 noiseParams.persistance,
           slider idx "Strength" UpdateStrength 0 4 noiseParams.strength,
           slider idx "Min Value" UpdateMinValue 0 1 noiseParams.minValue,
-          intSlider idx "Num Layers" UpdateNumLayers 1 8 noiseParams.numLayers
+          intSlider idx "Num Layers" UpdateNumLayers 1 8 noiseParams.numLayers,
+          intSlider idx "Resolution" UpdateResolution 10 100 noiseParams.resolution
         ]
     ]
 

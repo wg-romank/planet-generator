@@ -8668,6 +8668,9 @@ var $author$project$NoiseParameters$UpdateNumLayers = function (a) {
 var $author$project$NoiseParameters$UpdatePersistance = function (a) {
 	return {$: 'UpdatePersistance', a: a};
 };
+var $author$project$NoiseParameters$UpdateResolution = function (a) {
+	return {$: 'UpdateResolution', a: a};
+};
 var $author$project$NoiseParameters$UpdateRoughness = function (a) {
 	return {$: 'UpdateRoughness', a: a};
 };
@@ -8852,7 +8855,8 @@ var $author$project$Main$makeFilterControl = F2(
 							A6($author$project$Main$slider, idx, 'Persistance', $author$project$NoiseParameters$UpdatePersistance, 0, 1, noiseParams.persistance),
 							A6($author$project$Main$slider, idx, 'Strength', $author$project$NoiseParameters$UpdateStrength, 0, 4, noiseParams.strength),
 							A6($author$project$Main$slider, idx, 'Min Value', $author$project$NoiseParameters$UpdateMinValue, 0, 1, noiseParams.minValue),
-							A6($author$project$Main$intSlider, idx, 'Num Layers', $author$project$NoiseParameters$UpdateNumLayers, 1, 8, noiseParams.numLayers)
+							A6($author$project$Main$intSlider, idx, 'Num Layers', $author$project$NoiseParameters$UpdateNumLayers, 1, 8, noiseParams.numLayers),
+							A6($author$project$Main$intSlider, idx, 'Resolution', $author$project$NoiseParameters$UpdateResolution, 10, 100, noiseParams.resolution)
 						]))
 				]));
 	});

@@ -8586,7 +8586,7 @@ var $elm_explorations$webgl$WebGL$Internal$enableSetting = F2(
 	});
 var $elm_explorations$webgl$WebGL$entityWith = _WebGL_entity;
 var $author$project$Shaders$fragmentShader = {
-	src: '\n        precision mediump float;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            gl_FragColor = vec4(heightColor.x * heightColor.x, 1);\n        }\n    ',
+	src: '\n        precision mediump float;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            gl_FragColor = vec4(vLighting * heightColor.x, 1);\n        }\n    ',
 	attributes: {},
 	uniforms: {}
 };

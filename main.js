@@ -8941,7 +8941,9 @@ var $author$project$Main$view = function (model) {
 										$elm$html$Html$button,
 										_List_fromArray(
 											[
-												$elm$html$Html$Events$onClick($author$project$Main$AddFilter)
+												$elm$html$Html$Events$onClick($author$project$Main$AddFilter),
+												A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+												A2($elm$html$Html$Attributes$style, 'left', '0px')
 											]),
 										_List_fromArray(
 											[
@@ -8951,7 +8953,9 @@ var $author$project$Main$view = function (model) {
 										$elm$html$Html$button,
 										_List_fromArray(
 											[
-												$elm$html$Html$Events$onClick($author$project$Main$RemoveFilter)
+												$elm$html$Html$Events$onClick($author$project$Main$RemoveFilter),
+												A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+												A2($elm$html$Html$Attributes$style, 'right', '0px')
 											]),
 										_List_fromArray(
 											[

@@ -168,8 +168,8 @@ intSlider idx label up minValue maxValue actualValue =
     gSlider "1" idx label up String.fromInt minValue maxValue actualValue
 
 
-makeParamControl: Int -> NoiseParameters -> Html Msg
-makeParamControl idx noiseParams = 
+makeFilterControl: Int -> NoiseParameters -> Html Msg
+makeFilterControl idx noiseParams = 
     span [] [
         div [ style "color" "white", style "text-align" "center", style "font-size" "2em" ] [ text "Filter" ],
         div [
@@ -218,9 +218,9 @@ view model =
                         (draw (toFloat model.width) (toFloat model.height) model.maxHeight model.theta)
                         model.meshes),
                 div [ ] [
-                    button [ Html.Events.onClick AddFilter ] [ text "+"],
-                    button [ Html.Events.onClick RemoveFilter ] [ text "-"],
-                    div [ ] (List.indexedMap makeParamControl model.noiseParams)
+                    button [ Html.Events.onClick AddFilter, style "position" "absolute", style "left" "0px" ] [ text "+"],
+                    button [ Html.Events.onClick RemoveFilter, style "position" "absolute", style "right" "0px" ] [ text "-"],
+                    div [ ] (List.indexedMap makeFilterControl model.noiseParams)
                 ]
             ]
         ]

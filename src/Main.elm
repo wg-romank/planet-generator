@@ -74,7 +74,7 @@ computeViewportSize : Viewport -> Model -> Model
 computeViewportSize viewport model =
     let
         vph = viewport.viewport.height
-        ratio = 4.0 / 3.0
+        ratio = 16.0 / 9.0
         vpw = vph / ratio
         offset = (viewport.viewport.width - vpw) / 2.0 |> round
     in
@@ -95,11 +95,17 @@ update msg model =
             in
             ( { model | noiseParams = newParams, meshes = newCube, maxHeight = newHeight }, Cmd.none )
         AddFilter ->
-            let prevParamsList = model.noiseParams in
-            ( { model | noiseParams = emptyNoiseParams :: prevParamsList }, Cmd.none )
+            let
+                newParams = emptyNoiseParams :: model.noiseParams
+                (newHeight, newCube) = makeCube newParams
+            in
+            ( { model | noiseParams = newParams, meshes = newCube, maxHeight = newHeight }, Cmd.none )
         RemoveFilter ->
-            let prevParamsList = model.noiseParams in
-            ( { model | noiseParams = prevParamsList |> List.drop 1 }, Cmd.none)
+            let
+                newParams = model.noiseParams |> List.drop 1
+                (newHeight, newCube) = makeCube newParams
+            in
+            ( { model | noiseParams = newParams, maxHeight = newHeight, meshes = newCube }, Cmd.none)
 
 
 subscriptions : Model -> Sub Msg
@@ -155,19 +161,21 @@ intSlider idx label up minValue maxValue actualValue =
 
 makeParamControl: Int -> NoiseParameters -> Html Msg
 makeParamControl idx noiseParams = 
-    div [
-      -- style "top" (String.fromInt model.height ++ "px"),
-      style "align" "center",
-      style "position" "absolute",
-      style "width" "100%"
-    ] [ 
-      intSlider idx "Seed" UpdateSeed 1 100 noiseParams.seed,
-      slider idx "Base Roughness" UpdateBaseRoughness 1 5 noiseParams.baseRoughness,
-      slider idx "Roughness" UpdateRoughness 0 1 noiseParams.roughness,
-      slider idx "Persistance" UpdatePersistance 0 1 noiseParams.persistance,
-      slider idx "Strength" UpdateStrength 0 2 noiseParams.strength,
-      slider idx "Min Value" UpdateMinValue -0.3 1 noiseParams.minValue,
-      intSlider idx "Num Layers" UpdateNumLayers 1 8 noiseParams.numLayers
+    span [] [
+        div [ style "color" "white", style "text-align" "center", style "font-size" "2em" ] [ text "Filter" ],
+        div [
+          -- style "top" (String.fromInt model.height ++ "px"),
+        --   style "align" "center",
+        --   style "width" "100%"
+        ] [ 
+          intSlider idx "Seed" UpdateSeed 1 100 noiseParams.seed,
+          slider idx "Base Roughness" UpdateBaseRoughness 1 5 noiseParams.baseRoughness,
+          slider idx "Roughness" UpdateRoughness 0 1 noiseParams.roughness,
+          slider idx "Persistance" UpdatePersistance 0 1 noiseParams.persistance,
+          slider idx "Strength" UpdateStrength 0 2 noiseParams.strength,
+          slider idx "Min Value" UpdateMinValue -0.3 1 noiseParams.minValue,
+          intSlider idx "Num Layers" UpdateNumLayers 1 8 noiseParams.numLayers
+        ]
     ]
 
 view : Model -> Browser.Document Msg
@@ -178,15 +186,20 @@ view model =
             style "top" "0px",
             style "left" (String.fromInt model.offset ++ "px"),
             style "position" "absolute",
-            style "width" (String.fromInt model.viewportWidth ++ "px"),
-            style "height" (String.fromInt model.viewportHeight ++ "px")
+            -- style "width" (String.fromInt model.viewportWidth ++ "px"),
+            -- style "height" (String.fromInt model.viewportHeight ++ "px")
+            style "align" "center"
         ]
         [ 
-            div [ style "align" "center", style "position" "absolute" ] 
+            div [ 
+                style "align" "center"
+                -- style "position" "absolute"
+            ] 
             [
                 WebGL.toHtmlWith
                     [ WebGL.depth 1, WebGL.antialias, WebGL.stencil 0 ]
                     [ 
+                        style "align" "center",
                         style "display" "block",
                         style "align" "center",
                         width model.width,
@@ -195,16 +208,10 @@ view model =
                     (List.map 
                         (draw (toFloat model.width) (toFloat model.height) model.maxHeight model.theta)
                         model.meshes),
-                div [] [
-                    button [
-                        Html.Events.onClick AddFilter,
-                        style "color" "white"
-                    ] [ text "+"],
-                    button [
-                        Html.Events.onClick RemoveFilter,
-                        style "color" "white"
-                    ] [ text "-"],
-                    div [] (List.indexedMap makeParamControl model.noiseParams)
+                div [ ] [
+                    button [ Html.Events.onClick AddFilter ] [ text "+"],
+                    button [ Html.Events.onClick RemoveFilter ] [ text "-"],
+                    div [ ] (List.indexedMap makeParamControl model.noiseParams)
                 ]
             ]
         ]

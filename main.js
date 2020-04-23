@@ -7783,7 +7783,7 @@ var $author$project$Mesh$makeCube = function (noiseParamsList) {
 				$elm$core$List$foldl,
 				F2(
 					function (f, acc) {
-						return acc + A3(f, x, y, z);
+						return (acc + A3(f, x, y, z)) / 2.0;
 					}),
 				0,
 				noiseFilters);
@@ -8298,7 +8298,7 @@ var $elm$core$Basics$round = _Basics_round;
 var $author$project$Main$computeViewportSize = F2(
 	function (viewport, model) {
 		var vph = viewport.viewport.height;
-		var ratio = 4.0 / 3.0;
+		var ratio = 16.0 / 9.0;
 		var vpw = vph / ratio;
 		var offset = $elm$core$Basics$round((viewport.viewport.width - vpw) / 2.0);
 		return _Utils_update(
@@ -8467,22 +8467,24 @@ var $author$project$Main$update = F2(
 						{maxHeight: newHeight, meshes: newCube, noiseParams: newParams}),
 					$elm$core$Platform$Cmd$none);
 			case 'AddFilter':
-				var prevParamsList = model.noiseParams;
+				var newParams = A2($elm$core$List$cons, $author$project$NoiseParameters$emptyNoiseParams, model.noiseParams);
+				var _v2 = $author$project$Mesh$makeCube(newParams);
+				var newHeight = _v2.a;
+				var newCube = _v2.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{
-							noiseParams: A2($elm$core$List$cons, $author$project$NoiseParameters$emptyNoiseParams, prevParamsList)
-						}),
+						{maxHeight: newHeight, meshes: newCube, noiseParams: newParams}),
 					$elm$core$Platform$Cmd$none);
 			default:
-				var prevParamsList = model.noiseParams;
+				var newParams = A2($elm$core$List$drop, 1, model.noiseParams);
+				var _v3 = $author$project$Mesh$makeCube(newParams);
+				var newHeight = _v3.a;
+				var newCube = _v3.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{
-							noiseParams: A2($elm$core$List$drop, 1, prevParamsList)
-						}),
+						{maxHeight: newHeight, meshes: newCube, noiseParams: newParams}),
 					$elm$core$Platform$Cmd$none);
 		}
 	});
@@ -8825,25 +8827,39 @@ var $author$project$Main$slider = F6(
 					_List_Nil)
 				]));
 	});
+var $elm$html$Html$span = _VirtualDom_node('span');
 var $author$project$Main$makeParamControl = F2(
 	function (idx, noiseParams) {
 		return A2(
-			$elm$html$Html$div,
+			$elm$html$Html$span,
+			_List_Nil,
 			_List_fromArray(
 				[
-					A2($elm$html$Html$Attributes$style, 'align', 'center'),
-					A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-					A2($elm$html$Html$Attributes$style, 'width', '100%')
-				]),
-			_List_fromArray(
-				[
-					A6($author$project$Main$intSlider, idx, 'Seed', $author$project$NoiseParameters$UpdateSeed, 1, 100, noiseParams.seed),
-					A6($author$project$Main$slider, idx, 'Base Roughness', $author$project$NoiseParameters$UpdateBaseRoughness, 1, 5, noiseParams.baseRoughness),
-					A6($author$project$Main$slider, idx, 'Roughness', $author$project$NoiseParameters$UpdateRoughness, 0, 1, noiseParams.roughness),
-					A6($author$project$Main$slider, idx, 'Persistance', $author$project$NoiseParameters$UpdatePersistance, 0, 1, noiseParams.persistance),
-					A6($author$project$Main$slider, idx, 'Strength', $author$project$NoiseParameters$UpdateStrength, 0, 2, noiseParams.strength),
-					A6($author$project$Main$slider, idx, 'Min Value', $author$project$NoiseParameters$UpdateMinValue, -0.3, 1, noiseParams.minValue),
-					A6($author$project$Main$intSlider, idx, 'Num Layers', $author$project$NoiseParameters$UpdateNumLayers, 1, 8, noiseParams.numLayers)
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'color', 'white'),
+							A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+							A2($elm$html$Html$Attributes$style, 'font-size', '2em')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Filter')
+						])),
+					A2(
+					$elm$html$Html$div,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A6($author$project$Main$intSlider, idx, 'Seed', $author$project$NoiseParameters$UpdateSeed, 1, 100, noiseParams.seed),
+							A6($author$project$Main$slider, idx, 'Base Roughness', $author$project$NoiseParameters$UpdateBaseRoughness, 1, 5, noiseParams.baseRoughness),
+							A6($author$project$Main$slider, idx, 'Roughness', $author$project$NoiseParameters$UpdateRoughness, 0, 1, noiseParams.roughness),
+							A6($author$project$Main$slider, idx, 'Persistance', $author$project$NoiseParameters$UpdatePersistance, 0, 1, noiseParams.persistance),
+							A6($author$project$Main$slider, idx, 'Strength', $author$project$NoiseParameters$UpdateStrength, 0, 2, noiseParams.strength),
+							A6($author$project$Main$slider, idx, 'Min Value', $author$project$NoiseParameters$UpdateMinValue, -0.3, 1, noiseParams.minValue),
+							A6($author$project$Main$intSlider, idx, 'Num Layers', $author$project$NoiseParameters$UpdateNumLayers, 1, 8, noiseParams.numLayers)
+						]))
 				]));
 	});
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
@@ -8890,14 +8906,7 @@ var $author$project$Main$view = function (model) {
 						'left',
 						$elm$core$String$fromInt(model.offset) + 'px'),
 						A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2(
-						$elm$html$Html$Attributes$style,
-						'width',
-						$elm$core$String$fromInt(model.viewportWidth) + 'px'),
-						A2(
-						$elm$html$Html$Attributes$style,
-						'height',
-						$elm$core$String$fromInt(model.viewportHeight) + 'px')
+						A2($elm$html$Html$Attributes$style, 'align', 'center')
 					]),
 				_List_fromArray(
 					[
@@ -8905,8 +8914,7 @@ var $author$project$Main$view = function (model) {
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								A2($elm$html$Html$Attributes$style, 'align', 'center'),
-								A2($elm$html$Html$Attributes$style, 'position', 'absolute')
+								A2($elm$html$Html$Attributes$style, 'align', 'center')
 							]),
 						_List_fromArray(
 							[
@@ -8920,6 +8928,7 @@ var $author$project$Main$view = function (model) {
 									]),
 								_List_fromArray(
 									[
+										A2($elm$html$Html$Attributes$style, 'align', 'center'),
 										A2($elm$html$Html$Attributes$style, 'display', 'block'),
 										A2($elm$html$Html$Attributes$style, 'align', 'center'),
 										$elm$html$Html$Attributes$width(model.width),
@@ -8938,8 +8947,7 @@ var $author$project$Main$view = function (model) {
 										$elm$html$Html$button,
 										_List_fromArray(
 											[
-												$elm$html$Html$Events$onClick($author$project$Main$AddFilter),
-												A2($elm$html$Html$Attributes$style, 'color', 'white')
+												$elm$html$Html$Events$onClick($author$project$Main$AddFilter)
 											]),
 										_List_fromArray(
 											[
@@ -8949,8 +8957,7 @@ var $author$project$Main$view = function (model) {
 										$elm$html$Html$button,
 										_List_fromArray(
 											[
-												$elm$html$Html$Events$onClick($author$project$Main$RemoveFilter),
-												A2($elm$html$Html$Attributes$style, 'color', 'white')
+												$elm$html$Html$Events$onClick($author$project$Main$RemoveFilter)
 											]),
 										_List_fromArray(
 											[

@@ -1,20 +1,15 @@
-module Shaders exposing (makeCube, draw, Vertex)
+module Shaders exposing (draw)
 
-import Math.Vector3 as Vec3 exposing (vec3, Vec3)
-import Math.Vector2 as Vec2 exposing (vec2)
+import Math.Vector3 as Vec3 exposing (vec3)
 import Math.Matrix4 as Mat4 exposing (Mat4)
 
-import Simplex
 import WebGL exposing (Mesh)
 import WebGL.Settings exposing (back)
 import WebGL.Settings.DepthTest as DepthTest
 
 import NoiseParameters exposing (NoiseParameters)
+import Mesh exposing (..)
 
-type alias Vertex =
-    { position : Vec3
-    , normal: Vec3
-    }
 
 vertexShader = 
     [glsl|
@@ -56,46 +51,6 @@ fragmentShader =
         }
     |]
 
-face: (Float -> Float -> Float -> Float) -> Int -> Vec3 -> (Float, Mesh Vertex)
-face noise res direction =
-    let
-        axisA = vec3 (Vec3.getY direction) (Vec3.getZ direction) (Vec3.getX direction)
-        axisB = Vec3.cross direction axisA
-        vertexes =
-            List.range 0 (res - 1) |>
-                List.map (\y -> List.range 0 (res - 1) |> List.map (\x ->
-                    let
-                        floatX = toFloat x
-                        floatY = toFloat y
-                        floatRes = toFloat res - 1
-                        percent = vec2 (floatY / floatRes) (floatX / floatRes)
-                        pointOnUniSphere = direction
-                            |> Vec3.add (Vec3.scale (Vec2.getX percent * 2 - 1) axisA)
-                            |> Vec3.add (Vec3.scale (Vec2.getY percent * 2 - 1) axisB)
-                            |> Vec3.normalize
-                        noiseV = noise (Vec3.getX pointOnUniSphere) (Vec3.getY pointOnUniSphere) (Vec3.getZ pointOnUniSphere)
-                        point = Vec3.scale (1 + noiseV) pointOnUniSphere
-                    in
-                        { position = point, normal = pointOnUniSphere }
-                        
-                    )
-                ) |> List.concat
-        maxHeight = List.map (\v -> Vec3.sub v.position v.normal |> Vec3.length) vertexes |> List.maximum |> Maybe.withDefault 0
-        indices = List.range 0 (res - 1) |>
-            List.map (\y -> List.range 0 (res - 1) |> List.map (\x -> 
-                let
-                    vertexId = y * res + x
-                in
-                    if x < res - 1 && y < res - 1 then
-                        [
-                            (vertexId, vertexId + res + 1, vertexId + res),
-                            (vertexId, vertexId + 1, vertexId + res + 1)
-                        ]
-                    else []
-            ) ) |> List.concat |> List.concat
-    in
-        (maxHeight, WebGL.indexedTriangles vertexes indices)
-        
 
 type alias Uniforms = 
     { rotation: Mat4
@@ -116,8 +71,8 @@ perspective width height x y =
             (Mat4.makePerspective 45 (width / height) 0.01 100)
             (Mat4.makeLookAt eye (vec3 0 0 0) Vec3.j)
 
-uniforms: Float -> Float -> Float -> Float -> Uniforms
-uniforms width height maxHeight theta =
+makeUniforms: Float -> Float -> Float -> Float -> Uniforms
+makeUniforms width height maxHeight theta =
     let
         rotation = Mat4.mul
             (Mat4.makeRotate (3 * theta) (vec3 0 1 0))
@@ -135,47 +90,10 @@ uniforms width height maxHeight theta =
     { rotation = rotation, normalMatrix = normalTransform, maxHeight = maxHeight, perspective = perspectiveP }
 
 draw: Float -> Float -> Float -> Float -> Mesh Vertex -> WebGL.Entity
-draw width height maxHeight theta mesh = WebGL.entityWith
-    [ WebGL.Settings.cullFace back
-    , DepthTest.default 
-    ] vertexShader fragmentShader mesh (uniforms width height maxHeight theta)
-
-
-makeNoiseFunc: NoiseParameters -> Float -> Float -> Float -> Float
-makeNoiseFunc noiseParams x y z =
-    let
-        noise = Simplex.noise3d (Simplex.permutationTableFromInt noiseParams.seed)  -- [0, 1]
-        initialParams = { value = 0.0, frequency = noiseParams.baseRoughness, amplidute = 1 }
-    in
-        List.foldl ( \_ acc ->
-            let
-                noiseMinusOneOne = noise (acc.frequency * x) (acc.frequency * y) (acc.frequency * z)
-                noiseZeroOne = (noiseMinusOneOne + 1) * 0.5
-                -- noiseZeroOne = noiseMinusOneOne
-                v = noiseZeroOne * acc.amplidute
-                newFrequency = acc.frequency * noiseParams.roughness
-                newAmp = acc.amplidute * noiseParams.persistance
-            in
-                { value = acc.value + v, frequency = newFrequency, amplidute = newAmp }
-        ) initialParams (List.range 1 noiseParams.numLayers)
-        |> \f -> max 0 ((f.value * noiseParams.strength - noiseParams.minValue) / toFloat noiseParams.numLayers) -- [0, ???]
-
-
-makeCube: List NoiseParameters -> (Float, List (Mesh Vertex))
-makeCube noiseParamsList = 
-    let
-        noiseFilters = List.map makeNoiseFunc noiseParamsList
-        noiseFunc = \x y z -> List.foldl (\f acc -> acc + f x y z) 0 noiseFilters
-        res = List.head noiseParamsList |> Maybe.map (\e -> e.resolution) |> Maybe.withDefault 0
-    in
-    let
-        (a, b) =
-            [ vec3 1 0 0,
-              vec3 0 1 0,
-              vec3 0 0 1,
-              vec3 -1 0 0,
-              vec3 0 -1 0,
-              vec3 0 0 -1 ]
-                |> List.map (face noiseFunc res) |> List.unzip
-    in
-        (a |> List.maximum |> Maybe.withDefault 0, b)
+draw width height maxElevation theta mesh =
+    WebGL.entityWith
+        [ WebGL.Settings.cullFace back, DepthTest.default]
+        vertexShader
+        fragmentShader
+        mesh
+        (makeUniforms width height maxElevation theta)

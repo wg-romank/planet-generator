@@ -11,7 +11,6 @@ type alias NoiseParameters =
     , resolution: Int
     }
 
-
 emptyNoiseParams: NoiseParameters
 emptyNoiseParams =
     { seed = 42

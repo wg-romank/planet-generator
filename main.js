@@ -6892,7 +6892,7 @@ var $elm$core$Maybe$withDefault = F2(
 			return _default;
 		}
 	});
-var $author$project$Shaders$face = F3(
+var $author$project$Mesh$face = F3(
 	function (noise, res, direction) {
 		var indices = $elm$core$List$concat(
 			$elm$core$List$concat(
@@ -6977,6 +6977,29 @@ var $elm$core$List$head = function (list) {
 	} else {
 		return $elm$core$Maybe$Nothing;
 	}
+};
+var $author$project$Mesh$makeNoiseFunc = F5(
+	function (noise, noiseParams, x, y, z) {
+		var initialParams = {amplidute: 1, frequency: noiseParams.baseRoughness, value: 0.0};
+		return function (f) {
+			return A2($elm$core$Basics$max, 0, ((f.value * noiseParams.strength) - noiseParams.minValue) / noiseParams.numLayers);
+		}(
+			A3(
+				$elm$core$List$foldl,
+				F2(
+					function (_v0, acc) {
+						var noiseMinusOneOne = A3(noise, acc.frequency * x, acc.frequency * y, acc.frequency * z);
+						var noiseZeroOne = (noiseMinusOneOne + 1) * 0.5;
+						var v = noiseZeroOne * acc.amplidute;
+						var newFrequency = acc.frequency * noiseParams.roughness;
+						var newAmp = acc.amplidute * noiseParams.persistance;
+						return {amplidute: newAmp, frequency: newFrequency, value: acc.value + v};
+					}),
+				initialParams,
+				A2($elm$core$List$range, 1, noiseParams.numLayers)));
+	});
+var $elm$core$Basics$negate = function (n) {
+	return -n;
 };
 var $elm$core$Bitwise$and = _Bitwise_and;
 var $Herteby$simplex_noise$Simplex$f3 = 1 / 3;
@@ -7070,9 +7093,6 @@ var $elm$core$Array$fromList = function (list) {
 	} else {
 		return A3($elm$core$Array$fromListHelp, list, _List_Nil, 0);
 	}
-};
-var $elm$core$Basics$negate = function (n) {
-	return -n;
 };
 var $Herteby$simplex_noise$Simplex$grad3 = $elm$core$Array$fromList(
 	_List_fromArray(
@@ -7731,38 +7751,6 @@ var $Herteby$simplex_noise$Simplex$permutationTableFromInt = function (_int) {
 		$Herteby$simplex_noise$Simplex$permutationTableGenerator,
 		$elm$random$Random$initialSeed(_int)).a;
 };
-var $author$project$Shaders$makeNoiseFunc = F4(
-	function (noiseParams, x, y, z) {
-		var noise = $Herteby$simplex_noise$Simplex$noise3d(
-			$Herteby$simplex_noise$Simplex$permutationTableFromInt(noiseParams.seed));
-		var initialParams = {amplidute: 1, frequency: noiseParams.baseRoughness, value: 0.0};
-		return function (f) {
-			return A2($elm$core$Basics$max, 0, ((f.value * noiseParams.strength) - noiseParams.minValue) / noiseParams.numLayers);
-		}(
-			A3(
-				$elm$core$List$foldl,
-				F2(
-					function (_v0, acc) {
-						var noiseMinusOneOne = A3(noise, acc.frequency * x, acc.frequency * y, acc.frequency * z);
-						var noiseZeroOne = (noiseMinusOneOne + 1) * 0.5;
-						var v = noiseZeroOne * acc.amplidute;
-						var newFrequency = acc.frequency * noiseParams.roughness;
-						var newAmp = acc.amplidute * noiseParams.persistance;
-						return {amplidute: newAmp, frequency: newFrequency, value: acc.value + v};
-					}),
-				initialParams,
-				A2($elm$core$List$range, 1, noiseParams.numLayers)));
-	});
-var $elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return $elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
 var $elm$core$List$unzip = function (pairs) {
 	var step = F2(
 		function (_v0, _v1) {
@@ -7780,17 +7768,15 @@ var $elm$core$List$unzip = function (pairs) {
 		_Utils_Tuple2(_List_Nil, _List_Nil),
 		pairs);
 };
-var $author$project$Shaders$makeCube = function (noiseParamsList) {
-	var res = A2(
-		$elm$core$Maybe$withDefault,
-		0,
-		A2(
-			$elm$core$Maybe$map,
-			function (e) {
-				return e.resolution;
-			},
-			$elm$core$List$head(noiseParamsList)));
-	var noiseFilters = A2($elm$core$List$map, $author$project$Shaders$makeNoiseFunc, noiseParamsList);
+var $author$project$Mesh$makeCube = function (noiseParamsList) {
+	var noiseFunctions = A2(
+		$elm$core$List$map,
+		function (p) {
+			return $Herteby$simplex_noise$Simplex$noise3d(
+				$Herteby$simplex_noise$Simplex$permutationTableFromInt(p.seed));
+		},
+		noiseParamsList);
+	var noiseFilters = A3($elm$core$List$map2, $author$project$Mesh$makeNoiseFunc, noiseFunctions, noiseParamsList);
 	var noiseFunc = F3(
 		function (x, y, z) {
 			return A3(
@@ -7802,10 +7788,15 @@ var $author$project$Shaders$makeCube = function (noiseParamsList) {
 				0,
 				noiseFilters);
 		});
+	var firstParams = A2(
+		$elm$core$Maybe$withDefault,
+		$author$project$NoiseParameters$emptyNoiseParams,
+		$elm$core$List$head(noiseParamsList));
+	var res = firstParams.resolution;
 	var _v0 = $elm$core$List$unzip(
 		A2(
 			$elm$core$List$map,
-			A2($author$project$Shaders$face, noiseFunc, res),
+			A2($author$project$Mesh$face, noiseFunc, res),
 			_List_fromArray(
 				[
 					A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 1, 0, 0),
@@ -7817,33 +7808,20 @@ var $author$project$Shaders$makeCube = function (noiseParamsList) {
 				])));
 	var a = _v0.a;
 	var b = _v0.b;
-	return _Utils_Tuple2(
-		A2(
-			$elm$core$Maybe$withDefault,
-			0,
-			$elm$core$List$maximum(a)),
-		b);
+	var maxElevation = A2(
+		$elm$core$Maybe$withDefault,
+		0,
+		$elm$core$List$maximum(a));
+	return _Utils_Tuple2(maxElevation, b);
 };
 var $author$project$Main$init = function (_v0) {
-	var _v1 = $author$project$Shaders$makeCube(
-		_List_fromArray(
-			[$author$project$NoiseParameters$emptyNoiseParams]));
+	var noiesParams = _List_fromArray(
+		[$author$project$NoiseParameters$emptyNoiseParams]);
+	var _v1 = $author$project$Mesh$makeCube(noiesParams);
 	var maxHeight = _v1.a;
 	var cubeMesh = _v1.b;
 	return _Utils_Tuple2(
-		{
-			height: 240,
-			maxHeight: maxHeight,
-			meshes: cubeMesh,
-			noiseParams: _List_fromArray(
-				[$author$project$NoiseParameters$emptyNoiseParams]),
-			offset: 0,
-			paused: false,
-			theta: 0,
-			viewportHeight: 0,
-			viewportWidth: 0,
-			width: 240
-		},
+		{height: 240, maxHeight: maxHeight, meshes: cubeMesh, noiseParams: noiesParams, offset: 0, paused: false, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 240},
 		$elm$core$Platform$Cmd$batch(
 			_List_fromArray(
 				[
@@ -8331,6 +8309,27 @@ var $author$project$Main$computeViewportSize = F2(
 				viewportWidth: $elm$core$Basics$round(vpw)
 			});
 	});
+var $elm$core$List$drop = F2(
+	function (n, list) {
+		drop:
+		while (true) {
+			if (n <= 0) {
+				return list;
+			} else {
+				if (!list.b) {
+					return list;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs;
+					n = $temp$n;
+					list = $temp$list;
+					continue drop;
+				}
+			}
+		}
+	});
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $elm$core$String$toFloat = _String_toFloat;
 var $author$project$NoiseParameters$updateParams = F2(
@@ -8455,11 +8454,11 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					A2($author$project$Main$computeViewportSize, viewport, model),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'UpdateParams':
 				var idx = msg.a;
 				var paramsUpdate = msg.b;
 				var newParams = A3($author$project$NoiseParameters$updateParameter, idx, model.noiseParams, paramsUpdate);
-				var _v1 = $author$project$Shaders$makeCube(newParams);
+				var _v1 = $author$project$Mesh$makeCube(newParams);
 				var newHeight = _v1.a;
 				var newCube = _v1.b;
 				return _Utils_Tuple2(
@@ -8467,10 +8466,31 @@ var $author$project$Main$update = F2(
 						model,
 						{maxHeight: newHeight, meshes: newCube, noiseParams: newParams}),
 					$elm$core$Platform$Cmd$none);
+			case 'AddFilter':
+				var prevParamsList = model.noiseParams;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							noiseParams: A2($elm$core$List$cons, $author$project$NoiseParameters$emptyNoiseParams, prevParamsList)
+						}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				var prevParamsList = model.noiseParams;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							noiseParams: A2($elm$core$List$drop, 1, prevParamsList)
+						}),
+					$elm$core$Platform$Cmd$none);
 		}
 	});
+var $author$project$Main$AddFilter = {$: 'AddFilter'};
+var $author$project$Main$RemoveFilter = {$: 'RemoveFilter'};
 var $elm_explorations$webgl$WebGL$Internal$Antialias = {$: 'Antialias'};
 var $elm_explorations$webgl$WebGL$antialias = $elm_explorations$webgl$WebGL$Internal$Antialias;
+var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm_explorations$webgl$WebGL$Internal$Depth = function (a) {
 	return {$: 'Depth', a: a};
 };
@@ -8592,7 +8612,7 @@ var $author$project$Shaders$perspective = F4(
 				$elm_explorations$linear_algebra$Math$Vector3$j));
 	});
 var $elm_explorations$linear_algebra$Math$Matrix4$transpose = _MJS_m4x4transpose;
-var $author$project$Shaders$uniforms = F4(
+var $author$project$Shaders$makeUniforms = F4(
 	function (width, height, maxHeight, theta) {
 		var rotation = A2(
 			$elm_explorations$linear_algebra$Math$Matrix4$mul,
@@ -8615,7 +8635,7 @@ var $author$project$Shaders$vertexShader = {
 	uniforms: {maxHeight: 'maxHeight', normalMatrix: 'normalMatrix', perspective: 'perspective', rotation: 'rotation'}
 };
 var $author$project$Shaders$draw = F5(
-	function (width, height, maxHeight, theta, mesh) {
+	function (width, height, maxElevation, theta, mesh) {
 		return A5(
 			$elm_explorations$webgl$WebGL$entityWith,
 			_List_fromArray(
@@ -8626,7 +8646,7 @@ var $author$project$Shaders$draw = F5(
 			$author$project$Shaders$vertexShader,
 			$author$project$Shaders$fragmentShader,
 			mesh,
-			A4($author$project$Shaders$uniforms, width, height, maxHeight, theta));
+			A4($author$project$Shaders$makeUniforms, width, height, maxElevation, theta));
 	});
 var $elm$html$Html$Attributes$height = function (n) {
 	return A2(
@@ -8826,6 +8846,22 @@ var $author$project$Main$makeParamControl = F2(
 					A6($author$project$Main$intSlider, idx, 'Num Layers', $author$project$NoiseParameters$UpdateNumLayers, 1, 8, noiseParams.numLayers)
 				]));
 	});
+var $elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var $elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var $elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
+};
 var $elm_explorations$webgl$WebGL$Internal$Stencil = function (a) {
 	return {$: 'Stencil', a: a};
 };
@@ -8892,12 +8928,40 @@ var $author$project$Main$view = function (model) {
 								A2(
 									$elm$core$List$map,
 									A4($author$project$Shaders$draw, model.width, model.height, model.maxHeight, model.theta),
-									model.meshes))
-							])),
-						A2(
-						$elm$html$Html$div,
-						_List_Nil,
-						A2($elm$core$List$indexedMap, $author$project$Main$makeParamControl, model.noiseParams))
+									model.meshes)),
+								A2(
+								$elm$html$Html$div,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												$elm$html$Html$Events$onClick($author$project$Main$AddFilter),
+												A2($elm$html$Html$Attributes$style, 'color', 'white')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('+')
+											])),
+										A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												$elm$html$Html$Events$onClick($author$project$Main$RemoveFilter),
+												A2($elm$html$Html$Attributes$style, 'color', 'white')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('-')
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_Nil,
+										A2($elm$core$List$indexedMap, $author$project$Main$makeParamControl, model.noiseParams))
+									]))
+							]))
 					]))
 			]),
 		title: 'Document Title'

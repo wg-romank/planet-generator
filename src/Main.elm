@@ -9,8 +9,9 @@ import Html.Events exposing (onInput)
 import Task
 import WebGL
 
-import Shaders exposing (..)
 import NoiseParameters exposing (..)
+import Shaders exposing (..)
+import Mesh exposing (..)
 
 main : Program {} Model Msg
 main =
@@ -39,7 +40,8 @@ type alias Model =
 init : {} -> ( Model, Cmd Msg )
 init _ =
     let
-        (maxHeight, cubeMesh) = makeCube [emptyNoiseParams]
+        noiesParams = [emptyNoiseParams]
+        (maxHeight, cubeMesh) = makeCube noiesParams
     in
     ( { theta = 0
       , paused = False
@@ -48,7 +50,7 @@ init _ =
       , offset = 0
       , width = 240
       , height = 240
-      , noiseParams = [emptyNoiseParams]
+      , noiseParams = noiesParams
       , meshes = cubeMesh
       , maxHeight = maxHeight
       }
@@ -62,6 +64,8 @@ type Msg
     | Resumed
     | ViewPortLoaded Viewport
     | UpdateParams Int UpdateParams
+    | AddFilter
+    | RemoveFilter
 
 
 
@@ -90,6 +94,12 @@ update msg model =
                 (newHeight, newCube) = makeCube newParams
             in
             ( { model | noiseParams = newParams, meshes = newCube, maxHeight = newHeight }, Cmd.none )
+        AddFilter ->
+            let prevParamsList = model.noiseParams in
+            ( { model | noiseParams = emptyNoiseParams :: prevParamsList }, Cmd.none )
+        RemoveFilter ->
+            let prevParamsList = model.noiseParams in
+            ( { model | noiseParams = prevParamsList |> List.drop 1 }, Cmd.none)
 
 
 subscriptions : Model -> Sub Msg
@@ -182,9 +192,21 @@ view model =
                         width model.width,
                         height model.height
                     ]
-                    (List.map (draw (toFloat model.width) (toFloat model.height) model.maxHeight model.theta) model.meshes)
-            ],
-            div [] (List.indexedMap makeParamControl model.noiseParams)
+                    (List.map 
+                        (draw (toFloat model.width) (toFloat model.height) model.maxHeight model.theta)
+                        model.meshes),
+                div [] [
+                    button [
+                        Html.Events.onClick AddFilter,
+                        style "color" "white"
+                    ] [ text "+"],
+                    button [
+                        Html.Events.onClick RemoveFilter,
+                        style "color" "white"
+                    ] [ text "-"],
+                    div [] (List.indexedMap makeParamControl model.noiseParams)
+                ]
+            ]
         ]
         ]
     }

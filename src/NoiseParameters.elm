@@ -34,8 +34,8 @@ type UpdateParams
     | UpdateStrength String
     | UpdateMinValue String
 
-updateParameter: NoiseParameters -> UpdateParams -> NoiseParameters
-updateParameter prevParams updateMsg =
+updateParams: NoiseParameters -> UpdateParams -> NoiseParameters
+updateParams prevParams updateMsg =
     case updateMsg of 
         UpdateBaseRoughness baseRoughness ->
             { prevParams | baseRoughness = String.toFloat baseRoughness |> Maybe.withDefault prevParams.baseRoughness }
@@ -53,3 +53,10 @@ updateParameter prevParams updateMsg =
             { prevParams | strength = String.toFloat strength |> Maybe.withDefault prevParams.strength }
         UpdateMinValue minValue ->
             { prevParams | minValue = String.toFloat minValue |> Maybe.withDefault prevParams.strength }
+
+updateParameter: Int -> List NoiseParameters -> UpdateParams -> List NoiseParameters
+updateParameter idx paramsList updateMsg =
+        List.indexedMap
+            (\i prevParams ->
+                if i == idx then updateParams prevParams updateMsg
+                else prevParams) paramsList

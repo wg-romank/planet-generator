@@ -41,7 +41,7 @@ vertexShader =
             vLighting = ambientLight + (directionalLightColor * directional);
 
             float height = max(0.2, length(pos.xyz) - length(transformedNormal.xyz)) / maxHeight;
-            heightColor = vec3(height * height, (1.0 - height) / (2.0), (1.0 - height * height) / 2.0);
+            heightColor = vec3(height, (1.0 - height * height), (1.0 - height));
         }
     |]
 
@@ -140,24 +140,33 @@ draw width height maxHeight theta mesh = WebGL.entityWith
     , DepthTest.default 
     ] vertexShader fragmentShader mesh (uniforms width height maxHeight theta)
 
-makeCube: NoiseParameters -> (Float, List (Mesh Vertex))
-makeCube noiseParams = 
+
+makeNoiseFunc: NoiseParameters -> Float -> Float -> Float -> Float
+makeNoiseFunc noiseParams x y z =
     let
         noise = Simplex.noise3d (Simplex.permutationTableFromInt noiseParams.seed)  -- [0, 1]
         initialParams = { value = 0.0, frequency = noiseParams.baseRoughness, amplidute = 1 }
-        noiseFunc = \x y z ->
-            List.foldl ( \_ acc ->
-                let
-                    noiseMinusOneOne = noise (acc.frequency * x) (acc.frequency * y) (acc.frequency * z)
-                    noiseZeroOne = (noiseMinusOneOne + 1) * 0.5
-                    -- noiseZeroOne = noiseMinusOneOne
-                    v = noiseZeroOne * acc.amplidute
-                    newFrequency = acc.frequency * noiseParams.roughness
-                    newAmp = acc.amplidute * noiseParams.persistance
-                in
-                    { value = acc.value + v, frequency = newFrequency, amplidute = newAmp }
-            ) initialParams (List.range 1 noiseParams.numLayers)
-            |> \f -> max 0 ((f.value * noiseParams.strength - noiseParams.minValue) / toFloat noiseParams.numLayers) -- [0, ???]
+    in
+        List.foldl ( \_ acc ->
+            let
+                noiseMinusOneOne = noise (acc.frequency * x) (acc.frequency * y) (acc.frequency * z)
+                noiseZeroOne = (noiseMinusOneOne + 1) * 0.5
+                -- noiseZeroOne = noiseMinusOneOne
+                v = noiseZeroOne * acc.amplidute
+                newFrequency = acc.frequency * noiseParams.roughness
+                newAmp = acc.amplidute * noiseParams.persistance
+            in
+                { value = acc.value + v, frequency = newFrequency, amplidute = newAmp }
+        ) initialParams (List.range 1 noiseParams.numLayers)
+        |> \f -> max 0 ((f.value * noiseParams.strength - noiseParams.minValue) / toFloat noiseParams.numLayers) -- [0, ???]
+
+
+makeCube: List NoiseParameters -> (Float, List (Mesh Vertex))
+makeCube noiseParamsList = 
+    let
+        noiseFilters = List.map makeNoiseFunc noiseParamsList
+        noiseFunc = \x y z -> List.foldl (\f acc -> acc + f x y z) 0 noiseFilters
+        res = List.head noiseParamsList |> Maybe.map (\e -> e.resolution) |> Maybe.withDefault 0
     in
     let
         (a, b) =
@@ -167,6 +176,6 @@ makeCube noiseParams =
               vec3 -1 0 0,
               vec3 0 -1 0,
               vec3 0 0 -1 ]
-                |> List.map (face noiseFunc noiseParams.resolution) |> List.unzip
+                |> List.map (face noiseFunc res) |> List.unzip
     in
         (a |> List.maximum |> Maybe.withDefault 0, b)

@@ -28,7 +28,7 @@ vertexShader =
         varying vec3 heightColor;
 
         void main() {
-            vec4 pos = perspective * rotation * vec4(position, 1);
+            vec4 pos = rotation * vec4(position, 2);
             gl_Position = pos;
 
             vec3 ambientLight = vec3(0.3, 0.3, 0.3);
@@ -125,7 +125,7 @@ uniforms width height maxHeight theta =
             -- (Mat4.makeRotate (2 * theta) (vec3 1 0 0))
         perspectiveP = perspective width height 0 0
         normalTransform = 
-            Mat4.mul rotation perspectiveP
+            rotation
             |> Mat4.inverse
             |> Maybe.withDefault Mat4.identity
             |> Mat4.transpose

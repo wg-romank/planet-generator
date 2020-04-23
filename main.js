@@ -8562,12 +8562,11 @@ var $author$project$Shaders$uniforms = F4(
 			A2(
 				$elm$core$Maybe$withDefault,
 				$elm_explorations$linear_algebra$Math$Matrix4$identity,
-				$elm_explorations$linear_algebra$Math$Matrix4$inverse(
-					A2($elm_explorations$linear_algebra$Math$Matrix4$mul, rotation, perspectiveP))));
+				$elm_explorations$linear_algebra$Math$Matrix4$inverse(rotation)));
 		return {maxHeight: maxHeight, normalMatrix: normalTransform, perspective: perspectiveP, rotation: rotation};
 	});
 var $author$project$Shaders$vertexShader = {
-	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        uniform mat4 perspective;\n        uniform float maxHeight;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = perspective * rotation * vec4(position, 1);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.3, 0.3, 0.3);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(-0.85, -0.8, -0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 0.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n\n            float height = max(0.2, length(pos.xyz) - length(transformedNormal.xyz)) / maxHeight;\n            heightColor = vec3(height * height, (1.0 - height) / (2.0), (1.0 - height * height) / 2.0);\n        }\n    ',
+	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        uniform mat4 perspective;\n        uniform float maxHeight;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = rotation * vec4(position, 2);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.3, 0.3, 0.3);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(-0.85, -0.8, -0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 0.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n\n            float height = max(0.2, length(pos.xyz) - length(transformedNormal.xyz)) / maxHeight;\n            heightColor = vec3(height * height, (1.0 - height) / (2.0), (1.0 - height * height) / 2.0);\n        }\n    ',
 	attributes: {normal: 'normal', position: 'position'},
 	uniforms: {maxHeight: 'maxHeight', normalMatrix: 'normalMatrix', perspective: 'perspective', rotation: 'rotation'}
 };

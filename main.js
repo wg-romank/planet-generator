@@ -6841,7 +6841,7 @@ var $author$project$Main$ViewPortLoaded = function (a) {
 	return {$: 'ViewPortLoaded', a: a};
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $author$project$NoiseParameters$emptyNoiseParams = {baseRoughness: 3, minValue: 0.2, numLayers: 4, persistance: 0.7, resolution: 40, roughness: 0.5, seed: 42, strength: 0.8};
+var $author$project$NoiseParameters$emptyNoiseParams = {baseRoughness: 3, minValue: 0.2, numLayers: 4, persistance: 0.7, resolution: 80, roughness: 0.5, seed: 42, strength: 0.8};
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $elm_explorations$linear_algebra$Math$Vector3$add = _MJS_v3add;
 var $elm$core$List$append = F2(
@@ -7821,7 +7821,7 @@ var $author$project$Main$init = function (_v0) {
 	var maxHeight = _v1.a;
 	var cubeMesh = _v1.b;
 	return _Utils_Tuple2(
-		{height: 400, maxHeight: maxHeight, meshes: cubeMesh, noiseParams: noiesParams, offset: 0, paused: false, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 400},
+		{height: 240, maxHeight: maxHeight, meshes: cubeMesh, noiseParams: noiesParams, offset: 0, paused: false, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 240},
 		$elm$core$Platform$Cmd$batch(
 			_List_fromArray(
 				[
@@ -8632,7 +8632,7 @@ var $author$project$Shaders$makeUniforms = F4(
 		return {maxHeight: maxHeight, normalMatrix: normalTransform, perspective: perspectiveP, rotation: rotation};
 	});
 var $author$project$Shaders$vertexShader = {
-	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        uniform mat4 perspective;\n        uniform float maxHeight;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = rotation * vec4(position, 2);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.3, 0.3, 0.3);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(-0.85, -0.8, -0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 0.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n\n            float height = max(0.0, length(pos.xyz) - length(transformedNormal.xyz)) / maxHeight;\n            heightColor = vec3(height, (1.0 - height * height), (1.0 - height));\n        }\n    ',
+	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        uniform mat4 perspective;\n        uniform float maxHeight;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = rotation * vec4(position, 1.5);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.3, 0.3, 0.3);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(-0.85, -0.8, -0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 0.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n\n            float height = max(0.0, length(pos.xyz) - length(transformedNormal.xyz)) / maxHeight;\n            heightColor = vec3(height, (1.0 - height * height), (1.0 - height));\n        }\n    ',
 	attributes: {normal: 'normal', position: 'position'},
 	uniforms: {maxHeight: 'maxHeight', normalMatrix: 'normalMatrix', perspective: 'perspective', rotation: 'rotation'}
 };

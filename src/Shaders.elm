@@ -23,7 +23,7 @@ vertexShader =
         varying vec3 heightColor;
 
         void main() {
-            vec4 pos = rotation * vec4(position, 2);
+            vec4 pos = rotation * vec4(position, 1.5);
             gl_Position = pos;
 
             vec3 ambientLight = vec3(0.3, 0.3, 0.3);

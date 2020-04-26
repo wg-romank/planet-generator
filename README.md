@@ -8,6 +8,7 @@ This repository attemps to implement similar functionality using Elm and its Web
 Hosted on GitHub Pages under https://www.youtube.com/watch?v=QN39W020LqU
 
 Repo contains basic shaders for ambient and diffuse lighting.
+
 Some future work considerations are
 
 * Height based textures

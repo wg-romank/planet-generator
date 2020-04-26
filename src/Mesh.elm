@@ -1,5 +1,7 @@
 module Mesh exposing (..)
 
+import Array exposing (..)
+import Set exposing (..)
 import Math.Vector3 as Vec3 exposing (vec3, Vec3)
 import Math.Vector2 as Vec2 exposing (vec2)
 import WebGL exposing (Mesh)
@@ -12,10 +14,46 @@ type alias Vertex =
     , normal: Vec3
     }
 
+type alias Polygon =
+    { v1: Vertex,
+      v2: Vertex,
+      v3: Vertex
+    }
+
+type alias Edge =
+    { v1: Vertex
+    , v2: Vertex
+    }
+
+indexedTrianglesToPolygons: Array Vertex -> List (Int, Int, Int) -> List Polygon
+indexedTrianglesToPolygons vertexes indices =
+    List.filterMap
+        (\(v1i,v2i,v3i) -> 
+            Maybe.map3 Polygon
+                (Array.get v1i vertexes)
+                (Array.get v2i vertexes)
+                (Array.get v3i vertexes))
+        indices
+
+polyNormal: Polygon -> Vec3
+polyNormal poly = poly.v1
+
+polyAvgPos: Polygon -> Vec3
+polyAvgPos poly = Vec3.add poly.v1 poly.v2 |> Vec3.add poly.v3 |> Vec3.scale (1.0 / 3.0)
+
+computeShadowVolumes: List Polygon -> Vec3 -> List Edge
+computeShadowVolumes polys lightPos =
+    List.foldl (\p acc ->
+        let
+            incidentLightDir = Vec3.sub lightPos (polyAvgPos p)
+
+        in
+    ) Set.empty polys
+
 type alias Noise3d = Float -> Float -> Float -> Float
 
-face: Noise3d -> Int -> Vec3 -> (Float, Mesh Vertex)
-face noise res direction =
+faceTriangles: Noise3d -> Int -> Vec3 -> (Array Vertex, List (Int, Int, Int), Float)
+faceTriangles noise res direction =
     let
         axisA = vec3 (Vec3.getY direction) (Vec3.getZ direction) (Vec3.getX direction)
         axisB = Vec3.cross direction axisA
@@ -52,7 +90,14 @@ face noise res direction =
                     else []
             ) ) |> List.concat |> List.concat
     in
-        (maxHeight, WebGL.indexedTriangles vertexes indices)
+        (Array.fromList vertexes, indices, maxHeight)
+
+face: Noise3d -> Int -> Vec3 -> (Float, Mesh Vertex)
+face noise res direction =
+    let
+        (vertexes, indices, maxHeight) = faceTriangles noise res direction
+    in
+        (maxHeight, WebGL.indexedTriangles (Array.toList vertexes) indices)
 
 makeNoiseFunc: Noise3d -> NoiseParameters -> Noise3d
 makeNoiseFunc noise noiseParams x y z =

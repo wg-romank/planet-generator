@@ -6841,7 +6841,7 @@ var $author$project$Main$ViewPortLoaded = function (a) {
 	return {$: 'ViewPortLoaded', a: a};
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $author$project$NoiseParameters$emptyNoiseParams = {baseRoughness: 3, minValue: 0.2, numLayers: 4, persistance: 0.7, resolution: 80, roughness: 0.5, seed: 42, strength: 0.8};
+var $author$project$NoiseParameters$emptyNoiseParams = {baseRoughness: 3, minValue: 0.2, numLayers: 4, persistance: 0.7, resolution: 40, roughness: 0.5, seed: 42, strength: 0.8};
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $elm_explorations$linear_algebra$Math$Vector3$add = _MJS_v3add;
 var $elm$core$List$append = F2(
@@ -6856,17 +6856,46 @@ var $elm$core$List$concat = function (lists) {
 	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
 };
 var $elm_explorations$linear_algebra$Math$Vector3$cross = _MJS_v3cross;
+var $elm$core$Array$fromListHelp = F3(
+	function (list, nodeList, nodeListSize) {
+		fromListHelp:
+		while (true) {
+			var _v0 = A2($elm$core$Elm$JsArray$initializeFromList, $elm$core$Array$branchFactor, list);
+			var jsArray = _v0.a;
+			var remainingItems = _v0.b;
+			if (_Utils_cmp(
+				$elm$core$Elm$JsArray$length(jsArray),
+				$elm$core$Array$branchFactor) < 0) {
+				return A2(
+					$elm$core$Array$builderToArray,
+					true,
+					{nodeList: nodeList, nodeListSize: nodeListSize, tail: jsArray});
+			} else {
+				var $temp$list = remainingItems,
+					$temp$nodeList = A2(
+					$elm$core$List$cons,
+					$elm$core$Array$Leaf(jsArray),
+					nodeList),
+					$temp$nodeListSize = nodeListSize + 1;
+				list = $temp$list;
+				nodeList = $temp$nodeList;
+				nodeListSize = $temp$nodeListSize;
+				continue fromListHelp;
+			}
+		}
+	});
+var $elm$core$Array$fromList = function (list) {
+	if (!list.b) {
+		return $elm$core$Array$empty;
+	} else {
+		return A3($elm$core$Array$fromListHelp, list, _List_Nil, 0);
+	}
+};
 var $elm_explorations$linear_algebra$Math$Vector2$getX = _MJS_v2getX;
 var $elm_explorations$linear_algebra$Math$Vector3$getX = _MJS_v3getX;
 var $elm_explorations$linear_algebra$Math$Vector2$getY = _MJS_v2getY;
 var $elm_explorations$linear_algebra$Math$Vector3$getY = _MJS_v3getY;
 var $elm_explorations$linear_algebra$Math$Vector3$getZ = _MJS_v3getZ;
-var $elm_explorations$webgl$WebGL$MeshIndexed3 = F3(
-	function (a, b, c) {
-		return {$: 'MeshIndexed3', a: a, b: b, c: c};
-	});
-var $elm_explorations$webgl$WebGL$indexedTriangles = $elm_explorations$webgl$WebGL$MeshIndexed3(
-	{elemSize: 1, indexSize: 3, mode: 4});
 var $elm_explorations$linear_algebra$Math$Vector3$length = _MJS_v3length;
 var $elm$core$List$maximum = function (list) {
 	if (list.b) {
@@ -6892,7 +6921,7 @@ var $elm$core$Maybe$withDefault = F2(
 			return _default;
 		}
 	});
-var $author$project$Mesh$face = F3(
+var $author$project$Mesh$faceTriangles = F3(
 	function (noise, res, direction) {
 		var indices = $elm$core$List$concat(
 			$elm$core$List$concat(
@@ -6965,9 +6994,29 @@ var $author$project$Mesh$face = F3(
 							A2($elm_explorations$linear_algebra$Math$Vector3$sub, v.position, v.normal));
 					},
 					vertexes)));
+		return _Utils_Tuple3(
+			$elm$core$Array$fromList(vertexes),
+			indices,
+			maxHeight);
+	});
+var $elm_explorations$webgl$WebGL$MeshIndexed3 = F3(
+	function (a, b, c) {
+		return {$: 'MeshIndexed3', a: a, b: b, c: c};
+	});
+var $elm_explorations$webgl$WebGL$indexedTriangles = $elm_explorations$webgl$WebGL$MeshIndexed3(
+	{elemSize: 1, indexSize: 3, mode: 4});
+var $author$project$Mesh$face = F3(
+	function (noise, res, direction) {
+		var _v0 = A3($author$project$Mesh$faceTriangles, noise, res, direction);
+		var vertexes = _v0.a;
+		var indices = _v0.b;
+		var maxHeight = _v0.c;
 		return _Utils_Tuple2(
 			maxHeight,
-			A2($elm_explorations$webgl$WebGL$indexedTriangles, vertexes, indices));
+			A2(
+				$elm_explorations$webgl$WebGL$indexedTriangles,
+				$elm$core$Array$toList(vertexes),
+				indices));
 	});
 var $elm$core$List$head = function (list) {
 	if (list.b) {
@@ -7059,41 +7108,6 @@ var $Herteby$simplex_noise$Simplex$get = F2(
 			return 0;
 		}
 	});
-var $elm$core$Array$fromListHelp = F3(
-	function (list, nodeList, nodeListSize) {
-		fromListHelp:
-		while (true) {
-			var _v0 = A2($elm$core$Elm$JsArray$initializeFromList, $elm$core$Array$branchFactor, list);
-			var jsArray = _v0.a;
-			var remainingItems = _v0.b;
-			if (_Utils_cmp(
-				$elm$core$Elm$JsArray$length(jsArray),
-				$elm$core$Array$branchFactor) < 0) {
-				return A2(
-					$elm$core$Array$builderToArray,
-					true,
-					{nodeList: nodeList, nodeListSize: nodeListSize, tail: jsArray});
-			} else {
-				var $temp$list = remainingItems,
-					$temp$nodeList = A2(
-					$elm$core$List$cons,
-					$elm$core$Array$Leaf(jsArray),
-					nodeList),
-					$temp$nodeListSize = nodeListSize + 1;
-				list = $temp$list;
-				nodeList = $temp$nodeList;
-				nodeListSize = $temp$nodeListSize;
-				continue fromListHelp;
-			}
-		}
-	});
-var $elm$core$Array$fromList = function (list) {
-	if (!list.b) {
-		return $elm$core$Array$empty;
-	} else {
-		return A3($elm$core$Array$fromListHelp, list, _List_Nil, 0);
-	}
-};
 var $Herteby$simplex_noise$Simplex$grad3 = $elm$core$Array$fromList(
 	_List_fromArray(
 		[1, 1, 0, -1, 1, 0, 1, -1, 0, -1, -1, 0, 1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, -1, 0, 1, 1, 0, -1, 1, 0, 1, -1, 0, -1, -1]));

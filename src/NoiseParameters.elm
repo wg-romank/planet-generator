@@ -20,7 +20,7 @@ emptyNoiseParams =
     , persistance = 0.7
     , strength = 0.8
     , minValue = 0.2
-    , resolution = 80
+    , resolution = 40
      }
 
 type UpdateParams

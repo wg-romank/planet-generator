@@ -190,7 +190,8 @@ view model =
                     [ WebGL.depth 1, WebGL.antialias, WebGL.stencil 0 ]
                     [ 
                         width model.width,
-                        height model.height
+                        height model.height,
+                        id "planet-canvas"
                     ]
                     (List.map 
                         (draw (toFloat model.width) (toFloat model.height) model.maxHeight model.theta)

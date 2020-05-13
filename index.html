@@ -39,16 +39,24 @@
 </head>
 <body scroll="no" style="overflow: hidden;">
   <script>
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     var app = Elm.Main.init();
-    var canvas = document.getElementById('planet-canvas');
-    var dataURL = canvas.toDataURL('image/png');
 
-    var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
-    link.rel = 'shortcut icon';
-    link.type = 'image/png';
-    link.href = dataURL;
+    sleep(3000).then(() => {
+      var canvas = document.getElementById('planet-canvas');
+      var dataURL = canvas.toDataURL('image/png');
 
-    document.getElementsByTagName('head')[0].appendChild(link);
+      var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+      link.rel = 'shortcut icon';
+      link.type = 'image/png';
+      link.href = dataURL;
+
+      document.getElementsByTagName('head')[0].appendChild(link);
+    });
+
   </script>
 </body>
 </html>

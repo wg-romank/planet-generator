@@ -21,13 +21,6 @@
             "elm/virtual-dom": "1.0.2",
             "elm-community/random-extra": "3.1.0",
             "owanturist/elm-union-find": "1.0.0"
-        },
-        "locations": {
-            "elm-explorations/webgl": {
-                "method": "git",
-                "url": "https://github.com/wg-romank/webgl-1.git",
-                "ref": "master"
-            }
         }
     },
     "test-dependencies": {

@@ -8507,6 +8507,15 @@ var $author$project$Main$RemoveFilter = {$: 'RemoveFilter'};
 var $elm_explorations$webgl$WebGL$Internal$Antialias = {$: 'Antialias'};
 var $elm_explorations$webgl$WebGL$antialias = $elm_explorations$webgl$WebGL$Internal$Antialias;
 var $elm$html$Html$button = _VirtualDom_node('button');
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm_explorations$webgl$WebGL$Internal$Depth = function (a) {
 	return {$: 'Depth', a: a};
 };
@@ -8699,14 +8708,6 @@ var $author$project$Main$UpdateParams = F2(
 		return {$: 'UpdateParams', a: a, b: b};
 	});
 var $elm$html$Html$input = _VirtualDom_node('input');
-var $elm$json$Json$Encode$string = _Json_wrap;
-var $elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$string(string));
-	});
 var $elm$html$Html$Attributes$max = $elm$html$Html$Attributes$stringProperty('max');
 var $elm$html$Html$Attributes$min = $elm$html$Html$Attributes$stringProperty('min');
 var $elm$html$Html$Events$alwaysStop = function (x) {
@@ -8758,8 +8759,7 @@ var $author$project$Main$gSlider = F8(
 			$elm$html$Html$div,
 			_List_fromArray(
 				[
-					A2($elm$html$Html$Attributes$style, 'width', '100%'),
-					A2($elm$html$Html$Attributes$style, 'height', '4em')
+					$elm$html$Html$Attributes$class('control-element')
 				]),
 			_List_fromArray(
 				[
@@ -8788,7 +8788,6 @@ var $author$project$Main$gSlider = F8(
 							$elm$html$Html$input,
 							_List_fromArray(
 								[
-									A2($elm$html$Html$Attributes$style, 'width', '100%'),
 									$elm$html$Html$Attributes$type_('range'),
 									A2($elm$html$Html$Attributes$style, 'align', 'auto'),
 									$elm$html$Html$Attributes$min(
@@ -8817,9 +8816,7 @@ var $author$project$Main$gSlider = F8(
 							$elm$html$Html$output,
 							_List_fromArray(
 								[
-									A2($elm$html$Html$Attributes$style, 'color', 'white'),
-									A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-									A2($elm$html$Html$Attributes$style, 'right', '0px')
+									A2($elm$html$Html$Attributes$style, 'color', 'white')
 								]),
 							_List_fromArray(
 								[
@@ -8838,40 +8835,24 @@ var $author$project$Main$slider = F6(
 	function (idx, label, up, minValue, maxValue, actualValue) {
 		return A8($author$project$Main$gSlider, '0.01', idx, label, up, $elm$core$String$fromFloat, minValue, maxValue, actualValue);
 	});
-var $elm$html$Html$span = _VirtualDom_node('span');
 var $author$project$Main$makeFilterControl = F2(
 	function (idx, noiseParams) {
 		return A2(
-			$elm$html$Html$span,
-			_List_Nil,
+			$elm$html$Html$div,
 			_List_fromArray(
 				[
-					A2(
-					$elm$html$Html$div,
-					_List_fromArray(
-						[
-							A2($elm$html$Html$Attributes$style, 'color', 'white'),
-							A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
-							A2($elm$html$Html$Attributes$style, 'font-size', '2em')
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text('Filter')
-						])),
-					A2(
-					$elm$html$Html$div,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A6($author$project$Main$intSlider, idx, 'Seed', $author$project$NoiseParameters$UpdateSeed, 1, 100, noiseParams.seed),
-							A6($author$project$Main$slider, idx, 'Base Roughness', $author$project$NoiseParameters$UpdateBaseRoughness, 1, 5, noiseParams.baseRoughness),
-							A6($author$project$Main$slider, idx, 'Roughness', $author$project$NoiseParameters$UpdateRoughness, 0, 1, noiseParams.roughness),
-							A6($author$project$Main$slider, idx, 'Persistance', $author$project$NoiseParameters$UpdatePersistance, 0, 1, noiseParams.persistance),
-							A6($author$project$Main$slider, idx, 'Strength', $author$project$NoiseParameters$UpdateStrength, 0, 4, noiseParams.strength),
-							A6($author$project$Main$slider, idx, 'Min Value', $author$project$NoiseParameters$UpdateMinValue, 0, 1, noiseParams.minValue),
-							A6($author$project$Main$intSlider, idx, 'Num Layers', $author$project$NoiseParameters$UpdateNumLayers, 1, 8, noiseParams.numLayers),
-							A6($author$project$Main$intSlider, idx, 'Resolution', $author$project$NoiseParameters$UpdateResolution, 10, 100, noiseParams.resolution)
-						]))
+					$elm$html$Html$Attributes$class('control')
+				]),
+			_List_fromArray(
+				[
+					A6($author$project$Main$intSlider, idx, 'Seed', $author$project$NoiseParameters$UpdateSeed, 1, 100, noiseParams.seed),
+					A6($author$project$Main$slider, idx, 'Base Roughness', $author$project$NoiseParameters$UpdateBaseRoughness, 1, 5, noiseParams.baseRoughness),
+					A6($author$project$Main$slider, idx, 'Roughness', $author$project$NoiseParameters$UpdateRoughness, 0, 1, noiseParams.roughness),
+					A6($author$project$Main$slider, idx, 'Persistance', $author$project$NoiseParameters$UpdatePersistance, 0, 1, noiseParams.persistance),
+					A6($author$project$Main$slider, idx, 'Strength', $author$project$NoiseParameters$UpdateStrength, 0, 4, noiseParams.strength),
+					A6($author$project$Main$slider, idx, 'Min Value', $author$project$NoiseParameters$UpdateMinValue, 0, 1, noiseParams.minValue),
+					A6($author$project$Main$intSlider, idx, 'Num Layers', $author$project$NoiseParameters$UpdateNumLayers, 1, 8, noiseParams.numLayers),
+					A6($author$project$Main$intSlider, idx, 'Resolution', $author$project$NoiseParameters$UpdateResolution, 10, 100, noiseParams.resolution)
 				]));
 	});
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
@@ -8912,82 +8893,77 @@ var $author$project$Main$view = function (model) {
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						A2($elm$html$Html$Attributes$style, 'top', '0px'),
-						A2(
-						$elm$html$Html$Attributes$style,
-						'left',
-						$elm$core$String$fromInt(model.offset) + 'px'),
-						A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2($elm$html$Html$Attributes$style, 'align', 'center')
+						$elm$html$Html$Attributes$class('main')
 					]),
 				_List_fromArray(
 					[
+						A3(
+						$elm_explorations$webgl$WebGL$toHtmlWith,
+						_List_fromArray(
+							[
+								$elm_explorations$webgl$WebGL$depth(1),
+								$elm_explorations$webgl$WebGL$antialias,
+								$elm_explorations$webgl$WebGL$stencil(0)
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$width(model.width),
+								$elm$html$Html$Attributes$height(model.height)
+							]),
+						A2(
+							$elm$core$List$map,
+							A4($author$project$Shaders$draw, model.width, model.height, model.maxHeight, model.theta),
+							model.meshes)),
 						A2(
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								A2($elm$html$Html$Attributes$style, 'align', 'center')
+								$elm$html$Html$Attributes$class('control-element')
 							]),
 						_List_fromArray(
 							[
-								A3(
-								$elm_explorations$webgl$WebGL$toHtmlWith,
-								_List_fromArray(
-									[
-										$elm_explorations$webgl$WebGL$depth(1),
-										$elm_explorations$webgl$WebGL$antialias,
-										$elm_explorations$webgl$WebGL$stencil(0)
-									]),
-								_List_fromArray(
-									[
-										A2($elm$html$Html$Attributes$style, 'align', 'center'),
-										A2($elm$html$Html$Attributes$style, 'display', 'block'),
-										A2($elm$html$Html$Attributes$style, 'align', 'center'),
-										$elm$html$Html$Attributes$width(model.width),
-										$elm$html$Html$Attributes$height(model.height)
-									]),
 								A2(
-									$elm$core$List$map,
-									A4($author$project$Shaders$draw, model.width, model.height, model.maxHeight, model.theta),
-									model.meshes)),
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onClick($author$project$Main$AddFilter)
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('+')
+									])),
 								A2(
 								$elm$html$Html$div,
-								_List_Nil,
 								_List_fromArray(
 									[
-										A2(
-										$elm$html$Html$button,
-										_List_fromArray(
-											[
-												$elm$html$Html$Events$onClick($author$project$Main$AddFilter),
-												A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-												A2($elm$html$Html$Attributes$style, 'left', '0px')
-											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text('+')
-											])),
-										A2(
-										$elm$html$Html$button,
-										_List_fromArray(
-											[
-												$elm$html$Html$Events$onClick($author$project$Main$RemoveFilter),
-												A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-												A2($elm$html$Html$Attributes$style, 'right', '0px')
-											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text('-')
-											])),
-										A2(
-										$elm$html$Html$div,
-										_List_Nil,
-										A2($elm$core$List$indexedMap, $author$project$Main$makeFilterControl, model.noiseParams))
+										A2($elm$html$Html$Attributes$style, 'color', 'white'),
+										A2($elm$html$Html$Attributes$style, 'font-size', '2em')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Filters')
+									])),
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onClick($author$project$Main$RemoveFilter)
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('-')
 									]))
-							]))
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('filters')
+							]),
+						A2($elm$core$List$indexedMap, $author$project$Main$makeFilterControl, model.noiseParams))
 					]))
 			]),
-		title: 'Document Title'
+		title: 'Planet generator'
 	};
 };
 var $author$project$Main$main = $elm$browser$Browser$document(

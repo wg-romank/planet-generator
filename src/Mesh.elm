@@ -35,20 +35,20 @@ indexedTrianglesToPolygons vertexes indices =
                 (Array.get v3i vertexes))
         indices
 
-polyNormal: Polygon -> Vec3
-polyNormal poly = poly.v1
+-- polyNormal: Polygon -> Vec3
+-- polyNormal poly = poly.v1
 
-polyAvgPos: Polygon -> Vec3
-polyAvgPos poly = Vec3.add poly.v1 poly.v2 |> Vec3.add poly.v3 |> Vec3.scale (1.0 / 3.0)
+-- polyAvgPos: Polygon -> Vec3
+-- polyAvgPos poly = Vec3.add poly.v1 poly.v2 |> Vec3.add poly.v3 |> Vec3.scale (1.0 / 3.0)
 
-computeShadowVolumes: List Polygon -> Vec3 -> List Edge
-computeShadowVolumes polys lightPos =
-    List.foldl (\p acc ->
-        let
-            incidentLightDir = Vec3.sub lightPos (polyAvgPos p)
+-- computeShadowVolumes: List Polygon -> Vec3 -> List Edge
+-- computeShadowVolumes polys lightPos =
+--     List.foldl (\p acc ->
+--         let
+--             incidentLightDir = Vec3.sub lightPos (polyAvgPos p)
 
-        in
-    ) Set.empty polys
+--         in
+--     ) Set.empty polys
 
 type alias Noise3d = Float -> Float -> Float -> Float
 

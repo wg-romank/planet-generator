@@ -125,9 +125,7 @@ subscriptions model =
 gSlider: String -> Int -> String -> (String -> UpdateParams)  -> (a -> String) -> a -> a -> a -> Html Msg
 gSlider step idx label up toString minValue maxValue actualValue =
     div [
-        style "width" "100%",
-        style "height" "4em"
-        -- style "align" "center"
+        class "control-element"
     ] [
         div [ ]
         [
@@ -138,7 +136,6 @@ gSlider step idx label up toString minValue maxValue actualValue =
         div [ ]
         [
             input [
-                style "width" "100%",
                 type_ "range",
                 style "align" "auto",
                 H.min (toString minValue),
@@ -151,9 +148,7 @@ gSlider step idx label up toString minValue maxValue actualValue =
         div [ ]
         [
             output [
-                style "color" "white",
-                style "position" "absolute",
-                style "right" "0px"
+                style "color" "white"
             ] [ text (toString actualValue) ]
         ]
     ]
@@ -170,60 +165,46 @@ intSlider idx label up minValue maxValue actualValue =
 
 makeFilterControl: Int -> NoiseParameters -> Html Msg
 makeFilterControl idx noiseParams = 
-    span [] [
-        div [ style "color" "white", style "text-align" "center", style "font-size" "2em" ] [ text "Filter" ],
-        div [
-          -- style "top" (String.fromInt model.height ++ "px"),
-        --   style "align" "center",
-        --   style "width" "100%"
-        ] [ 
-          intSlider idx "Seed" UpdateSeed 1 100 noiseParams.seed,
-          slider idx "Base Roughness" UpdateBaseRoughness 1 5 noiseParams.baseRoughness,
-          slider idx "Roughness" UpdateRoughness 0 1 noiseParams.roughness,
-          slider idx "Persistance" UpdatePersistance 0 1 noiseParams.persistance,
-          slider idx "Strength" UpdateStrength 0 4 noiseParams.strength,
-          slider idx "Min Value" UpdateMinValue 0 1 noiseParams.minValue,
-          intSlider idx "Num Layers" UpdateNumLayers 1 8 noiseParams.numLayers,
-          intSlider idx "Resolution" UpdateResolution 10 100 noiseParams.resolution
-        ]
+    div [
+        class "control"
+    ] [ 
+      intSlider idx "Seed" UpdateSeed 1 100 noiseParams.seed,
+      slider idx "Base Roughness" UpdateBaseRoughness 1 5 noiseParams.baseRoughness,
+      slider idx "Roughness" UpdateRoughness 0 1 noiseParams.roughness,
+      slider idx "Persistance" UpdatePersistance 0 1 noiseParams.persistance,
+      slider idx "Strength" UpdateStrength 0 4 noiseParams.strength,
+      slider idx "Min Value" UpdateMinValue 0 1 noiseParams.minValue,
+      intSlider idx "Num Layers" UpdateNumLayers 1 8 noiseParams.numLayers,
+      intSlider idx "Resolution" UpdateResolution 10 100 noiseParams.resolution
     ]
 
 view : Model -> Browser.Document Msg
 view model =
-    { title = "Document Title"
+    { title = "Planet generator"
     , body = [
-        div [
-            style "top" "0px",
-            style "left" (String.fromInt model.offset ++ "px"),
-            style "position" "absolute",
-            -- style "width" (String.fromInt model.viewportWidth ++ "px"),
-            -- style "height" (String.fromInt model.viewportHeight ++ "px")
-            style "align" "center"
-        ]
-        [ 
             div [ 
-                style "align" "center"
-                -- style "position" "absolute"
+                class "main"
             ] 
             [
                 WebGL.toHtmlWith
                     [ WebGL.depth 1, WebGL.antialias, WebGL.stencil 0 ]
                     [ 
-                        style "align" "center",
-                        style "display" "block",
-                        style "align" "center",
                         width model.width,
                         height model.height
                     ]
                     (List.map 
                         (draw (toFloat model.width) (toFloat model.height) model.maxHeight model.theta)
                         model.meshes),
-                div [ ] [
-                    button [ Html.Events.onClick AddFilter, style "position" "absolute", style "left" "0px" ] [ text "+"],
-                    button [ Html.Events.onClick RemoveFilter, style "position" "absolute", style "right" "0px" ] [ text "-"],
-                    div [ ] (List.indexedMap makeFilterControl model.noiseParams)
-                ]
+
+                div [ class "control-element" ] 
+                [
+                    button [ Html.Events.onClick AddFilter ] [ text "+"],
+                    div [
+                        style "color" "white",
+                        style "font-size" "2em"
+                    ] [text "Filters"],
+                    button [ Html.Events.onClick RemoveFilter ] [ text "-"] ],
+                div [ class "filters" ] (List.indexedMap makeFilterControl model.noiseParams)
             ]
-        ]
         ]
     }

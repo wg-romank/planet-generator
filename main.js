@@ -77,7 +77,7 @@ function A9(fun, a, b, c, d, e, f, g, h, i) {
   return fun.a === 9 ? fun.f(a, b, c, d, e, f, g, h, i) : fun(a)(b)(c)(d)(e)(f)(g)(h)(i);
 }
 
-console.warn('Compiled in DEV mode. Follow the advice at https://elm-lang.org/0.19.1/optimize for better performance and smaller assets.');
+
 
 
 // EQUALITY
@@ -113,7 +113,7 @@ function _Utils_eqHelp(x, y, depth, stack)
 		return true;
 	}
 
-	/**/
+	/**_UNUSED/
 	if (x.$ === 'Set_elm_builtin')
 	{
 		x = $elm$core$Set$toList(x);
@@ -126,7 +126,7 @@ function _Utils_eqHelp(x, y, depth, stack)
 	}
 	//*/
 
-	/**_UNUSED/
+	/**/
 	if (x.$ < 0)
 	{
 		x = $elm$core$Dict$toList(x);
@@ -161,7 +161,7 @@ function _Utils_cmp(x, y, ord)
 		return x === y ? /*EQ*/ 0 : x < y ? /*LT*/ -1 : /*GT*/ 1;
 	}
 
-	/**/
+	/**_UNUSED/
 	if (x instanceof String)
 	{
 		var a = x.valueOf();
@@ -170,10 +170,10 @@ function _Utils_cmp(x, y, ord)
 	}
 	//*/
 
-	/**_UNUSED/
+	/**/
 	if (typeof x.$ === 'undefined')
 	//*/
-	/**/
+	/**_UNUSED/
 	if (x.$[0] === '#')
 	//*/
 	{
@@ -203,17 +203,17 @@ var _Utils_compare = F2(function(x, y)
 
 // COMMON VALUES
 
-var _Utils_Tuple0_UNUSED = 0;
-var _Utils_Tuple0 = { $: '#0' };
+var _Utils_Tuple0 = 0;
+var _Utils_Tuple0_UNUSED = { $: '#0' };
 
-function _Utils_Tuple2_UNUSED(a, b) { return { a: a, b: b }; }
-function _Utils_Tuple2(a, b) { return { $: '#2', a: a, b: b }; }
+function _Utils_Tuple2(a, b) { return { a: a, b: b }; }
+function _Utils_Tuple2_UNUSED(a, b) { return { $: '#2', a: a, b: b }; }
 
-function _Utils_Tuple3_UNUSED(a, b, c) { return { a: a, b: b, c: c }; }
-function _Utils_Tuple3(a, b, c) { return { $: '#3', a: a, b: b, c: c }; }
+function _Utils_Tuple3(a, b, c) { return { a: a, b: b, c: c }; }
+function _Utils_Tuple3_UNUSED(a, b, c) { return { $: '#3', a: a, b: b, c: c }; }
 
-function _Utils_chr_UNUSED(c) { return c; }
-function _Utils_chr(c) { return new String(c); }
+function _Utils_chr(c) { return c; }
+function _Utils_chr_UNUSED(c) { return new String(c); }
 
 
 // RECORDS
@@ -264,11 +264,11 @@ function _Utils_ap(xs, ys)
 
 
 
-var _List_Nil_UNUSED = { $: 0 };
-var _List_Nil = { $: '[]' };
+var _List_Nil = { $: 0 };
+var _List_Nil_UNUSED = { $: '[]' };
 
-function _List_Cons_UNUSED(hd, tl) { return { $: 1, a: hd, b: tl }; }
-function _List_Cons(hd, tl) { return { $: '::', a: hd, b: tl }; }
+function _List_Cons(hd, tl) { return { $: 1, a: hd, b: tl }; }
+function _List_Cons_UNUSED(hd, tl) { return { $: '::', a: hd, b: tl }; }
 
 
 var _List_cons = F2(_List_Cons);
@@ -499,12 +499,12 @@ var _JsArray_appendN = F3(function(n, dest, source)
 
 // LOG
 
-var _Debug_log_UNUSED = F2(function(tag, value)
+var _Debug_log = F2(function(tag, value)
 {
 	return value;
 });
 
-var _Debug_log = F2(function(tag, value)
+var _Debug_log_UNUSED = F2(function(tag, value)
 {
 	console.log(tag + ': ' + _Debug_toString(value));
 	return value;
@@ -530,12 +530,12 @@ function _Debug_todoCase(moduleName, region, value)
 
 // TO STRING
 
-function _Debug_toString_UNUSED(value)
+function _Debug_toString(value)
 {
 	return '<internals>';
 }
 
-function _Debug_toString(value)
+function _Debug_toString_UNUSED(value)
 {
 	return _Debug_toAnsiString(false, value);
 }
@@ -720,13 +720,13 @@ function _Debug_toHexDigit(n)
 // CRASH
 
 
-function _Debug_crash_UNUSED(identifier)
+function _Debug_crash(identifier)
 {
 	throw new Error('https://github.com/elm/core/blob/1.0.0/hints/' + identifier + '.md');
 }
 
 
-function _Debug_crash(identifier, fact1, fact2, fact3, fact4)
+function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 {
 	switch(identifier)
 	{
@@ -784,11 +784,11 @@ function _Debug_crash(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.start.line === region.end.line)
+	if (region.aA.N === region.aJ.N)
 	{
-		return 'on line ' + region.start.line;
+		return 'on line ' + region.aA.N;
 	}
-	return 'on lines ' + region.start.line + ' through ' + region.end.line;
+	return 'on lines ' + region.aA.N + ' through ' + region.aJ.N;
 }
 
 
@@ -1212,7 +1212,7 @@ function _Char_toLocaleLower(char)
 
 
 
-/**/
+/**_UNUSED/
 function _Json_errorToString(error)
 {
 	return $elm$json$Json$Decode$errorToString(error);
@@ -1616,11 +1616,11 @@ var _Json_encode = F2(function(indentLevel, value)
 	return JSON.stringify(_Json_unwrap(value), null, indentLevel) + '';
 });
 
-function _Json_wrap(value) { return { $: 0, a: value }; }
-function _Json_unwrap(value) { return value.a; }
+function _Json_wrap_UNUSED(value) { return { $: 0, a: value }; }
+function _Json_unwrap_UNUSED(value) { return value.a; }
 
-function _Json_wrap_UNUSED(value) { return value; }
-function _Json_unwrap_UNUSED(value) { return value; }
+function _Json_wrap(value) { return value; }
+function _Json_unwrap(value) { return value; }
 
 function _Json_emptyArray() { return []; }
 function _Json_emptyObject() { return {}; }
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.init,
-		impl.update,
-		impl.subscriptions,
+		impl.bB,
+		impl.bQ,
+		impl.bO,
 		function() { return function() {} }
 	);
 });
@@ -1872,7 +1872,7 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 function _Platform_initialize(flagDecoder, args, init, update, subscriptions, stepperBuilder)
 {
 	var result = A2(_Json_run, flagDecoder, _Json_wrap(args ? args['flags'] : undefined));
-	$elm$core$Result$isOk(result) || _Debug_crash(2 /**/, _Json_errorToString(result.a) /**/);
+	$elm$core$Result$isOk(result) || _Debug_crash(2 /**_UNUSED/, _Json_errorToString(result.a) /**/);
 	var managers = {};
 	var initPair = init(result.a);
 	var model = initPair.a;
@@ -2316,7 +2316,7 @@ function _Platform_setupIncomingPort(name, sendToApp)
 //
 
 
-function _Platform_export_UNUSED(exports)
+function _Platform_export(exports)
 {
 	scope['Elm']
 		? _Platform_mergeExportsProd(scope['Elm'], exports)
@@ -2337,7 +2337,7 @@ function _Platform_mergeExportsProd(obj, exports)
 }
 
 
-function _Platform_export(exports)
+function _Platform_export_UNUSED(exports)
 {
 	scope['Elm']
 		? _Platform_mergeExportsDebug('Elm', scope['Elm'], exports)
@@ -2377,10 +2377,10 @@ var _VirtualDom_init = F4(function(virtualNode, flagDecoder, debugMetadata, args
 {
 	// NOTE: this function needs _Platform_export available to work
 
-	/**_UNUSED/
+	/**/
 	var node = args['node'];
 	//*/
-	/**/
+	/**_UNUSED/
 	var node = args && args['node'] ? args['node'] : _Debug_crash(0);
 	//*/
 
@@ -2635,24 +2635,24 @@ function _VirtualDom_noInnerHtmlOrFormAction(key)
 	return key == 'innerHTML' || key == 'formAction' ? 'data-' + key : key;
 }
 
-function _VirtualDom_noJavaScriptUri_UNUSED(value)
+function _VirtualDom_noJavaScriptUri(value)
 {
 	return /^javascript:/i.test(value.replace(/\s/g,'')) ? '' : value;
 }
 
-function _VirtualDom_noJavaScriptUri(value)
+function _VirtualDom_noJavaScriptUri_UNUSED(value)
 {
 	return /^javascript:/i.test(value.replace(/\s/g,''))
 		? 'javascript:alert("This is an XSS vector. Please use ports or web components instead.")'
 		: value;
 }
 
-function _VirtualDom_noJavaScriptOrHtmlUri_UNUSED(value)
+function _VirtualDom_noJavaScriptOrHtmlUri(value)
 {
 	return /^\s*(javascript:|data:text\/html)/i.test(value) ? '' : value;
 }
 
-function _VirtualDom_noJavaScriptOrHtmlUri(value)
+function _VirtualDom_noJavaScriptOrHtmlUri_UNUSED(value)
 {
 	return /^\s*(javascript:|data:text\/html)/i.test(value)
 		? 'javascript:alert("This is an XSS vector. Please use ports or web components instead.")'
@@ -2704,9 +2704,9 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		message: func(record.message),
-		stopPropagation: record.stopPropagation,
-		preventDefault: record.preventDefault
+		r: func(record.r),
+		aB: record.aB,
+		ax: record.ax
 	}
 });
 
@@ -2974,11 +2974,11 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.message;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.stopPropagation;
+		var message = !tag ? value : tag < 3 ? value.a : value.r;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.aB;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.preventDefault) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.ax) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3928,15 +3928,15 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.init,
-		impl.update,
-		impl.subscriptions,
+		impl.bB,
+		impl.bQ,
+		impl.bO,
 		function(sendToApp, initialModel) {
-			var view = impl.view;
-			/**_UNUSED/
+			var view = impl.bS;
+			/**/
 			var domNode = args['node'];
 			//*/
-			/**/
+			/**_UNUSED/
 			var domNode = args && args['node'] ? args['node'] : _Debug_crash(0);
 			//*/
 			var currNode = _VirtualDom_virtualize(domNode);
@@ -3964,12 +3964,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.init,
-		impl.update,
-		impl.subscriptions,
+		impl.bB,
+		impl.bQ,
+		impl.bO,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.setup && impl.setup(sendToApp)
-			var view = impl.view;
+			var divertHrefToApp = impl.az && impl.az(sendToApp)
+			var view = impl.bS;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3977,12 +3977,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.body);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.bt);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.title) && (_VirtualDom_doc.title = title = doc.title);
+				(title !== doc.bP) && (_VirtualDom_doc.title = title = doc.bP);
 			});
 		}
 	);
@@ -4038,12 +4038,12 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.onUrlChange;
-	var onUrlRequest = impl.onUrlRequest;
+	var onUrlChange = impl.bF;
+	var onUrlRequest = impl.bG;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		setup: function(sendToApp)
+		az: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4059,9 +4059,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.protocol === next.protocol
-							&& curr.host === next.host
-							&& curr.port_.a === next.port_.a
+							&& curr.bc === next.bc
+							&& curr.aM === next.aM
+							&& curr.a9.a === next.a9.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4069,13 +4069,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		init: function(flags)
+		bB: function(flags)
 		{
-			return A3(impl.init, flags, _Browser_getUrl(), key);
+			return A3(impl.bB, flags, _Browser_getUrl(), key);
 		},
-		view: impl.view,
-		update: impl.update,
-		subscriptions: impl.subscriptions
+		bS: impl.bS,
+		bQ: impl.bQ,
+		bO: impl.bO
 	});
 }
 
@@ -4141,17 +4141,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { hidden: 'hidden', change: 'visibilitychange' }
+		? { bz: 'hidden', bu: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { hidden: 'mozHidden', change: 'mozvisibilitychange' }
+		? { bz: 'mozHidden', bu: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { hidden: 'msHidden', change: 'msvisibilitychange' }
+		? { bz: 'msHidden', bu: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { hidden: 'webkitHidden', change: 'webkitvisibilitychange' }
-		: { hidden: 'hidden', change: 'visibilitychange' };
+		? { bz: 'webkitHidden', bu: 'webkitvisibilitychange' }
+		: { bz: 'hidden', bu: 'visibilitychange' };
 }
 
 
@@ -4232,12 +4232,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		scene: _Browser_getScene(),
-		viewport: {
-			x: _Browser_window.pageXOffset,
-			y: _Browser_window.pageYOffset,
-			width: _Browser_doc.documentElement.clientWidth,
-			height: _Browser_doc.documentElement.clientHeight
+		bh: _Browser_getScene(),
+		bm: {
+			bo: _Browser_window.pageXOffset,
+			bp: _Browser_window.pageYOffset,
+			X: _Browser_doc.documentElement.clientWidth,
+			M: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4247,8 +4247,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		width: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		height: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		X: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		M: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4271,15 +4271,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			scene: {
-				width: node.scrollWidth,
-				height: node.scrollHeight
+			bh: {
+				X: node.scrollWidth,
+				M: node.scrollHeight
 			},
-			viewport: {
-				x: node.scrollLeft,
-				y: node.scrollTop,
-				width: node.clientWidth,
-				height: node.clientHeight
+			bm: {
+				bo: node.scrollLeft,
+				bp: node.scrollTop,
+				X: node.clientWidth,
+				M: node.clientHeight
 			}
 		};
 	});
@@ -4309,18 +4309,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			scene: _Browser_getScene(),
-			viewport: {
-				x: x,
-				y: y,
-				width: _Browser_doc.documentElement.clientWidth,
-				height: _Browser_doc.documentElement.clientHeight
+			bh: _Browser_getScene(),
+			bm: {
+				bo: x,
+				bp: y,
+				X: _Browser_doc.documentElement.clientWidth,
+				M: _Browser_doc.documentElement.clientHeight
 			},
-			element: {
-				x: x + rect.left,
-				y: y + rect.top,
-				width: rect.width,
-				height: rect.height
+			bx: {
+				bo: x + rect.left,
+				bp: y + rect.top,
+				X: rect.width,
+				M: rect.height
 			}
 		};
 	});
@@ -4408,11 +4408,11 @@ var _MJS_v2setY = F2(function(y, a) {
 });
 
 var _MJS_v2toRecord = function(a) {
-    return { x: a[0], y: a[1] };
+    return { bo: a[0], bp: a[1] };
 };
 
 var _MJS_v2fromRecord = function(r) {
-    return new Float64Array([r.x, r.y]);
+    return new Float64Array([r.bo, r.bp]);
 };
 
 var _MJS_v2add = F2(function(a, b) {
@@ -4521,11 +4521,11 @@ var _MJS_v3setZ = F2(function(z, a) {
 });
 
 var _MJS_v3toRecord = function(a) {
-    return { x: a[0], y: a[1], z: a[2] };
+    return { bo: a[0], bp: a[1], aq: a[2] };
 };
 
 var _MJS_v3fromRecord = function(r) {
-    return new Float64Array([r.x, r.y, r.z]);
+    return new Float64Array([r.bo, r.bp, r.aq]);
 };
 
 var _MJS_v3add = F2(function(a, b) {
@@ -4681,11 +4681,11 @@ var _MJS_v4setW = F2(function(w, a) {
 });
 
 var _MJS_v4toRecord = function(a) {
-    return { x: a[0], y: a[1], z: a[2], w: a[3] };
+    return { bo: a[0], bp: a[1], aq: a[2], bn: a[3] };
 };
 
 var _MJS_v4fromRecord = function(r) {
-    return new Float64Array([r.x, r.y, r.z, r.w]);
+    return new Float64Array([r.bo, r.bp, r.aq, r.bn]);
 };
 
 var _MJS_v4add = F2(function(a, b) {
@@ -4791,31 +4791,31 @@ var _MJS_m4x4identity = new Float64Array([
 
 var _MJS_m4x4fromRecord = function(r) {
     var m = new Float64Array(16);
-    m[0] = r.m11;
-    m[1] = r.m21;
-    m[2] = r.m31;
-    m[3] = r.m41;
-    m[4] = r.m12;
-    m[5] = r.m22;
-    m[6] = r.m32;
-    m[7] = r.m42;
-    m[8] = r.m13;
-    m[9] = r.m23;
-    m[10] = r.m33;
-    m[11] = r.m43;
-    m[12] = r.m14;
-    m[13] = r.m24;
-    m[14] = r.m34;
-    m[15] = r.m44;
+    m[0] = r.aP;
+    m[1] = r.aT;
+    m[2] = r.aX;
+    m[3] = r.a$;
+    m[4] = r.aQ;
+    m[5] = r.aU;
+    m[6] = r.aY;
+    m[7] = r.a0;
+    m[8] = r.aR;
+    m[9] = r.aV;
+    m[10] = r.aZ;
+    m[11] = r.a1;
+    m[12] = r.aS;
+    m[13] = r.aW;
+    m[14] = r.a_;
+    m[15] = r.a2;
     return m;
 };
 
 var _MJS_m4x4toRecord = function(m) {
     return {
-        m11: m[0], m21: m[1], m31: m[2], m41: m[3],
-        m12: m[4], m22: m[5], m32: m[6], m42: m[7],
-        m13: m[8], m23: m[9], m33: m[10], m43: m[11],
-        m14: m[12], m24: m[13], m34: m[14], m44: m[15]
+        aP: m[0], aT: m[1], aX: m[2], a$: m[3],
+        aQ: m[4], aU: m[5], aY: m[6], a0: m[7],
+        aR: m[8], aV: m[9], aZ: m[10], a1: m[11],
+        aS: m[12], aW: m[13], a_: m[14], a2: m[15]
     };
 };
 
@@ -5621,7 +5621,7 @@ function _WebGL_doBindAttribute(gl, attribute, mesh, attributes) {
   // The length of the number of vertices that
   // complete one 'thing' based on the drawing mode.
   // ie, 2 for Lines, 3 for Triangles, etc.
-  var elemSize = mesh.a.elemSize;
+  var elemSize = mesh.a.aI;
 
   var idxKeys = [];
   for (var i = 0; i < elemSize; i++) {
@@ -5684,10 +5684,10 @@ function _WebGL_doBindAttribute(gl, attribute, mesh, attributes) {
  *  @return {Object} buffer.buffers - will be used to buffer attributes
  */
 function _WebGL_doBindSetup(gl, mesh) {
-  if (mesh.a.indexSize > 0) {
+  if (mesh.a.aN > 0) {
     _WebGL_log('Created index buffer');
     var indexBuffer = gl.createBuffer();
-    var indices = _WebGL_makeIndexedBuffer(mesh.c, mesh.a.indexSize);
+    var indices = _WebGL_makeIndexedBuffer(mesh.c, mesh.a.aN);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
     return {
@@ -5697,7 +5697,7 @@ function _WebGL_doBindSetup(gl, mesh) {
     };
   } else {
     return {
-      numIndices: mesh.a.elemSize * _WebGL_listLength(mesh.b),
+      numIndices: mesh.a.aI * _WebGL_listLength(mesh.b),
       indexBuffer: null,
       buffers: {}
     };
@@ -5843,9 +5843,9 @@ var _WebGL_drawGL = F2(function (model, domNode) {
 
     if (buffer.indexBuffer) {
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indexBuffer);
-      gl.drawElements(entity.d.a.mode, buffer.numIndices, gl.UNSIGNED_SHORT, 0);
+      gl.drawElements(entity.d.a.a3, buffer.numIndices, gl.UNSIGNED_SHORT, 0);
     } else {
-      gl.drawArrays(entity.d.a.mode, 0, buffer.numIndices);
+      gl.drawArrays(entity.d.a.a3, 0, buffer.numIndices);
     }
 
     _WebGL_listEach($elm_explorations$webgl$WebGL$Internal$disableSetting(model.f), entity.a);
@@ -5892,7 +5892,7 @@ function _WebGL_createUniformSetters(gl, model, program, uniformsMap) {
           var tex = model.f.textures.get(texture);
           if (!tex) {
             _WebGL_log('Created texture');
-            tex = texture.createTexture(gl);
+            tex = texture.bv(gl);
             model.f.textures.set(texture, tex);
           }
           gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -6048,15 +6048,15 @@ function _WebGL_diff(oldModel, newModel) {
   newModel.f = oldModel.f;
   return _WebGL_drawGL(newModel);
 }
-var $elm$core$Basics$EQ = {$: 'EQ'};
-var $elm$core$Basics$GT = {$: 'GT'};
-var $elm$core$Basics$LT = {$: 'LT'};
+var $elm$core$Basics$EQ = 1;
+var $elm$core$Basics$GT = 2;
+var $elm$core$Basics$LT = 0;
 var $elm$core$List$cons = _List_cons;
 var $elm$core$Dict$foldr = F3(
 	function (func, acc, t) {
 		foldr:
 		while (true) {
-			if (t.$ === 'RBEmpty_elm_builtin') {
+			if (t.$ === -2) {
 				return acc;
 			} else {
 				var key = t.b;
@@ -6101,7 +6101,7 @@ var $elm$core$Dict$keys = function (dict) {
 		dict);
 };
 var $elm$core$Set$toList = function (_v0) {
-	var dict = _v0.a;
+	var dict = _v0;
 	return $elm$core$Dict$keys(dict);
 };
 var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
@@ -6111,7 +6111,7 @@ var $elm$core$Array$foldr = F3(
 		var tail = _v0.d;
 		var helper = F2(
 			function (node, acc) {
-				if (node.$ === 'SubTree') {
+				if (!node.$) {
 					var subTree = node.a;
 					return A3($elm$core$Elm$JsArray$foldr, helper, acc, subTree);
 				} else {
@@ -6129,32 +6129,32 @@ var $elm$core$Array$toList = function (array) {
 	return A3($elm$core$Array$foldr, $elm$core$List$cons, _List_Nil, array);
 };
 var $elm$core$Result$Err = function (a) {
-	return {$: 'Err', a: a};
+	return {$: 1, a: a};
 };
 var $elm$json$Json$Decode$Failure = F2(
 	function (a, b) {
-		return {$: 'Failure', a: a, b: b};
+		return {$: 3, a: a, b: b};
 	});
 var $elm$json$Json$Decode$Field = F2(
 	function (a, b) {
-		return {$: 'Field', a: a, b: b};
+		return {$: 0, a: a, b: b};
 	});
 var $elm$json$Json$Decode$Index = F2(
 	function (a, b) {
-		return {$: 'Index', a: a, b: b};
+		return {$: 1, a: a, b: b};
 	});
 var $elm$core$Result$Ok = function (a) {
-	return {$: 'Ok', a: a};
+	return {$: 0, a: a};
 };
 var $elm$json$Json$Decode$OneOf = function (a) {
-	return {$: 'OneOf', a: a};
+	return {$: 2, a: a};
 };
-var $elm$core$Basics$False = {$: 'False'};
+var $elm$core$Basics$False = 1;
 var $elm$core$Basics$add = _Basics_add;
 var $elm$core$Maybe$Just = function (a) {
-	return {$: 'Just', a: a};
+	return {$: 0, a: a};
 };
-var $elm$core$Maybe$Nothing = {$: 'Nothing'};
+var $elm$core$Maybe$Nothing = {$: 1};
 var $elm$core$String$all = _String_all;
 var $elm$core$Basics$and = _Basics_and;
 var $elm$core$Basics$append = _Utils_append;
@@ -6279,12 +6279,12 @@ var $elm$json$Json$Decode$errorToStringHelp = F2(
 		errorToStringHelp:
 		while (true) {
 			switch (error.$) {
-				case 'Field':
+				case 0:
 					var f = error.a;
 					var err = error.b;
 					var isSimple = function () {
 						var _v1 = $elm$core$String$uncons(f);
-						if (_v1.$ === 'Nothing') {
+						if (_v1.$ === 1) {
 							return false;
 						} else {
 							var _v2 = _v1.a;
@@ -6299,7 +6299,7 @@ var $elm$json$Json$Decode$errorToStringHelp = F2(
 					error = $temp$error;
 					context = $temp$context;
 					continue errorToStringHelp;
-				case 'Index':
+				case 1:
 					var i = error.a;
 					var err = error.b;
 					var indexName = '[' + ($elm$core$String$fromInt(i) + ']');
@@ -6308,7 +6308,7 @@ var $elm$json$Json$Decode$errorToStringHelp = F2(
 					error = $temp$error;
 					context = $temp$context;
 					continue errorToStringHelp;
-				case 'OneOf':
+				case 2:
 					var errors = error.a;
 					if (!errors.b) {
 						return 'Ran into a Json.Decode.oneOf with no possibilities' + function () {
@@ -6372,7 +6372,7 @@ var $elm$json$Json$Decode$errorToStringHelp = F2(
 var $elm$core$Array$branchFactor = 32;
 var $elm$core$Array$Array_elm_builtin = F4(
 	function (a, b, c, d) {
-		return {$: 'Array_elm_builtin', a: a, b: b, c: c, d: d};
+		return {$: 0, a: a, b: b, c: c, d: d};
 	});
 var $elm$core$Elm$JsArray$empty = _JsArray_empty;
 var $elm$core$Basics$ceiling = _Basics_ceiling;
@@ -6387,7 +6387,7 @@ var $elm$core$Array$shiftStep = $elm$core$Basics$ceiling(
 var $elm$core$Array$empty = A4($elm$core$Array$Array_elm_builtin, 0, $elm$core$Array$shiftStep, $elm$core$Elm$JsArray$empty, $elm$core$Elm$JsArray$empty);
 var $elm$core$Elm$JsArray$initialize = _JsArray_initialize;
 var $elm$core$Array$Leaf = function (a) {
-	return {$: 'Leaf', a: a};
+	return {$: 1, a: a};
 };
 var $elm$core$Basics$apL = F2(
 	function (f, x) {
@@ -6407,7 +6407,7 @@ var $elm$core$Basics$max = F2(
 	});
 var $elm$core$Basics$mul = _Basics_mul;
 var $elm$core$Array$SubTree = function (a) {
-	return {$: 'SubTree', a: a};
+	return {$: 0, a: a};
 };
 var $elm$core$Elm$JsArray$initializeFromList = _JsArray_initializeFromList;
 var $elm$core$Array$compressNodes = F2(
@@ -6454,25 +6454,25 @@ var $elm$core$Array$treeFromBuilder = F2(
 	});
 var $elm$core$Array$builderToArray = F2(
 	function (reverseNodeList, builder) {
-		if (!builder.nodeListSize) {
+		if (!builder.a) {
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.tail),
+				$elm$core$Elm$JsArray$length(builder.c),
 				$elm$core$Array$shiftStep,
 				$elm$core$Elm$JsArray$empty,
-				builder.tail);
+				builder.c);
 		} else {
-			var treeLen = builder.nodeListSize * $elm$core$Array$branchFactor;
+			var treeLen = builder.a * $elm$core$Array$branchFactor;
 			var depth = $elm$core$Basics$floor(
 				A2($elm$core$Basics$logBase, $elm$core$Array$branchFactor, treeLen - 1));
-			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.nodeList) : builder.nodeList;
-			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.nodeListSize);
+			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.d) : builder.d;
+			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.a);
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.tail) + treeLen,
+				$elm$core$Elm$JsArray$length(builder.c) + treeLen,
 				A2($elm$core$Basics$max, 5, depth * $elm$core$Array$shiftStep),
 				tree,
-				builder.tail);
+				builder.c);
 		}
 	});
 var $elm$core$Basics$idiv = _Basics_idiv;
@@ -6485,7 +6485,7 @@ var $elm$core$Array$initializeHelp = F5(
 				return A2(
 					$elm$core$Array$builderToArray,
 					false,
-					{nodeList: nodeList, nodeListSize: (len / $elm$core$Array$branchFactor) | 0, tail: tail});
+					{d: nodeList, a: (len / $elm$core$Array$branchFactor) | 0, c: tail});
 			} else {
 				var leaf = $elm$core$Array$Leaf(
 					A3($elm$core$Elm$JsArray$initialize, $elm$core$Array$branchFactor, fromIndex, fn));
@@ -6515,9 +6515,9 @@ var $elm$core$Array$initialize = F2(
 			return A5($elm$core$Array$initializeHelp, fn, initialFromIndex, len, _List_Nil, tail);
 		}
 	});
-var $elm$core$Basics$True = {$: 'True'};
+var $elm$core$Basics$True = 0;
 var $elm$core$Result$isOk = function (result) {
-	if (result.$ === 'Ok') {
+	if (!result.$) {
 		return true;
 	} else {
 		return false;
@@ -6528,33 +6528,31 @@ var $elm$json$Json$Decode$map2 = _Json_map2;
 var $elm$json$Json$Decode$succeed = _Json_succeed;
 var $elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 	switch (handler.$) {
-		case 'Normal':
+		case 0:
 			return 0;
-		case 'MayStopPropagation':
+		case 1:
 			return 1;
-		case 'MayPreventDefault':
+		case 2:
 			return 2;
 		default:
 			return 3;
 	}
 };
 var $elm$browser$Browser$External = function (a) {
-	return {$: 'External', a: a};
+	return {$: 1, a: a};
 };
 var $elm$browser$Browser$Internal = function (a) {
-	return {$: 'Internal', a: a};
+	return {$: 0, a: a};
 };
 var $elm$core$Basics$identity = function (x) {
 	return x;
 };
-var $elm$browser$Browser$Dom$NotFound = function (a) {
-	return {$: 'NotFound', a: a};
-};
-var $elm$url$Url$Http = {$: 'Http'};
-var $elm$url$Url$Https = {$: 'Https'};
+var $elm$browser$Browser$Dom$NotFound = $elm$core$Basics$identity;
+var $elm$url$Url$Http = 0;
+var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {fragment: fragment, host: host, path: path, port_: port_, protocol: protocol, query: query};
+		return {aL: fragment, aM: host, a6: path, a9: port_, bc: protocol, bd: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -6590,7 +6588,7 @@ var $elm$url$Url$chompBeforePath = F5(
 					var i = _v0.a;
 					var _v1 = $elm$core$String$toInt(
 						A2($elm$core$String$dropLeft, i + 1, str));
-					if (_v1.$ === 'Nothing') {
+					if (_v1.$ === 1) {
 						return $elm$core$Maybe$Nothing;
 					} else {
 						var port_ = _v1;
@@ -6673,26 +6671,24 @@ var $elm$core$String$startsWith = _String_startsWith;
 var $elm$url$Url$fromString = function (str) {
 	return A2($elm$core$String$startsWith, 'http://', str) ? A2(
 		$elm$url$Url$chompAfterProtocol,
-		$elm$url$Url$Http,
+		0,
 		A2($elm$core$String$dropLeft, 7, str)) : (A2($elm$core$String$startsWith, 'https://', str) ? A2(
 		$elm$url$Url$chompAfterProtocol,
-		$elm$url$Url$Https,
+		1,
 		A2($elm$core$String$dropLeft, 8, str)) : $elm$core$Maybe$Nothing);
 };
 var $elm$core$Basics$never = function (_v0) {
 	never:
 	while (true) {
-		var nvr = _v0.a;
+		var nvr = _v0;
 		var $temp$_v0 = nvr;
 		_v0 = $temp$_v0;
 		continue never;
 	}
 };
-var $elm$core$Task$Perform = function (a) {
-	return {$: 'Perform', a: a};
-};
+var $elm$core$Task$Perform = $elm$core$Basics$identity;
 var $elm$core$Task$succeed = _Scheduler_succeed;
-var $elm$core$Task$init = $elm$core$Task$succeed(_Utils_Tuple0);
+var $elm$core$Task$init = $elm$core$Task$succeed(0);
 var $elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
 		if (!ls.b) {
@@ -6798,7 +6794,7 @@ var $elm$core$Task$sequence = function (tasks) {
 var $elm$core$Platform$sendToApp = _Platform_sendToApp;
 var $elm$core$Task$spawnCmd = F2(
 	function (router, _v0) {
-		var task = _v0.a;
+		var task = _v0;
 		return _Scheduler_spawn(
 			A2(
 				$elm$core$Task$andThen,
@@ -6810,7 +6806,7 @@ var $elm$core$Task$onEffects = F3(
 		return A2(
 			$elm$core$Task$map,
 			function (_v0) {
-				return _Utils_Tuple0;
+				return 0;
 			},
 			$elm$core$Task$sequence(
 				A2(
@@ -6820,28 +6816,26 @@ var $elm$core$Task$onEffects = F3(
 	});
 var $elm$core$Task$onSelfMsg = F3(
 	function (_v0, _v1, _v2) {
-		return $elm$core$Task$succeed(_Utils_Tuple0);
+		return $elm$core$Task$succeed(0);
 	});
 var $elm$core$Task$cmdMap = F2(
 	function (tagger, _v0) {
-		var task = _v0.a;
-		return $elm$core$Task$Perform(
-			A2($elm$core$Task$map, tagger, task));
+		var task = _v0;
+		return A2($elm$core$Task$map, tagger, task);
 	});
 _Platform_effectManagers['Task'] = _Platform_createManager($elm$core$Task$init, $elm$core$Task$onEffects, $elm$core$Task$onSelfMsg, $elm$core$Task$cmdMap);
 var $elm$core$Task$command = _Platform_leaf('Task');
 var $elm$core$Task$perform = F2(
 	function (toMessage, task) {
 		return $elm$core$Task$command(
-			$elm$core$Task$Perform(
-				A2($elm$core$Task$map, toMessage, task)));
+			A2($elm$core$Task$map, toMessage, task));
 	});
 var $elm$browser$Browser$document = _Browser_document;
 var $author$project$Main$ViewPortLoaded = function (a) {
-	return {$: 'ViewPortLoaded', a: a};
+	return {$: 3, a: a};
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $author$project$NoiseParameters$emptyNoiseParams = {baseRoughness: 3, minValue: 0.2, numLayers: 4, persistance: 0.7, resolution: 40, roughness: 0.5, seed: 42, strength: 0.8};
+var $author$project$NoiseParameters$emptyNoiseParams = {bs: 3, bC: 0.2, bE: 4, bI: 0.7, bJ: 40, bL: 0.5, bM: 42, bN: 0.8};
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $elm_explorations$linear_algebra$Math$Vector3$add = _MJS_v3add;
 var $elm$core$List$append = F2(
@@ -6869,7 +6863,7 @@ var $elm$core$Array$fromListHelp = F3(
 				return A2(
 					$elm$core$Array$builderToArray,
 					true,
-					{nodeList: nodeList, nodeListSize: nodeListSize, tail: jsArray});
+					{d: nodeList, a: nodeListSize, c: jsArray});
 			} else {
 				var $temp$list = remainingItems,
 					$temp$nodeList = A2(
@@ -6914,7 +6908,7 @@ var $elm_explorations$linear_algebra$Math$Vector2$vec2 = _MJS_v2;
 var $elm_explorations$linear_algebra$Math$Vector3$vec3 = _MJS_v3;
 var $elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
+		if (!maybe.$) {
 			var value = maybe.a;
 			return value;
 		} else {
@@ -6978,7 +6972,7 @@ var $author$project$Mesh$faceTriangles = F3(
 								$elm_explorations$linear_algebra$Math$Vector3$getY(pointOnUniSphere),
 								$elm_explorations$linear_algebra$Math$Vector3$getZ(pointOnUniSphere));
 							var point = A2($elm_explorations$linear_algebra$Math$Vector3$scale, 1 + noiseV, pointOnUniSphere);
-							return {normal: pointOnUniSphere, position: point};
+							return {at: pointOnUniSphere, aw: point};
 						},
 						A2($elm$core$List$range, 0, res - 1));
 				},
@@ -6991,7 +6985,7 @@ var $author$project$Mesh$faceTriangles = F3(
 					$elm$core$List$map,
 					function (v) {
 						return $elm_explorations$linear_algebra$Math$Vector3$length(
-							A2($elm_explorations$linear_algebra$Math$Vector3$sub, v.position, v.normal));
+							A2($elm_explorations$linear_algebra$Math$Vector3$sub, v.aw, v.at));
 					},
 					vertexes)));
 		return _Utils_Tuple3(
@@ -7001,10 +6995,10 @@ var $author$project$Mesh$faceTriangles = F3(
 	});
 var $elm_explorations$webgl$WebGL$MeshIndexed3 = F3(
 	function (a, b, c) {
-		return {$: 'MeshIndexed3', a: a, b: b, c: c};
+		return {$: 3, a: a, b: b, c: c};
 	});
 var $elm_explorations$webgl$WebGL$indexedTriangles = $elm_explorations$webgl$WebGL$MeshIndexed3(
-	{elemSize: 1, indexSize: 3, mode: 4});
+	{aI: 1, aN: 3, a3: 4});
 var $author$project$Mesh$face = F3(
 	function (noise, res, direction) {
 		var _v0 = A3($author$project$Mesh$faceTriangles, noise, res, direction);
@@ -7029,23 +7023,23 @@ var $elm$core$List$head = function (list) {
 };
 var $author$project$Mesh$makeNoiseFunc = F5(
 	function (noise, noiseParams, x, y, z) {
-		var initialParams = {amplidute: 1, frequency: noiseParams.baseRoughness, value: 0.0};
+		var initialParams = {ab: 1, F: noiseParams.bs, ao: 0.0};
 		return function (f) {
-			return A2($elm$core$Basics$max, 0, ((f.value * noiseParams.strength) - noiseParams.minValue) / noiseParams.numLayers);
+			return A2($elm$core$Basics$max, 0, ((f.ao * noiseParams.bN) - noiseParams.bC) / noiseParams.bE);
 		}(
 			A3(
 				$elm$core$List$foldl,
 				F2(
 					function (_v0, acc) {
-						var noiseMinusOneOne = A3(noise, acc.frequency * x, acc.frequency * y, acc.frequency * z);
+						var noiseMinusOneOne = A3(noise, acc.F * x, acc.F * y, acc.F * z);
 						var noiseZeroOne = (noiseMinusOneOne + 1) * 0.5;
-						var v = noiseZeroOne * acc.amplidute;
-						var newFrequency = acc.frequency * noiseParams.roughness;
-						var newAmp = acc.amplidute * noiseParams.persistance;
-						return {amplidute: newAmp, frequency: newFrequency, value: acc.value + v};
+						var v = noiseZeroOne * acc.ab;
+						var newFrequency = acc.F * noiseParams.bL;
+						var newAmp = acc.ab * noiseParams.bI;
+						return {ab: newAmp, F: newFrequency, ao: acc.ao + v};
 					}),
 				initialParams,
-				A2($elm$core$List$range, 1, noiseParams.numLayers)));
+				A2($elm$core$List$range, 1, noiseParams.bE)));
 	});
 var $elm$core$Basics$negate = function (n) {
 	return -n;
@@ -7056,7 +7050,7 @@ var $Herteby$simplex_noise$Simplex$g3 = 1 / 6;
 var $elm$core$Basics$ge = _Utils_ge;
 var $Herteby$simplex_noise$Simplex$getCornerOffset3d = F3(
 	function (x, y, z) {
-		return (_Utils_cmp(x, y) > -1) ? ((_Utils_cmp(y, z) > -1) ? {i1: 1, i2: 1, j1: 0, j2: 1, k1: 0, k2: 0} : ((_Utils_cmp(x, z) > -1) ? {i1: 1, i2: 1, j1: 0, j2: 0, k1: 0, k2: 1} : {i1: 0, i2: 1, j1: 0, j2: 0, k1: 1, k2: 1})) : ((_Utils_cmp(y, z) < 0) ? {i1: 0, i2: 0, j1: 0, j2: 1, k1: 1, k2: 1} : ((_Utils_cmp(x, z) < 0) ? {i1: 0, i2: 0, j1: 1, j2: 1, k1: 0, k2: 1} : {i1: 0, i2: 1, j1: 1, j2: 1, k1: 0, k2: 0}));
+		return (_Utils_cmp(x, y) > -1) ? ((_Utils_cmp(y, z) > -1) ? {v: 1, w: 1, x: 0, y: 1, z: 0, A: 0} : ((_Utils_cmp(x, z) > -1) ? {v: 1, w: 1, x: 0, y: 0, z: 0, A: 1} : {v: 0, w: 1, x: 0, y: 0, z: 1, A: 1})) : ((_Utils_cmp(y, z) < 0) ? {v: 0, w: 0, x: 0, y: 1, z: 1, A: 1} : ((_Utils_cmp(x, z) < 0) ? {v: 0, w: 0, x: 1, y: 1, z: 0, A: 1} : {v: 0, w: 1, x: 1, y: 1, z: 0, A: 0}));
 	});
 var $elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
 var $elm$core$Array$bitMask = 4294967295 >>> (32 - $elm$core$Array$shiftStep);
@@ -7067,7 +7061,7 @@ var $elm$core$Array$getHelp = F3(
 		while (true) {
 			var pos = $elm$core$Array$bitMask & (index >>> shift);
 			var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
-			if (_v0.$ === 'SubTree') {
+			if (!_v0.$) {
 				var subTree = _v0.a;
 				var $temp$shift = shift - $elm$core$Array$shiftStep,
 					$temp$index = index,
@@ -7101,7 +7095,7 @@ var $elm$core$Array$get = F2(
 var $Herteby$simplex_noise$Simplex$get = F2(
 	function (arr, i) {
 		var _v0 = A2($elm$core$Array$get, i, arr);
-		if (_v0.$ === 'Just') {
+		if (!_v0.$) {
 			var x = _v0.a;
 			return x;
 		} else {
@@ -7130,8 +7124,8 @@ var $Herteby$simplex_noise$Simplex$getN3d = F8(
 	});
 var $Herteby$simplex_noise$Simplex$noise3d = F4(
 	function (_v0, xin, yin, zin) {
-		var perm = _v0.perm;
-		var permMod12 = _v0.permMod12;
+		var perm = _v0.P;
+		var permMod12 = _v0.Q;
 		var s = ((xin + yin) + zin) * $Herteby$simplex_noise$Simplex$f3;
 		var k = $elm$core$Basics$floor(zin + s);
 		var kk = k & 255;
@@ -7152,12 +7146,12 @@ var $Herteby$simplex_noise$Simplex$noise3d = F4(
 		var x3 = (x0 - 1) + (3 * $Herteby$simplex_noise$Simplex$g3);
 		var n3 = A8($Herteby$simplex_noise$Simplex$getN3d, x3, y3, z3, ii + 1, jj + 1, kk + 1, perm, permMod12);
 		var _v1 = A3($Herteby$simplex_noise$Simplex$getCornerOffset3d, x0, y0, z0);
-		var i1 = _v1.i1;
-		var j1 = _v1.j1;
-		var k1 = _v1.k1;
-		var i2 = _v1.i2;
-		var j2 = _v1.j2;
-		var k2 = _v1.k2;
+		var i1 = _v1.v;
+		var j1 = _v1.x;
+		var k1 = _v1.z;
+		var i2 = _v1.w;
+		var j2 = _v1.y;
+		var k2 = _v1.A;
 		var x1 = (x0 - i1) + $Herteby$simplex_noise$Simplex$g3;
 		var x2 = (x0 - i2) + (2 * $Herteby$simplex_noise$Simplex$g3);
 		var y1 = (y0 - j1) + $Herteby$simplex_noise$Simplex$g3;
@@ -7170,7 +7164,7 @@ var $Herteby$simplex_noise$Simplex$noise3d = F4(
 	});
 var $elm$random$Random$Seed = F2(
 	function (a, b) {
-		return {$: 'Seed', a: a, b: b};
+		return {$: 0, a: a, b: b};
 	});
 var $elm$random$Random$next = function (_v0) {
 	var state0 = _v0.a;
@@ -7191,23 +7185,23 @@ var $elm$core$Elm$JsArray$slice = _JsArray_slice;
 var $elm$core$Array$appendHelpBuilder = F2(
 	function (tail, builder) {
 		var tailLen = $elm$core$Elm$JsArray$length(tail);
-		var notAppended = ($elm$core$Array$branchFactor - $elm$core$Elm$JsArray$length(builder.tail)) - tailLen;
-		var appended = A3($elm$core$Elm$JsArray$appendN, $elm$core$Array$branchFactor, builder.tail, tail);
+		var notAppended = ($elm$core$Array$branchFactor - $elm$core$Elm$JsArray$length(builder.c)) - tailLen;
+		var appended = A3($elm$core$Elm$JsArray$appendN, $elm$core$Array$branchFactor, builder.c, tail);
 		return (notAppended < 0) ? {
-			nodeList: A2(
+			d: A2(
 				$elm$core$List$cons,
 				$elm$core$Array$Leaf(appended),
-				builder.nodeList),
-			nodeListSize: builder.nodeListSize + 1,
-			tail: A3($elm$core$Elm$JsArray$slice, notAppended, tailLen, tail)
+				builder.d),
+			a: builder.a + 1,
+			c: A3($elm$core$Elm$JsArray$slice, notAppended, tailLen, tail)
 		} : ((!notAppended) ? {
-			nodeList: A2(
+			d: A2(
 				$elm$core$List$cons,
 				$elm$core$Array$Leaf(appended),
-				builder.nodeList),
-			nodeListSize: builder.nodeListSize + 1,
-			tail: $elm$core$Elm$JsArray$empty
-		} : {nodeList: builder.nodeList, nodeListSize: builder.nodeListSize, tail: appended});
+				builder.d),
+			a: builder.a + 1,
+			c: $elm$core$Elm$JsArray$empty
+		} : {d: builder.d, a: builder.a, c: appended});
 	});
 var $elm$core$Elm$JsArray$push = _JsArray_push;
 var $elm$core$Elm$JsArray$singleton = _JsArray_singleton;
@@ -7230,7 +7224,7 @@ var $elm$core$Array$insertTailInTree = F4(
 			}
 		} else {
 			var value = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
-			if (value.$ === 'SubTree') {
+			if (!value.$) {
 				var subTree = value.a;
 				var newSub = $elm$core$Array$SubTree(
 					A4($elm$core$Array$insertTailInTree, shift - $elm$core$Array$shiftStep, index, tail, subTree));
@@ -7303,7 +7297,7 @@ var $elm$core$Array$builderFromArray = function (_v0) {
 	var tail = _v0.d;
 	var helper = F2(
 		function (node, acc) {
-			if (node.$ === 'SubTree') {
+			if (!node.$) {
 				var subTree = node.a;
 				return A3($elm$core$Elm$JsArray$foldl, helper, acc, subTree);
 			} else {
@@ -7311,9 +7305,9 @@ var $elm$core$Array$builderFromArray = function (_v0) {
 			}
 		});
 	return {
-		nodeList: A3($elm$core$Elm$JsArray$foldl, helper, _List_Nil, tree),
-		nodeListSize: (len / $elm$core$Array$branchFactor) | 0,
-		tail: tail
+		d: A3($elm$core$Elm$JsArray$foldl, helper, _List_Nil, tree),
+		a: (len / $elm$core$Array$branchFactor) | 0,
+		c: tail
 	};
 };
 var $elm$core$Array$append = F2(
@@ -7325,7 +7319,7 @@ var $elm$core$Array$append = F2(
 		if (_Utils_cmp(bLen, $elm$core$Array$branchFactor * 4) < 1) {
 			var foldHelper = F2(
 				function (node, array) {
-					if (node.$ === 'SubTree') {
+					if (!node.$) {
 						var tree = node.a;
 						return A3($elm$core$Elm$JsArray$foldl, foldHelper, array, tree);
 					} else {
@@ -7340,7 +7334,7 @@ var $elm$core$Array$append = F2(
 		} else {
 			var foldHelper = F2(
 				function (node, builder) {
-					if (node.$ === 'SubTree') {
+					if (!node.$) {
 						var tree = node.a;
 						return A3($elm$core$Elm$JsArray$foldl, foldHelper, builder, tree);
 					} else {
@@ -7369,7 +7363,7 @@ var $elm$core$Array$map = F2(
 		var tree = _v0.c;
 		var tail = _v0.d;
 		var helper = function (node) {
-			if (node.$ === 'SubTree') {
+			if (!node.$) {
 				var subTree = node.a;
 				return $elm$core$Array$SubTree(
 					A2($elm$core$Elm$JsArray$map, helper, subTree));
@@ -7386,21 +7380,18 @@ var $elm$core$Array$map = F2(
 			A2($elm$core$Elm$JsArray$map, helper, tree),
 			A2($elm$core$Elm$JsArray$map, func, tail));
 	});
-var $elm$random$Random$Generator = function (a) {
-	return {$: 'Generator', a: a};
-};
+var $elm$random$Random$Generator = $elm$core$Basics$identity;
 var $elm$random$Random$map = F2(
 	function (func, _v0) {
-		var genA = _v0.a;
-		return $elm$random$Random$Generator(
-			function (seed0) {
-				var _v1 = genA(seed0);
-				var a = _v1.a;
-				var seed1 = _v1.b;
-				return _Utils_Tuple2(
-					func(a),
-					seed1);
-			});
+		var genA = _v0;
+		return function (seed0) {
+			var _v1 = genA(seed0);
+			var a = _v1.a;
+			var seed1 = _v1.b;
+			return _Utils_Tuple2(
+				func(a),
+				seed1);
+		};
 	});
 var $elm$core$Basics$composeR = F3(
 	function (f, g, x) {
@@ -7415,35 +7406,34 @@ var $elm$random$Random$peel = function (_v0) {
 };
 var $elm$random$Random$int = F2(
 	function (a, b) {
-		return $elm$random$Random$Generator(
-			function (seed0) {
-				var _v0 = (_Utils_cmp(a, b) < 0) ? _Utils_Tuple2(a, b) : _Utils_Tuple2(b, a);
-				var lo = _v0.a;
-				var hi = _v0.b;
-				var range = (hi - lo) + 1;
-				if (!((range - 1) & range)) {
-					return _Utils_Tuple2(
-						(((range - 1) & $elm$random$Random$peel(seed0)) >>> 0) + lo,
-						$elm$random$Random$next(seed0));
-				} else {
-					var threshhold = (((-range) >>> 0) % range) >>> 0;
-					var accountForBias = function (seed) {
-						accountForBias:
-						while (true) {
-							var x = $elm$random$Random$peel(seed);
-							var seedN = $elm$random$Random$next(seed);
-							if (_Utils_cmp(x, threshhold) < 0) {
-								var $temp$seed = seedN;
-								seed = $temp$seed;
-								continue accountForBias;
-							} else {
-								return _Utils_Tuple2((x % range) + lo, seedN);
-							}
+		return function (seed0) {
+			var _v0 = (_Utils_cmp(a, b) < 0) ? _Utils_Tuple2(a, b) : _Utils_Tuple2(b, a);
+			var lo = _v0.a;
+			var hi = _v0.b;
+			var range = (hi - lo) + 1;
+			if (!((range - 1) & range)) {
+				return _Utils_Tuple2(
+					(((range - 1) & $elm$random$Random$peel(seed0)) >>> 0) + lo,
+					$elm$random$Random$next(seed0));
+			} else {
+				var threshhold = (((-range) >>> 0) % range) >>> 0;
+				var accountForBias = function (seed) {
+					accountForBias:
+					while (true) {
+						var x = $elm$random$Random$peel(seed);
+						var seedN = $elm$random$Random$next(seed);
+						if (_Utils_cmp(x, threshhold) < 0) {
+							var $temp$seed = seedN;
+							seed = $temp$seed;
+							continue accountForBias;
+						} else {
+							return _Utils_Tuple2((x % range) + lo, seedN);
 						}
-					};
-					return accountForBias(seed0);
-				}
-			});
+					}
+				};
+				return accountForBias(seed0);
+			}
+		};
 	});
 var $elm$core$Array$length = function (_v0) {
 	var len = _v0.a;
@@ -7473,18 +7463,17 @@ var $elm$random$Random$listHelp = F4(
 	});
 var $elm$random$Random$list = F2(
 	function (n, _v0) {
-		var gen = _v0.a;
-		return $elm$random$Random$Generator(
-			function (seed) {
-				return A4($elm$random$Random$listHelp, _List_Nil, n, gen, seed);
-			});
+		var gen = _v0;
+		return function (seed) {
+			return A4($elm$random$Random$listHelp, _List_Nil, n, gen, seed);
+		};
 	});
 var $elm$core$Basics$compare = _Utils_compare;
 var $elm$core$Dict$get = F2(
 	function (targetKey, dict) {
 		get:
 		while (true) {
-			if (dict.$ === 'RBEmpty_elm_builtin') {
+			if (dict.$ === -2) {
 				return $elm$core$Maybe$Nothing;
 			} else {
 				var key = dict.b;
@@ -7492,14 +7481,14 @@ var $elm$core$Dict$get = F2(
 				var left = dict.d;
 				var right = dict.e;
 				var _v1 = A2($elm$core$Basics$compare, targetKey, key);
-				switch (_v1.$) {
-					case 'LT':
+				switch (_v1) {
+					case 0:
 						var $temp$targetKey = targetKey,
 							$temp$dict = left;
 						targetKey = $temp$targetKey;
 						dict = $temp$dict;
 						continue get;
-					case 'EQ':
+					case 1:
 						return $elm$core$Maybe$Just(value);
 					default:
 						var $temp$targetKey = targetKey,
@@ -7516,7 +7505,7 @@ var $owanturist$elm_union_find$UnionFind$findFast = F2(
 		findFast:
 		while (true) {
 			var _v0 = A2($elm$core$Dict$get, id, dict);
-			if (_v0.$ === 'Nothing') {
+			if (_v0.$ === 1) {
 				return id;
 			} else {
 				var cursor = _v0.a;
@@ -7544,30 +7533,30 @@ var $elm$core$Array$isEmpty = function (_v0) {
 var $elm$core$Basics$modBy = _Basics_modBy;
 var $owanturist$elm_union_find$UnionFind$QuickUnionPathCompression = F2(
 	function (a, b) {
-		return {$: 'QuickUnionPathCompression', a: a, b: b};
+		return {$: 0, a: a, b: b};
 	});
-var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
+var $elm$core$Dict$RBEmpty_elm_builtin = {$: -2};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $owanturist$elm_union_find$UnionFind$quickUnionPathCompression = A2($owanturist$elm_union_find$UnionFind$QuickUnionPathCompression, 0, $elm$core$Dict$empty);
 var $elm$core$Tuple$second = function (_v0) {
 	var y = _v0.b;
 	return y;
 };
-var $elm$core$Dict$Black = {$: 'Black'};
+var $elm$core$Dict$Black = 1;
 var $elm$core$Dict$RBNode_elm_builtin = F5(
 	function (a, b, c, d, e) {
-		return {$: 'RBNode_elm_builtin', a: a, b: b, c: c, d: d, e: e};
+		return {$: -1, a: a, b: b, c: c, d: d, e: e};
 	});
-var $elm$core$Dict$Red = {$: 'Red'};
+var $elm$core$Dict$Red = 0;
 var $elm$core$Dict$balance = F5(
 	function (color, key, value, left, right) {
-		if ((right.$ === 'RBNode_elm_builtin') && (right.a.$ === 'Red')) {
+		if ((right.$ === -1) && (!right.a)) {
 			var _v1 = right.a;
 			var rK = right.b;
 			var rV = right.c;
 			var rLeft = right.d;
 			var rRight = right.e;
-			if ((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Red')) {
+			if ((left.$ === -1) && (!left.a)) {
 				var _v3 = left.a;
 				var lK = left.b;
 				var lV = left.c;
@@ -7575,22 +7564,22 @@ var $elm$core$Dict$balance = F5(
 				var lRight = left.e;
 				return A5(
 					$elm$core$Dict$RBNode_elm_builtin,
-					$elm$core$Dict$Red,
+					0,
 					key,
 					value,
-					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, lK, lV, lLeft, lRight),
-					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, rK, rV, rLeft, rRight));
+					A5($elm$core$Dict$RBNode_elm_builtin, 1, lK, lV, lLeft, lRight),
+					A5($elm$core$Dict$RBNode_elm_builtin, 1, rK, rV, rLeft, rRight));
 			} else {
 				return A5(
 					$elm$core$Dict$RBNode_elm_builtin,
 					color,
 					rK,
 					rV,
-					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, key, value, left, rLeft),
+					A5($elm$core$Dict$RBNode_elm_builtin, 0, key, value, left, rLeft),
 					rRight);
 			}
 		} else {
-			if ((((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Red')) && (left.d.$ === 'RBNode_elm_builtin')) && (left.d.a.$ === 'Red')) {
+			if ((((left.$ === -1) && (!left.a)) && (left.d.$ === -1)) && (!left.d.a)) {
 				var _v5 = left.a;
 				var lK = left.b;
 				var lV = left.c;
@@ -7603,11 +7592,11 @@ var $elm$core$Dict$balance = F5(
 				var lRight = left.e;
 				return A5(
 					$elm$core$Dict$RBNode_elm_builtin,
-					$elm$core$Dict$Red,
+					0,
 					lK,
 					lV,
-					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, llK, llV, llLeft, llRight),
-					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, key, value, lRight, right));
+					A5($elm$core$Dict$RBNode_elm_builtin, 1, llK, llV, llLeft, llRight),
+					A5($elm$core$Dict$RBNode_elm_builtin, 1, key, value, lRight, right));
 			} else {
 				return A5($elm$core$Dict$RBNode_elm_builtin, color, key, value, left, right);
 			}
@@ -7615,8 +7604,8 @@ var $elm$core$Dict$balance = F5(
 	});
 var $elm$core$Dict$insertHelp = F3(
 	function (key, value, dict) {
-		if (dict.$ === 'RBEmpty_elm_builtin') {
-			return A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, key, value, $elm$core$Dict$RBEmpty_elm_builtin, $elm$core$Dict$RBEmpty_elm_builtin);
+		if (dict.$ === -2) {
+			return A5($elm$core$Dict$RBNode_elm_builtin, 0, key, value, $elm$core$Dict$RBEmpty_elm_builtin, $elm$core$Dict$RBEmpty_elm_builtin);
 		} else {
 			var nColor = dict.a;
 			var nKey = dict.b;
@@ -7624,8 +7613,8 @@ var $elm$core$Dict$insertHelp = F3(
 			var nLeft = dict.d;
 			var nRight = dict.e;
 			var _v1 = A2($elm$core$Basics$compare, key, nKey);
-			switch (_v1.$) {
-				case 'LT':
+			switch (_v1) {
+				case 0:
 					return A5(
 						$elm$core$Dict$balance,
 						nColor,
@@ -7633,7 +7622,7 @@ var $elm$core$Dict$insertHelp = F3(
 						nValue,
 						A3($elm$core$Dict$insertHelp, key, value, nLeft),
 						nRight);
-				case 'EQ':
+				case 1:
 					return A5($elm$core$Dict$RBNode_elm_builtin, nColor, nKey, value, nLeft, nRight);
 				default:
 					return A5(
@@ -7649,13 +7638,13 @@ var $elm$core$Dict$insertHelp = F3(
 var $elm$core$Dict$insert = F3(
 	function (key, value, dict) {
 		var _v0 = A3($elm$core$Dict$insertHelp, key, value, dict);
-		if ((_v0.$ === 'RBNode_elm_builtin') && (_v0.a.$ === 'Red')) {
+		if ((_v0.$ === -1) && (!_v0.a)) {
 			var _v1 = _v0.a;
 			var k = _v0.b;
 			var v = _v0.c;
 			var l = _v0.d;
 			var r = _v0.e;
-			return A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, k, v, l, r);
+			return A5($elm$core$Dict$RBNode_elm_builtin, 1, k, v, l, r);
 		} else {
 			var x = _v0;
 			return x;
@@ -7664,7 +7653,7 @@ var $elm$core$Dict$insert = F3(
 var $owanturist$elm_union_find$UnionFind$findCompressed = F2(
 	function (id, dict) {
 		var _v0 = A2($elm$core$Dict$get, id, dict);
-		if (_v0.$ === 'Nothing') {
+		if (_v0.$ === 1) {
 			return _Utils_Tuple2(
 				id,
 				A3($elm$core$Dict$insert, id, id, dict));
@@ -7711,7 +7700,7 @@ var $elm_community$random_extra$Utils$selectUniqByIndexes = F2(
 					modByLength(leaderOfElement + 1),
 					uf);
 				var _v0 = A2($elm$core$Array$get, leaderOfElement, values);
-				if (_v0.$ === 'Nothing') {
+				if (_v0.$ === 1) {
 					return _Utils_Tuple2(uf, acc);
 				} else {
 					var value = _v0.a;
@@ -7744,8 +7733,8 @@ var $Herteby$simplex_noise$Simplex$permutationTableGenerator = A2(
 	function (array) {
 		var perm = A2($elm$core$Array$append, array, array);
 		return {
-			perm: perm,
-			permMod12: A2(
+			P: perm,
+			Q: A2(
 				$elm$core$Array$map,
 				$elm$core$Basics$remainderBy(12),
 				perm)
@@ -7756,7 +7745,7 @@ var $Herteby$simplex_noise$Simplex$permutationTableGenerator = A2(
 			A2($elm$core$List$range, 0, 255))));
 var $elm$random$Random$step = F2(
 	function (_v0, seed) {
-		var generator = _v0.a;
+		var generator = _v0;
 		return generator(seed);
 	});
 var $Herteby$simplex_noise$Simplex$permutationTableFromInt = function (_int) {
@@ -7787,7 +7776,7 @@ var $author$project$Mesh$makeCube = function (noiseParamsList) {
 		$elm$core$List$map,
 		function (p) {
 			return $Herteby$simplex_noise$Simplex$noise3d(
-				$Herteby$simplex_noise$Simplex$permutationTableFromInt(p.seed));
+				$Herteby$simplex_noise$Simplex$permutationTableFromInt(p.bM));
 		},
 		noiseParamsList);
 	var noiseFilters = A3($elm$core$List$map2, $author$project$Mesh$makeNoiseFunc, noiseFunctions, noiseParamsList);
@@ -7806,7 +7795,7 @@ var $author$project$Mesh$makeCube = function (noiseParamsList) {
 		$elm$core$Maybe$withDefault,
 		$author$project$NoiseParameters$emptyNoiseParams,
 		$elm$core$List$head(noiseParamsList));
-	var res = firstParams.resolution;
+	var res = firstParams.bJ;
 	var _v0 = $elm$core$List$unzip(
 		A2(
 			$elm$core$List$map,
@@ -7835,7 +7824,7 @@ var $author$project$Main$init = function (_v0) {
 	var maxHeight = _v1.a;
 	var cubeMesh = _v1.b;
 	return _Utils_Tuple2(
-		{height: 240, maxHeight: maxHeight, meshes: cubeMesh, noiseParams: noiesParams, offset: 0, paused: false, theta: 0, viewportHeight: 0, viewportWidth: 0, width: 240},
+		{M: 240, G: maxHeight, H: cubeMesh, p: noiesParams, au: 0, O: false, T: 0, aC: 0, aD: 0, X: 240},
 		$elm$core$Platform$Cmd$batch(
 			_List_fromArray(
 				[
@@ -7843,32 +7832,32 @@ var $author$project$Main$init = function (_v0) {
 				])));
 };
 var $author$project$Main$Delta = function (a) {
-	return {$: 'Delta', a: a};
+	return {$: 0, a: a};
 };
-var $author$project$Main$Paused = {$: 'Paused'};
-var $author$project$Main$Resumed = {$: 'Resumed'};
+var $author$project$Main$Paused = {$: 1};
+var $author$project$Main$Resumed = {$: 2};
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $elm$browser$Browser$AnimationManager$Delta = function (a) {
-	return {$: 'Delta', a: a};
+	return {$: 1, a: a};
 };
 var $elm$browser$Browser$AnimationManager$State = F3(
 	function (subs, request, oldTime) {
-		return {oldTime: oldTime, request: request, subs: subs};
+		return {av: oldTime, bf: request, bi: subs};
 	});
 var $elm$browser$Browser$AnimationManager$init = $elm$core$Task$succeed(
 	A3($elm$browser$Browser$AnimationManager$State, _List_Nil, $elm$core$Maybe$Nothing, 0));
 var $elm$core$Process$kill = _Scheduler_kill;
-var $elm$browser$Browser$AnimationManager$now = _Browser_now(_Utils_Tuple0);
-var $elm$browser$Browser$AnimationManager$rAF = _Browser_rAF(_Utils_Tuple0);
+var $elm$browser$Browser$AnimationManager$now = _Browser_now(0);
+var $elm$browser$Browser$AnimationManager$rAF = _Browser_rAF(0);
 var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
 var $elm$core$Process$spawn = _Scheduler_spawn;
 var $elm$browser$Browser$AnimationManager$onEffects = F3(
 	function (router, subs, _v0) {
-		var request = _v0.request;
-		var oldTime = _v0.oldTime;
+		var request = _v0.bf;
+		var oldTime = _v0.av;
 		var _v1 = _Utils_Tuple2(request, subs);
-		if (_v1.a.$ === 'Nothing') {
+		if (_v1.a.$ === 1) {
 			if (!_v1.b.b) {
 				var _v2 = _v1.a;
 				return $elm$browser$Browser$AnimationManager$init;
@@ -7910,16 +7899,14 @@ var $elm$browser$Browser$AnimationManager$onEffects = F3(
 			}
 		}
 	});
-var $elm$time$Time$Posix = function (a) {
-	return {$: 'Posix', a: a};
-};
-var $elm$time$Time$millisToPosix = $elm$time$Time$Posix;
+var $elm$time$Time$Posix = $elm$core$Basics$identity;
+var $elm$time$Time$millisToPosix = $elm$core$Basics$identity;
 var $elm$browser$Browser$AnimationManager$onSelfMsg = F3(
 	function (router, newTime, _v0) {
-		var subs = _v0.subs;
-		var oldTime = _v0.oldTime;
+		var subs = _v0.bi;
+		var oldTime = _v0.av;
 		var send = function (sub) {
-			if (sub.$ === 'Time') {
+			if (!sub.$) {
 				var tagger = sub.a;
 				return A2(
 					$elm$core$Platform$sendToApp,
@@ -7957,7 +7944,7 @@ var $elm$browser$Browser$AnimationManager$onSelfMsg = F3(
 					$elm$browser$Browser$AnimationManager$rAF)));
 	});
 var $elm$browser$Browser$AnimationManager$Time = function (a) {
-	return {$: 'Time', a: a};
+	return {$: 0, a: a};
 };
 var $elm$core$Basics$composeL = F3(
 	function (g, f, x) {
@@ -7966,7 +7953,7 @@ var $elm$core$Basics$composeL = F3(
 	});
 var $elm$browser$Browser$AnimationManager$subMap = F2(
 	function (func, sub) {
-		if (sub.$ === 'Time') {
+		if (!sub.$) {
 			var tagger = sub.a;
 			return $elm$browser$Browser$AnimationManager$Time(
 				A2($elm$core$Basics$composeL, func, tagger));
@@ -7983,21 +7970,21 @@ var $elm$browser$Browser$AnimationManager$onAnimationFrameDelta = function (tagg
 		$elm$browser$Browser$AnimationManager$Delta(tagger));
 };
 var $elm$browser$Browser$Events$onAnimationFrameDelta = $elm$browser$Browser$AnimationManager$onAnimationFrameDelta;
-var $elm$browser$Browser$Events$Document = {$: 'Document'};
+var $elm$browser$Browser$Events$Document = 0;
 var $elm$json$Json$Decode$bool = _Json_decodeBool;
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$browser$Browser$Events$MySub = F3(
 	function (a, b, c) {
-		return {$: 'MySub', a: a, b: b, c: c};
+		return {$: 0, a: a, b: b, c: c};
 	});
 var $elm$browser$Browser$Events$State = F2(
 	function (subs, pids) {
-		return {pids: pids, subs: subs};
+		return {a8: pids, bi: subs};
 	});
 var $elm$browser$Browser$Events$init = $elm$core$Task$succeed(
 	A2($elm$browser$Browser$Events$State, _List_Nil, $elm$core$Dict$empty));
 var $elm$browser$Browser$Events$nodeToKey = function (node) {
-	if (node.$ === 'Document') {
+	if (!node) {
 		return 'd_';
 	} else {
 		return 'w_';
@@ -8028,7 +8015,7 @@ var $elm$core$Dict$foldl = F3(
 	function (func, acc, dict) {
 		foldl:
 		while (true) {
-			if (dict.$ === 'RBEmpty_elm_builtin') {
+			if (dict.$ === -2) {
 				return acc;
 			} else {
 				var key = dict.b;
@@ -8112,14 +8099,14 @@ var $elm$core$Dict$merge = F6(
 	});
 var $elm$browser$Browser$Events$Event = F2(
 	function (key, event) {
-		return {event: event, key: key};
+		return {aK: event, aO: key};
 	});
 var $elm$browser$Browser$Events$spawn = F3(
 	function (router, key, _v0) {
 		var node = _v0.a;
 		var name = _v0.b;
 		var actualNode = function () {
-			if (node.$ === 'Document') {
+			if (!node) {
 				return _Browser_doc;
 			} else {
 				return _Browser_window;
@@ -8186,7 +8173,7 @@ var $elm$browser$Browser$Events$onEffects = F3(
 			stepLeft,
 			stepBoth,
 			stepRight,
-			state.pids,
+			state.a8,
 			$elm$core$Dict$fromList(newSubs),
 			_Utils_Tuple3(_List_Nil, $elm$core$Dict$empty, _List_Nil));
 		var deadPids = _v0.a;
@@ -8215,7 +8202,7 @@ var $elm$browser$Browser$Events$onEffects = F3(
 var $elm$core$List$maybeCons = F3(
 	function (f, mx, xs) {
 		var _v0 = f(mx);
-		if (_v0.$ === 'Just') {
+		if (!_v0.$) {
 			var x = _v0.a;
 			return A2($elm$core$List$cons, x, xs);
 		} else {
@@ -8232,8 +8219,8 @@ var $elm$core$List$filterMap = F2(
 	});
 var $elm$browser$Browser$Events$onSelfMsg = F3(
 	function (router, _v0, state) {
-		var key = _v0.key;
-		var event = _v0.event;
+		var key = _v0.aO;
+		var event = _v0.aK;
 		var toMessage = function (_v2) {
 			var subKey = _v2.a;
 			var _v3 = _v2.b;
@@ -8242,7 +8229,7 @@ var $elm$browser$Browser$Events$onSelfMsg = F3(
 			var decoder = _v3.c;
 			return _Utils_eq(subKey, key) ? A2(_Browser_decodeEvent, decoder, event) : $elm$core$Maybe$Nothing;
 		};
-		var messages = A2($elm$core$List$filterMap, toMessage, state.subs);
+		var messages = A2($elm$core$List$filterMap, toMessage, state.bi);
 		return A2(
 			$elm$core$Task$andThen,
 			function (_v1) {
@@ -8272,35 +8259,35 @@ var $elm$browser$Browser$Events$on = F3(
 		return $elm$browser$Browser$Events$subscription(
 			A3($elm$browser$Browser$Events$MySub, node, name, decoder));
 	});
-var $elm$browser$Browser$Events$Hidden = {$: 'Hidden'};
-var $elm$browser$Browser$Events$Visible = {$: 'Visible'};
+var $elm$browser$Browser$Events$Hidden = 1;
+var $elm$browser$Browser$Events$Visible = 0;
 var $elm$browser$Browser$Events$withHidden = F2(
 	function (func, isHidden) {
 		return func(
-			isHidden ? $elm$browser$Browser$Events$Hidden : $elm$browser$Browser$Events$Visible);
+			isHidden ? 1 : 0);
 	});
 var $elm$browser$Browser$Events$onVisibilityChange = function (func) {
-	var info = _Browser_visibilityInfo(_Utils_Tuple0);
+	var info = _Browser_visibilityInfo(0);
 	return A3(
 		$elm$browser$Browser$Events$on,
-		$elm$browser$Browser$Events$Document,
-		info.change,
+		0,
+		info.bu,
 		A2(
 			$elm$json$Json$Decode$map,
 			$elm$browser$Browser$Events$withHidden(func),
 			A2(
 				$elm$json$Json$Decode$field,
 				'target',
-				A2($elm$json$Json$Decode$field, info.hidden, $elm$json$Json$Decode$bool))));
+				A2($elm$json$Json$Decode$field, info.bz, $elm$json$Json$Decode$bool))));
 };
 var $author$project$Main$subscriptions = function (model) {
 	return $elm$core$Platform$Sub$batch(
 		_List_fromArray(
 			[
-				model.paused ? $elm$core$Platform$Sub$none : $elm$browser$Browser$Events$onAnimationFrameDelta($author$project$Main$Delta),
+				model.O ? $elm$core$Platform$Sub$none : $elm$browser$Browser$Events$onAnimationFrameDelta($author$project$Main$Delta),
 				$elm$browser$Browser$Events$onVisibilityChange(
 				function (v) {
-					if (v.$ === 'Hidden') {
+					if (v === 1) {
 						return $author$project$Main$Paused;
 					} else {
 						return $author$project$Main$Resumed;
@@ -8311,16 +8298,16 @@ var $author$project$Main$subscriptions = function (model) {
 var $elm$core$Basics$round = _Basics_round;
 var $author$project$Main$computeViewportSize = F2(
 	function (viewport, model) {
-		var vph = viewport.viewport.height;
+		var vph = viewport.bm.M;
 		var ratio = 16.0 / 9.0;
 		var vpw = vph / ratio;
-		var offset = $elm$core$Basics$round((viewport.viewport.width - vpw) / 2.0);
+		var offset = $elm$core$Basics$round((viewport.bm.X - vpw) / 2.0);
 		return _Utils_update(
 			model,
 			{
-				offset: offset,
-				viewportHeight: $elm$core$Basics$round(vph),
-				viewportWidth: $elm$core$Basics$round(vpw)
+				au: offset,
+				aC: $elm$core$Basics$round(vph),
+				aD: $elm$core$Basics$round(vpw)
 			});
 	});
 var $elm$core$List$drop = F2(
@@ -8349,74 +8336,74 @@ var $elm$core$String$toFloat = _String_toFloat;
 var $author$project$NoiseParameters$updateParams = F2(
 	function (prevParams, updateMsg) {
 		switch (updateMsg.$) {
-			case 'UpdateBaseRoughness':
+			case 0:
 				var baseRoughness = updateMsg.a;
 				return _Utils_update(
 					prevParams,
 					{
-						baseRoughness: A2(
+						bs: A2(
 							$elm$core$Maybe$withDefault,
-							prevParams.baseRoughness,
+							prevParams.bs,
 							$elm$core$String$toFloat(baseRoughness))
 					});
-			case 'UpdateRoughness':
+			case 1:
 				var roughness = updateMsg.a;
 				return _Utils_update(
 					prevParams,
 					{
-						roughness: A2(
+						bL: A2(
 							$elm$core$Maybe$withDefault,
-							prevParams.roughness,
+							prevParams.bL,
 							$elm$core$String$toFloat(roughness))
 					});
-			case 'UpdatePersistance':
+			case 2:
 				var persistance = updateMsg.a;
 				return _Utils_update(
 					prevParams,
 					{
-						persistance: A2(
+						bI: A2(
 							$elm$core$Maybe$withDefault,
-							prevParams.persistance,
+							prevParams.bI,
 							$elm$core$String$toFloat(persistance))
 					});
-			case 'UpdateNumLayers':
+			case 3:
 				var numLayers = updateMsg.a;
 				return _Utils_update(
 					prevParams,
 					{
-						numLayers: A2(
+						bE: A2(
 							$elm$core$Maybe$withDefault,
-							prevParams.numLayers,
+							prevParams.bE,
 							$elm$core$String$toInt(numLayers))
 					});
-			case 'UpdateSeed':
+			case 4:
 				var seed = updateMsg.a;
 				return _Utils_update(
 					prevParams,
 					{
-						seed: A2(
+						bM: A2(
 							$elm$core$Maybe$withDefault,
-							prevParams.seed,
+							prevParams.bM,
 							$elm$core$String$toInt(seed))
 					});
-			case 'UpdateResolution':
+			case 5:
 				var resolution = updateMsg.a;
 				return _Utils_update(
 					prevParams,
 					{
-						resolution: A2(
+						bJ: A2(
 							$elm$core$Maybe$withDefault,
-							prevParams.resolution,
+							prevParams.bJ,
 							$elm$core$String$toInt(resolution))
 					});
-			case 'UpdateStrength':
+			case 6:
 				var strength = updateMsg.a;
 				return _Utils_update(
 					prevParams,
 					{
-						strength: A2(
+						bN: A2(
 							$elm$core$Maybe$withDefault,
-							prevParams.strength,
+							prevParams.bN,
 							$elm$core$String$toFloat(strength))
 					});
 			default:
@@ -8424,9 +8411,9 @@ var $author$project$NoiseParameters$updateParams = F2(
 				return _Utils_update(
 					prevParams,
 					{
-						minValue: A2(
+						bC: A2(
 							$elm$core$Maybe$withDefault,
-							prevParams.strength,
+							prevParams.bN,
 							$elm$core$String$toFloat(minValue))
 					});
 		}
@@ -8444,67 +8431,67 @@ var $author$project$NoiseParameters$updateParameter = F3(
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
-			case 'Delta':
+			case 0:
 				var f = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{theta: model.theta + (f / 5000)}),
+						{T: model.T + (f / 5000)}),
 					$elm$core$Platform$Cmd$none);
-			case 'Paused':
+			case 1:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{paused: true}),
+						{O: true}),
 					$elm$core$Platform$Cmd$none);
-			case 'Resumed':
+			case 2:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{paused: false}),
+						{O: false}),
 					$elm$core$Platform$Cmd$none);
-			case 'ViewPortLoaded':
+			case 3:
 				var viewport = msg.a;
 				return _Utils_Tuple2(
 					A2($author$project$Main$computeViewportSize, viewport, model),
 					$elm$core$Platform$Cmd$none);
-			case 'UpdateParams':
+			case 4:
 				var idx = msg.a;
 				var paramsUpdate = msg.b;
-				var newParams = A3($author$project$NoiseParameters$updateParameter, idx, model.noiseParams, paramsUpdate);
+				var newParams = A3($author$project$NoiseParameters$updateParameter, idx, model.p, paramsUpdate);
 				var _v1 = $author$project$Mesh$makeCube(newParams);
 				var newHeight = _v1.a;
 				var newCube = _v1.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{maxHeight: newHeight, meshes: newCube, noiseParams: newParams}),
+						{G: newHeight, H: newCube, p: newParams}),
 					$elm$core$Platform$Cmd$none);
-			case 'AddFilter':
-				var newParams = A2($elm$core$List$cons, $author$project$NoiseParameters$emptyNoiseParams, model.noiseParams);
+			case 5:
+				var newParams = A2($elm$core$List$cons, $author$project$NoiseParameters$emptyNoiseParams, model.p);
 				var _v2 = $author$project$Mesh$makeCube(newParams);
 				var newHeight = _v2.a;
 				var newCube = _v2.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{maxHeight: newHeight, meshes: newCube, noiseParams: newParams}),
+						{G: newHeight, H: newCube, p: newParams}),
 					$elm$core$Platform$Cmd$none);
 			default:
-				var newParams = A2($elm$core$List$drop, 1, model.noiseParams);
+				var newParams = A2($elm$core$List$drop, 1, model.p);
 				var _v3 = $author$project$Mesh$makeCube(newParams);
 				var newHeight = _v3.a;
 				var newCube = _v3.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{maxHeight: newHeight, meshes: newCube, noiseParams: newParams}),
+						{G: newHeight, H: newCube, p: newParams}),
 					$elm$core$Platform$Cmd$none);
 		}
 	});
-var $author$project$Main$AddFilter = {$: 'AddFilter'};
-var $author$project$Main$RemoveFilter = {$: 'RemoveFilter'};
-var $elm_explorations$webgl$WebGL$Internal$Antialias = {$: 'Antialias'};
+var $author$project$Main$AddFilter = {$: 5};
+var $author$project$Main$RemoveFilter = {$: 6};
+var $elm_explorations$webgl$WebGL$Internal$Antialias = {$: 3};
 var $elm_explorations$webgl$WebGL$antialias = $elm_explorations$webgl$WebGL$Internal$Antialias;
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$json$Json$Encode$string = _Json_wrap;
@@ -8517,51 +8504,49 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm_explorations$webgl$WebGL$Internal$Depth = function (a) {
-	return {$: 'Depth', a: a};
+	return {$: 1, a: a};
 };
 var $elm_explorations$webgl$WebGL$depth = $elm_explorations$webgl$WebGL$Internal$Depth;
 var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm_explorations$webgl$WebGL$Settings$FaceMode = function (a) {
-	return {$: 'FaceMode', a: a};
-};
-var $elm_explorations$webgl$WebGL$Settings$back = $elm_explorations$webgl$WebGL$Settings$FaceMode(1029);
+var $elm_explorations$webgl$WebGL$Settings$FaceMode = $elm$core$Basics$identity;
+var $elm_explorations$webgl$WebGL$Settings$back = 1029;
 var $elm_explorations$webgl$WebGL$Internal$CullFace = function (a) {
-	return {$: 'CullFace', a: a};
+	return {$: 5, a: a};
 };
 var $elm_explorations$webgl$WebGL$Settings$cullFace = function (_v0) {
-	var faceMode = _v0.a;
+	var faceMode = _v0;
 	return $elm_explorations$webgl$WebGL$Internal$CullFace(faceMode);
 };
 var $elm_explorations$webgl$WebGL$Internal$DepthTest = F4(
 	function (a, b, c, d) {
-		return {$: 'DepthTest', a: a, b: b, c: c, d: d};
+		return {$: 1, a: a, b: b, c: c, d: d};
 	});
 var $elm_explorations$webgl$WebGL$Settings$DepthTest$less = function (_v0) {
-	var write = _v0.write;
-	var near = _v0.near;
-	var far = _v0.far;
+	var write = _v0.n;
+	var near = _v0.k;
+	var far = _v0.j;
 	return A4($elm_explorations$webgl$WebGL$Internal$DepthTest, 513, write, near, far);
 };
 var $elm_explorations$webgl$WebGL$Settings$DepthTest$default = $elm_explorations$webgl$WebGL$Settings$DepthTest$less(
-	{far: 1, near: 0, write: true});
+	{j: 1, k: 0, n: true});
 var $elm_explorations$webgl$WebGL$Internal$disableSetting = F2(
 	function (cache, setting) {
 		switch (setting.$) {
-			case 'Blend':
+			case 0:
 				return _WebGL_disableBlend(cache);
-			case 'DepthTest':
+			case 1:
 				return _WebGL_disableDepthTest(cache);
-			case 'StencilTest':
+			case 2:
 				return _WebGL_disableStencilTest(cache);
-			case 'Scissor':
+			case 3:
 				return _WebGL_disableScissor(cache);
-			case 'ColorMask':
+			case 4:
 				return _WebGL_disableColorMask(cache);
-			case 'CullFace':
+			case 5:
 				return _WebGL_disableCullFace(cache);
-			case 'PolygonOffset':
+			case 6:
 				return _WebGL_disablePolygonOffset(cache);
-			case 'SampleCoverage':
+			case 7:
 				return _WebGL_disableSampleCoverage(cache);
 			default:
 				return _WebGL_disableSampleAlphaToCoverage(cache);
@@ -8570,15 +8555,15 @@ var $elm_explorations$webgl$WebGL$Internal$disableSetting = F2(
 var $elm_explorations$webgl$WebGL$Internal$enableOption = F2(
 	function (ctx, option) {
 		switch (option.$) {
-			case 'Alpha':
+			case 0:
 				return A2(_WebGL_enableAlpha, ctx, option);
-			case 'Depth':
+			case 1:
 				return A2(_WebGL_enableDepth, ctx, option);
-			case 'Stencil':
+			case 2:
 				return A2(_WebGL_enableStencil, ctx, option);
-			case 'Antialias':
+			case 3:
 				return A2(_WebGL_enableAntialias, ctx, option);
-			case 'ClearColor':
+			case 4:
 				return A2(_WebGL_enableClearColor, ctx, option);
 			default:
 				return A2(_WebGL_enablePreserveDrawingBuffer, ctx, option);
@@ -8587,21 +8572,21 @@ var $elm_explorations$webgl$WebGL$Internal$enableOption = F2(
 var $elm_explorations$webgl$WebGL$Internal$enableSetting = F2(
 	function (gl, setting) {
 		switch (setting.$) {
-			case 'Blend':
+			case 0:
 				return A2(_WebGL_enableBlend, gl, setting);
-			case 'DepthTest':
+			case 1:
 				return A2(_WebGL_enableDepthTest, gl, setting);
-			case 'StencilTest':
+			case 2:
 				return A2(_WebGL_enableStencilTest, gl, setting);
-			case 'Scissor':
+			case 3:
 				return A2(_WebGL_enableScissor, gl, setting);
-			case 'ColorMask':
+			case 4:
 				return A2(_WebGL_enableColorMask, gl, setting);
-			case 'CullFace':
+			case 5:
 				return A2(_WebGL_enableCullFace, gl, setting);
-			case 'PolygonOffset':
+			case 6:
 				return A2(_WebGL_enablePolygonOffset, gl, setting);
-			case 'SampleCoverage':
+			case 7:
 				return A2(_WebGL_enableSampleCoverage, gl, setting);
 			default:
 				return A2(_WebGL_enableSampleAlphaToCoverage, gl, setting);
@@ -8652,12 +8637,12 @@ var $author$project$Shaders$makeUniforms = F4(
 				$elm$core$Maybe$withDefault,
 				$elm_explorations$linear_algebra$Math$Matrix4$identity,
 				$elm_explorations$linear_algebra$Math$Matrix4$inverse(rotation)));
-		return {maxHeight: maxHeight, normalMatrix: normalTransform, perspective: perspectiveP, rotation: rotation};
+		return {G: maxHeight, a5: normalTransform, a7: perspectiveP, bg: rotation};
 	});
 var $author$project$Shaders$vertexShader = {
 	src: '\n        attribute vec3 position;\n        attribute vec3 normal;\n        uniform mat4 rotation;\n        uniform mat4 normalMatrix;\n        uniform mat4 perspective;\n        uniform float maxHeight;\n        varying vec3 vLighting;\n        varying vec3 heightColor;\n\n        void main() {\n            vec4 pos = rotation * vec4(position, 1.5);\n            gl_Position = pos;\n\n            vec3 ambientLight = vec3(0.3, 0.3, 0.3);\n            vec3 directionalLightColor = vec3(1, 1, 1);\n            vec3 directionalVector = normalize(vec3(-0.85, -0.8, -0.75));\n\n            vec4 transformedNormal = normalMatrix * vec4(normal, 0.0);\n\n            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);\n            vLighting = ambientLight + (directionalLightColor * directional);\n\n            float height = max(0.0, length(pos.xyz) - length(transformedNormal.xyz)) / maxHeight;\n            heightColor = vec3(height, (1.0 - height * height), (1.0 - height));\n        }\n    ',
-	attributes: {normal: 'normal', position: 'position'},
-	uniforms: {maxHeight: 'maxHeight', normalMatrix: 'normalMatrix', perspective: 'perspective', rotation: 'rotation'}
+	attributes: {normal: 'at', position: 'aw'},
+	uniforms: {maxHeight: 'G', normalMatrix: 'a5', perspective: 'a7', rotation: 'bg'}
 };
 var $author$project$Shaders$draw = F5(
 	function (width, height, maxElevation, theta, mesh) {
@@ -8680,32 +8665,32 @@ var $elm$html$Html$Attributes$height = function (n) {
 		$elm$core$String$fromInt(n));
 };
 var $author$project$NoiseParameters$UpdateBaseRoughness = function (a) {
-	return {$: 'UpdateBaseRoughness', a: a};
+	return {$: 0, a: a};
 };
 var $author$project$NoiseParameters$UpdateMinValue = function (a) {
-	return {$: 'UpdateMinValue', a: a};
+	return {$: 7, a: a};
 };
 var $author$project$NoiseParameters$UpdateNumLayers = function (a) {
-	return {$: 'UpdateNumLayers', a: a};
+	return {$: 3, a: a};
 };
 var $author$project$NoiseParameters$UpdatePersistance = function (a) {
-	return {$: 'UpdatePersistance', a: a};
+	return {$: 2, a: a};
 };
 var $author$project$NoiseParameters$UpdateResolution = function (a) {
-	return {$: 'UpdateResolution', a: a};
+	return {$: 5, a: a};
 };
 var $author$project$NoiseParameters$UpdateRoughness = function (a) {
-	return {$: 'UpdateRoughness', a: a};
+	return {$: 1, a: a};
 };
 var $author$project$NoiseParameters$UpdateSeed = function (a) {
-	return {$: 'UpdateSeed', a: a};
+	return {$: 4, a: a};
 };
 var $author$project$NoiseParameters$UpdateStrength = function (a) {
-	return {$: 'UpdateStrength', a: a};
+	return {$: 6, a: a};
 };
 var $author$project$Main$UpdateParams = F2(
 	function (a, b) {
-		return {$: 'UpdateParams', a: a, b: b};
+		return {$: 4, a: a, b: b};
 	});
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$html$Html$Attributes$max = $elm$html$Html$Attributes$stringProperty('max');
@@ -8714,7 +8699,7 @@ var $elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
 };
 var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
-	return {$: 'MayStopPropagation', a: a};
+	return {$: 1, a: a};
 };
 var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
 var $elm$html$Html$Events$stopPropagationOn = F2(
@@ -8845,18 +8830,18 @@ var $author$project$Main$makeFilterControl = F2(
 				]),
 			_List_fromArray(
 				[
-					A6($author$project$Main$intSlider, idx, 'Seed', $author$project$NoiseParameters$UpdateSeed, 1, 100, noiseParams.seed),
-					A6($author$project$Main$slider, idx, 'Base Roughness', $author$project$NoiseParameters$UpdateBaseRoughness, 1, 5, noiseParams.baseRoughness),
-					A6($author$project$Main$slider, idx, 'Roughness', $author$project$NoiseParameters$UpdateRoughness, 0, 1, noiseParams.roughness),
-					A6($author$project$Main$slider, idx, 'Persistance', $author$project$NoiseParameters$UpdatePersistance, 0, 1, noiseParams.persistance),
-					A6($author$project$Main$slider, idx, 'Strength', $author$project$NoiseParameters$UpdateStrength, 0, 4, noiseParams.strength),
-					A6($author$project$Main$slider, idx, 'Min Value', $author$project$NoiseParameters$UpdateMinValue, 0, 1, noiseParams.minValue),
-					A6($author$project$Main$intSlider, idx, 'Num Layers', $author$project$NoiseParameters$UpdateNumLayers, 1, 8, noiseParams.numLayers),
-					A6($author$project$Main$intSlider, idx, 'Resolution', $author$project$NoiseParameters$UpdateResolution, 10, 100, noiseParams.resolution)
+					A6($author$project$Main$intSlider, idx, 'Seed', $author$project$NoiseParameters$UpdateSeed, 1, 100, noiseParams.bM),
+					A6($author$project$Main$slider, idx, 'Base Roughness', $author$project$NoiseParameters$UpdateBaseRoughness, 1, 5, noiseParams.bs),
+					A6($author$project$Main$slider, idx, 'Roughness', $author$project$NoiseParameters$UpdateRoughness, 0, 1, noiseParams.bL),
+					A6($author$project$Main$slider, idx, 'Persistance', $author$project$NoiseParameters$UpdatePersistance, 0, 1, noiseParams.bI),
+					A6($author$project$Main$slider, idx, 'Strength', $author$project$NoiseParameters$UpdateStrength, 0, 4, noiseParams.bN),
+					A6($author$project$Main$slider, idx, 'Min Value', $author$project$NoiseParameters$UpdateMinValue, 0, 1, noiseParams.bC),
+					A6($author$project$Main$intSlider, idx, 'Num Layers', $author$project$NoiseParameters$UpdateNumLayers, 1, 8, noiseParams.bE),
+					A6($author$project$Main$intSlider, idx, 'Resolution', $author$project$NoiseParameters$UpdateResolution, 10, 100, noiseParams.bJ)
 				]));
 	});
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
+	return {$: 0, a: a};
 };
 var $elm$html$Html$Events$on = F2(
 	function (event, decoder) {
@@ -8872,7 +8857,7 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		$elm$json$Json$Decode$succeed(msg));
 };
 var $elm_explorations$webgl$WebGL$Internal$Stencil = function (a) {
-	return {$: 'Stencil', a: a};
+	return {$: 2, a: a};
 };
 var $elm_explorations$webgl$WebGL$stencil = $elm_explorations$webgl$WebGL$Internal$Stencil;
 var $elm_explorations$webgl$WebGL$toHtmlWith = F3(
@@ -8887,7 +8872,7 @@ var $elm$html$Html$Attributes$width = function (n) {
 };
 var $author$project$Main$view = function (model) {
 	return {
-		body: _List_fromArray(
+		bt: _List_fromArray(
 			[
 				A2(
 				$elm$html$Html$div,
@@ -8907,13 +8892,13 @@ var $author$project$Main$view = function (model) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$width(model.width),
-								$elm$html$Html$Attributes$height(model.height)
+								$elm$html$Html$Attributes$width(model.X),
+								$elm$html$Html$Attributes$height(model.M)
 							]),
 						A2(
 							$elm$core$List$map,
-							A4($author$project$Shaders$draw, model.width, model.height, model.maxHeight, model.theta),
-							model.meshes)),
+							A4($author$project$Shaders$draw, model.X, model.M, model.G, model.T),
+							model.H)),
 						A2(
 						$elm$html$Html$div,
 						_List_fromArray(
@@ -8960,14 +8945,14 @@ var $author$project$Main$view = function (model) {
 							[
 								$elm$html$Html$Attributes$class('filters')
 							]),
-						A2($elm$core$List$indexedMap, $author$project$Main$makeFilterControl, model.noiseParams))
+						A2($elm$core$List$indexedMap, $author$project$Main$makeFilterControl, model.p))
 					]))
 			]),
-		title: 'Planet generator'
+		bP: 'Planet generator'
 	};
 };
 var $author$project$Main$main = $elm$browser$Browser$document(
-	{init: $author$project$Main$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
+	{bB: $author$project$Main$init, bO: $author$project$Main$subscriptions, bQ: $author$project$Main$update, bS: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(
 		{}))(0)}});}(this));

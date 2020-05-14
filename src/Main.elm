@@ -187,7 +187,7 @@ view model =
             ] 
             [
                 WebGL.toHtmlWith
-                    [ WebGL.depth 1, WebGL.antialias, WebGL.stencil 0 ]
+                    [ WebGL.depth 1, WebGL.antialias, WebGL.stencil 0, WebGL.preserveDrawingBuffer ]
                     [ 
                         width model.width,
                         height model.height,

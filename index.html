@@ -45,7 +45,7 @@
 
     var app = Elm.Main.init();
 
-    sleep(3000).then(() => {
+    sleep(50).then(() => {
       var canvas = document.getElementById('planet-canvas');
       var dataURL = canvas.toDataURL('image/png');
 
@@ -56,7 +56,6 @@
 
       document.getElementsByTagName('head')[0].appendChild(link);
     });
-
   </script>
 </body>
 </html>
